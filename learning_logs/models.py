@@ -11,6 +11,9 @@ class Topic(models.Model):
         self.slug = slugify(self.title)
         super(Topic, self).save(*args, **kwargs)
 
+    class Meta:
+        ordering = ['date_added']
+
     def __str__(self):
         return self.title
 
