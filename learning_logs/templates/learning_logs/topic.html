@@ -5,15 +5,13 @@
 
   <p>Entries:</p>
 
-  <ul>
     {% for entry in entries %}
-      <li>
-        <p>{{ entry.title }}</p>
+      <div>
+        <p><a href="{% url 'learning_logs:entry' entry.slug %}">{{ entry.title }}</a></p>
         <p>{{ entry.date_added|date:'M d, Y H:i' }}</p>
-        <p>{{ entry.text|linebreaks }}</p>
-      </li>
+        <p>{{ entry.text|linebreaks|truncatewords:33 }}</p>
+      </div>
     {% empty %}
-      <li>There are no entries for this topic yet.</li>
+        <p>There are no entries for this topic yet.</p>
     {% endfor %}
-  </ul>
 {% endblock %}

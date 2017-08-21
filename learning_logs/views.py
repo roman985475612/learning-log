@@ -18,8 +18,8 @@ class TopicDetail(ListView):
     template_name = 'learning_logs/topic.html'
     
     def get_queryset(self):
-        self.topic = get_object_or_404(Topic, slug=self.kwargs['topic_slug'])
-        return Entry.objects.filter(topic=self.topic)
+        self.topic = get_object_or_404(Topic, slug=self.kwargs['slug'])
+        return Entry.objects.filter(topic=self.topic).order_by('-date_added')
     
     def get_context_data(self, **kwargs):
         context = super(TopicDetail, self).get_context_data(**kwargs)
@@ -27,3 +27,10 @@ class TopicDetail(ListView):
         return context
 
     context_object_name = 'entries'
+
+
+class EntryDetail(DetailView):
+    model = Entry
+    context_object_name = 'entry'
+    template_name = 'learning_logs/entry.html'
+    
