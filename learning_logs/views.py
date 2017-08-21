@@ -1,7 +1,11 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import TemplateView, ListView, DetailView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
 
 from .models import Topic, Entry
+from .forms import TopicForm, EntryForm
+
 
 class IndexView(TemplateView):
     template_name = 'learning_logs/index.html'
@@ -37,3 +41,28 @@ class EntryDetail(ListView):
     context_object_name = 'entry'
     template_name = 'learning_logs/entry.html'
     
+
+class TopicCreate(CreateView):
+    model = Topic
+    form_class = TopicForm
+    template_name = 'learning_logs/topic_create.html'
+    success_url = reverse_lazy('learning_logs:topics')
+
+
+class TopicUpdate(UpdateView):
+    model = Topic
+    slug_url_kwarg = 'topic_slug'
+    form_class = TopicForm
+    context_object_name = 'topic'
+    template_name = 'learning_logs/topic_update.html'
+    success_url = reverse_lazy('learning_logs:topics')
+
+
+class TopicDelete(DeleteView):
+    model = Topic
+    slug_url_kwarg = 'topic_slug'
+    success_url = reverse_lazy('learning_logs:topics')
+    
+
+class EntryCreate(CreateView):
+    pass

@@ -1,0 +1,10 @@
+{% extends 'learning_logs/base.html' %}
+
+{% block content %}
+  <p>Delete topic: {{ topic }}</p>
+  <form action="{% url 'learning_logs:topic_delete' topic.slug %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button name="submit">delete</button>
+  </form>
+{% endblock %}
