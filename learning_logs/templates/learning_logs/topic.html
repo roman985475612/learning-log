@@ -10,8 +10,9 @@
     {% for entry in entries %}
       <div>
         <p>
-          <a href="{% url 'learning_logs:entry' entry.slug %}">
-          {{ entry.title }}</a>
+          <a href="{% url 'learning_logs:entry' entry.slug %}">{{ entry.title }}</a> -
+          <a href="{% url 'learning_logs:entry_update' entry.slug %}"> update</a> -
+          <a href="{% url 'learning_logs:entry_delete' entry.slug %}"> delete</a>
         </p>
         <p>{{ entry.date_added|date:'M d, Y H:i' }}</p>
         <p>{{ entry.text|linebreaks|truncatewords:33 }}</p>
