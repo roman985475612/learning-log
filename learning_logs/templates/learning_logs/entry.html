@@ -2,6 +2,10 @@
 
 {% block content %}
   <h1>{{ entry.title }}</h1>
+  <p>
+    <a href="{% url 'learning_logs:entry_update' entry.slug %}">update</a>
+    <a href="{% url 'learning_logs:entry_delete' entry.slug %}">delete</a>
+  </p>
   <p>{{ entry.date_added|date:'M d, Y H:i' }}</p>
   <p>{{ entry.text|linebreaks }}</p>
   <p><a href="{% url 'learning_logs:topic' entry.topic.slug %}">Back {{ entry.topic.title}}</a></p>

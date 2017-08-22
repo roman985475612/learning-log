@@ -8,8 +8,8 @@
     {% for topic in topics %}
       <li>
         <a href="{% url 'learning_logs:topic' topic.slug %}">{{ topic }}</a> 
-        <a href="{% url 'learning_logs:topic_update' topic.slug %}">(update)</a>
-        <a href="{% url 'learning_logs:topic_delete' topic.slug %}">(delete)</a>
+        <a href="{% url 'learning_logs:topic_update' topic.slug %}"> - update</a>
+        <a href="{% url 'learning_logs:topic_delete' topic.slug %}"> - delete</a>
       </li>
     {% empty %}
       <li>No topics have been added yet.</li>

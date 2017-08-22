@@ -5,10 +5,12 @@
 
   <p>Entries:</p>
 
+  <p><a href="{% url 'learning_logs:entry_create' topic.slug %}">Add a new entry</a></p>
+
     {% for entry in entries %}
       <div>
         <p>
-          <a href="{% url 'learning_logs:entry' topic_slug=topic.slug entry_slug=entry.slug %}">
+          <a href="{% url 'learning_logs:entry' entry.slug %}">
           {{ entry.title }}</a>
         </p>
         <p>{{ entry.date_added|date:'M d, Y H:i' }}</p>
