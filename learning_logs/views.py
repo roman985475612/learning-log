@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import View, TemplateView, ListView, DetailView
+from django.views.generic import View, TemplateView, RedirectView, ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse, reverse_lazy
 
@@ -7,52 +7,28 @@ from .models import Topic, Entry
 from .forms import TopicForm, EntryForm
 
 
-class IndexView(TemplateView):
-    template_name = 'learning_logs/index.html'
-
-
 class TopicList(ListView):
-    queryset = Topic.objects.order_by('title')
-    template_name = 'learning_logs/topics.html' 
-    context_object_name = 'topics'
+    model = Topic
 
 
-class TopicDetail(ListView):
-
-    def get_queryset(self):
-        self.topic = get_object_or_404(Topic, slug=self.kwargs['slug'])
-        return Entry.objects.filter(topic=self.topic).order_by('-date_added')
-    
-    def get_context_data(self, **kwargs):
-        context = super(TopicDetail, self).get_context_data(**kwargs)
-        context['topic'] = self.topic
-        return context
-
-    template_name = 'learning_logs/topic.html'
-    context_object_name = 'entries'
+class TopicDetail(DetailView):
+    model = Topic
 
 
-class EntryDetail(ListView):
-    def get_queryset(self):
-        self.entry = get_object_or_404(Entry, slug=self.kwargs['slug'])
-        return self.entry
-
-    context_object_name = 'entry'
-    template_name = 'learning_logs/entry.html'
+class EntryDetail(DetailView):
+    model = Entry
     
 
 class TopicCreate(CreateView):
+    model = Topic
     form_class = TopicForm
     template_name = 'learning_logs/topic_create.html'
-    success_url = reverse_lazy('learning_logs:topics')
 
 
 class TopicUpdate(UpdateView):
     model = Topic
     form_class = TopicForm
-    context_object_name = 'topic'
     template_name = 'learning_logs/topic_update.html'
-    success_url = reverse_lazy('learning_logs:topics')
 
 
 class TopicDelete(DeleteView):

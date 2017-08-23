@@ -1,5 +1,6 @@
 from django.db import models
 from django.template.defaultfilters import slugify
+from django.urls import reverse
 
 
 class Topic(models.Model):
@@ -12,10 +13,13 @@ class Topic(models.Model):
         super(Topic, self).save(*args, **kwargs)
 
     class Meta:
-        ordering = ['date_added']
+        ordering = ['title']
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse('learning_logs:topics')
 
 
 class Entry(models.Model):

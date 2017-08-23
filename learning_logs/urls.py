@@ -1,11 +1,12 @@
 from django.conf.urls import url
+from django.views.generic import TemplateView
 
 from . import views
 
 app_name = 'learning_logs'
 
 urlpatterns = [
-    url(r'^$', views.IndexView.as_view(), name='index'), 
+    url(r'^$', TemplateView.as_view(template_name='learning_logs/index.html'), name='index'), 
     url(r'^topics/$', views.TopicList.as_view(), name='topics'),
     url(r'^topic-add/$', views.TopicCreate.as_view(), name='topic_create'),
     url(r'^topic/(?P<slug>[\w-]+)/update/$', views.TopicUpdate.as_view(), name='topic_update'),

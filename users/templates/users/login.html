@@ -7,7 +7,14 @@
 
   <form action="{% url 'users:login' %}" method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+    <table>
+      {% for field in form %}
+        <tr>
+          <td>{{ field.label_tag }}</td>
+          <td>{{ field }}</td>
+        </tr>
+      {% endfor %}
+    </table>
     <button name="submit">log in</button>
     <input type="hidden" name="next" value="{% url 'learning_logs:index' %}">
   </form>

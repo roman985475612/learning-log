@@ -1,22 +1,19 @@
 {% extends 'learning_logs/base.html' %}
 
 {% block content %}
-  <p>Topic: {{ topic }}</p>
-
+  <p>Topic: {{ object }}</p>
   <p>Entries:</p>
 
-  <p><a href="{% url 'learning_logs:entry_create' topic.slug %}">Add a new entry</a></p>
+  <p><a href="{% url 'learning_logs:entry_create' object.slug %}">Add a new entry</a></p>
 
-    {% for entry in entries %}
-      <div>
+    {% for entry in object.entry_set.all %}
         <p>
           <a href="{% url 'learning_logs:entry' entry.slug %}">{{ entry.title }}</a> -
           <a href="{% url 'learning_logs:entry_update' entry.slug %}"> update</a> -
-          <a href="{% url 'learning_logs:entry_delete' entry.slug %}"> delete</a>
+          <a href="{% url 'learning_logs:entry_delete' entry.slug %}"> delete</a> -
+          <span>{{ entry.date_added|date:'M d, Y H:i' }}</span>
         </p>
-        <p>{{ entry.date_added|date:'M d, Y H:i' }}</p>
         <p>{{ entry.text|linebreaks|truncatewords:33 }}</p>
-      </div>
     {% empty %}
         <p>There are no entries for this topic yet.</p>
     {% endfor %}
