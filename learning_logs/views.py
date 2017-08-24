@@ -1,3 +1,5 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import View, TemplateView, RedirectView, ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -19,24 +21,40 @@ class EntryDetail(DetailView):
     model = Entry
     
 
-class TopicCreate(CreateView):
+class TopicCreate(LoginRequiredMixin, CreateView):
     model = Topic
     form_class = TopicForm
     template_name = 'learning_logs/topic_create.html'
 
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super(TopicCreate, self).form_valid(form)
 
-class TopicUpdate(UpdateView):
+
+class TopicUpdate(LoginRequiredMixin, UpdateView):
     model = Topic
     form_class = TopicForm
     template_name = 'learning_logs/topic_update.html'
 
+    def get_object(self):
+        object = super(TopicUpdate, self).get_object()
+        if object.owner != self.request.user:
+            raise Http404("You are not the owner")
+        return object
 
-class TopicDelete(DeleteView):
+
+class TopicDelete(LoginRequiredMixin, DeleteView):
     model = Topic
     success_url = reverse_lazy('learning_logs:topics')
-    
 
-class EntryCreate(View):
+    def get_object(self):
+        object = super(TopicDelete, self).get_object()
+        if object.owner != self.request.user:
+            raise Http404("You are not the owner")
+        return object
+
+
+class EntryCreate(LoginRequiredMixin, View):
     form_class = EntryForm
     template_name = 'learning_logs/entry_create.html'
 
@@ -57,7 +75,7 @@ class EntryCreate(View):
         return render(request, self.template_name, {'topic': topic, 'form': form})
 
 
-class EntryUpdate(View):
+class EntryUpdate(LoginRequiredMixin, View):
     form_class = EntryForm
     template_name = 'learning_logs/entry_update.html'
 
@@ -85,7 +103,7 @@ class EntryUpdate(View):
         })
 
 
-class EntryDelete(DeleteView):
+class EntryDelete(LoginRequiredMixin, DeleteView):
     model = Entry
     
     def get_success_url(self):

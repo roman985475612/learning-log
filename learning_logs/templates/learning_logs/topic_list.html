@@ -8,14 +8,18 @@
     {% for topic in topic_list %}
       <li>
         <a href="{% url 'learning_logs:topic' topic.slug %}">{{ topic }}</a> 
-        <a href="{% url 'learning_logs:topic_update' topic.slug %}"> - update</a>
-        <a href="{% url 'learning_logs:topic_delete' topic.slug %}"> - delete</a>
+        {% if user == topic.owner %}
+          <a href="{% url 'learning_logs:topic_update' topic.slug %}"> - update</a>
+          <a href="{% url 'learning_logs:topic_delete' topic.slug %}"> - delete</a>
+        {% endif %}
       </li>
     {% empty %}
       <li>No topics have been added yet.</li>
     {% endfor %}
   </ul>
 
-  <a href="{% url 'learning_logs:topic_create' %}">Add a new topic</a>
+  {% if user.is_authenticated %}
+    <a href="{% url 'learning_logs:topic_create' %}">Add a new topic</a>
+  {% endif %}
 
 {% endblock %}

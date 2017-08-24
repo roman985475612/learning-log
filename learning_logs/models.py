@@ -1,9 +1,11 @@
+from django.contrib.auth.models import User
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.urls import reverse
 
 
 class Topic(models.Model):
+    owner = models.ForeignKey(User)
     title = models.CharField(max_length=200)
     date_added = models.DateTimeField(auto_now_add=True)
     slug = models.SlugField()

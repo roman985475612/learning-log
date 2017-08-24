@@ -1,17 +1,20 @@
 {% extends 'learning_logs/base.html' %}
 
 {% block content %}
-  <p>Topic: {{ object }}</p>
-  <p>Entries:</p>
+  <p>Topic: <a href="{% url 'learning_logs:topics' %}">{{ object }}</a></p>
 
-  <p><a href="{% url 'learning_logs:entry_create' object.slug %}">Add a new entry</a></p>
+  {% if user.is_authenticated %}
+    <p><a href="{% url 'learning_logs:entry_create' object.slug %}">Add a new entry</a></p>
+  {% endif %}
 
     {% for entry in object.entry_set.all %}
         <p>
           <a href="{% url 'learning_logs:entry' entry.slug %}">{{ entry.title }}</a> -
-          <a href="{% url 'learning_logs:entry_update' entry.slug %}"> update</a> -
-          <a href="{% url 'learning_logs:entry_delete' entry.slug %}"> delete</a> -
           <span>{{ entry.date_added|date:'M d, Y H:i' }}</span>
+          {% if user.is_authenticated %}
+            <a href="{% url 'learning_logs:entry_update' entry.slug %}"> update</a> -
+            <a href="{% url 'learning_logs:entry_delete' entry.slug %}"> delete</a> -
+          {% endif %}
         </p>
         <p>{{ entry.text|linebreaks|truncatewords:33 }}</p>
     {% empty %}

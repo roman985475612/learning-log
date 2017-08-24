@@ -1,3 +1,4 @@
+{# base.html #}
 <p>
   <a href="{% url 'learning_logs:index' %}">Learning Log</a> -
   <a href="{% url 'learning_logs:topics' %}">Topics</a> -
@@ -5,6 +6,7 @@
     Hello, {{ user.username|title }}. -
     <a href="{% url 'users:logout' %}">log out</a>
   {% else %}
+    <a href="{% url 'users:register' %}">register</a> -
     <a href="{% url 'users:login' %}">log in</a>
   {% endif %}
 </p>
