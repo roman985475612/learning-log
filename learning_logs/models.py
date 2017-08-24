@@ -8,7 +8,7 @@ class Topic(models.Model):
     owner = models.ForeignKey(User)
     title = models.CharField(max_length=200)
     date_added = models.DateTimeField(auto_now_add=True)
-    slug = models.SlugField()
+    slug = models.SlugField(unique=True)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
@@ -25,11 +25,12 @@ class Topic(models.Model):
 
 
 class Entry(models.Model):
+    owner = models.ForeignKey(User)
     topic = models.ForeignKey(Topic)
     title = models.CharField(max_length=200)
     text = models.TextField()
     date_added = models.DateTimeField(auto_now_add=True)
-    slug = models.SlugField()
+    slug = models.SlugField(unique=True)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)

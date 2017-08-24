@@ -3,7 +3,8 @@
 {% block content %}
   <p><a href="{% url 'learning_logs:topic' object.topic.slug %}">Back {{ object.topic.title}}</a></p>
   <h1>{{ object.title }}</h1>
-  {% if user.is_authenticated %}
+  <h3>by {{ object.owner|title }}</h3>
+  {% if user == object.owner %}
     <p>
       <a href="{% url 'learning_logs:entry_update' object.slug %}">update</a>
       <a href="{% url 'learning_logs:entry_delete' object.slug %}">delete</a>

@@ -1,8 +1,19 @@
 from django.contrib.auth import login, logout, authenticate
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.views.generic import View
+from django.views.generic.edit import FormView
 from django.shortcuts import render, redirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
+
+
+class LoginView(FormView):
+    template_name = 'users/login.html'
+    form_class = AuthenticationForm
+    success_url = reverse_lazy('learning_logs:index')
+
+    def form_valid(self, form):
+        login(self.request, form.get_user())
+        return redirect(self.success_url)
 
 
 class LogoutView(View):

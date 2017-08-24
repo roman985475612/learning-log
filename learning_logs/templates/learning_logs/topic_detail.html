@@ -10,8 +10,9 @@
     {% for entry in object.entry_set.all %}
         <p>
           <a href="{% url 'learning_logs:entry' entry.slug %}">{{ entry.title }}</a> -
+          <span> by {{ entry.owner|title }}</span>
           <span>{{ entry.date_added|date:'M d, Y H:i' }}</span>
-          {% if user.is_authenticated %}
+          {% if user == entry.owner %}
             <a href="{% url 'learning_logs:entry_update' entry.slug %}"> update</a> -
             <a href="{% url 'learning_logs:entry_delete' entry.slug %}"> delete</a> -
           {% endif %}

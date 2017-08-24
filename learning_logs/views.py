@@ -68,6 +68,7 @@ class EntryCreate(LoginRequiredMixin, View):
         form = self.form_class(request.POST)
         if form.is_valid():
             new_entry = form.save(commit=False)
+            new_entry.owner = request.user
             new_entry.topic = topic
             new_entry.save()
             return redirect('learning_logs:topic', topic.slug)
@@ -81,6 +82,8 @@ class EntryUpdate(LoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         entry = get_object_or_404(Entry, slug=self.kwargs['slug'])
+        if entry.owner != self.request.user:
+            raise Http404("You are not the owner")
         topic = entry.topic
         form = self.form_class(instance=entry)
         return render(request, self.template_name, {
@@ -106,5 +109,11 @@ class EntryUpdate(LoginRequiredMixin, View):
 class EntryDelete(LoginRequiredMixin, DeleteView):
     model = Entry
     
+    def get_object(self):
+        object = super(EntryDelete, self).get_object()
+        if object.owner != self.request.user:
+            raise Http404("You are not owner")
+        return object
+
     def get_success_url(self):
         return reverse('learning_logs:topic', kwargs={'slug': self.object.topic.slug})
