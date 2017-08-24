@@ -23,21 +23,16 @@ class LogoutView(View):
         return redirect('learning_logs:index') 
 
 
-class RegisterView(View):
+class RegisterView(FormView):
+    template_name = 'users/register.html'
+    form_class = UserCreationForm
+    success_url = reverse_lazy('learning_logs:index')
     
-    def get(self, request, *args, **kwargs):
-        form = UserCreationForm()
-        return render(request, 'users/register.html', {'form': form})
-
-    def post(self, request, *args, **kwargs):
-        form = UserCreationForm(request.POST) 
-        if form.is_valid():
-            new_user = form.save()
-            authenticated_user = authenticate(
-                username=new_user.username,
-                password=request.POST['password1']
-            )
-            login(request, authenticated_user)
-            return redirect('learning_logs:index') 
-
-        return render(request, 'users/register.html', {'form': form})
+    def form_valid(self, form):
+        new_user = form.save()
+        authenticated_user = authenticate(
+            username=new_user.username,
+            password=self.request.POST['password1']
+        )
+        login(self.request, authenticated_user)
+        return redirect(self.success_url) 
