@@ -6,7 +6,7 @@ from django.urls import reverse
 
 class Topic(models.Model):
     owner = models.ForeignKey(User)
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=200, unique=True)
     date_added = models.DateTimeField(auto_now_add=True)
     slug = models.SlugField(unique=True)
 
@@ -27,7 +27,7 @@ class Topic(models.Model):
 class Entry(models.Model):
     owner = models.ForeignKey(User)
     topic = models.ForeignKey(Topic)
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=200, unique=True)
     text = models.TextField()
     date_added = models.DateTimeField(auto_now_add=True)
     slug = models.SlugField(unique=True)
