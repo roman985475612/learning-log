@@ -21,7 +21,7 @@ class Topic(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return reverse('learning_logs:topics')
+        return reverse('learning_logs:topic', kwargs={'slug': self.slug})
 
 
 class Entry(models.Model):
@@ -47,6 +47,9 @@ class Entry(models.Model):
             return self.text
         else:
             return self.text[:100] + '...'
+    
+    def get_absolute_url(self):
+        return reverse('learning_logs:entry', kwargs={'slug': self.slug})
 
 
 class Comment(models.Model):
@@ -60,3 +63,4 @@ class Comment(models.Model):
             return self.text
         else:
             return self.text[:50] + '...'
+

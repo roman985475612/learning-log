@@ -7,9 +7,11 @@
     <p><a href="{% url 'learning_logs:entry_create' object.slug %}">Add a new entry</a></p>
   {% endif %}
 
+  <ul>
     {% for entry in object.entry_set.all %}
+      <li>
         <p>
-          <a href="{% url 'learning_logs:entry' entry.slug %}">{{ entry.title }}</a> -
+          <a href="{{ entry.get_absolute_url }}">{{ entry.title }}</a> -
           <span> by {{ entry.owner|title }}</span>
           <span>{{ entry.date_added|date:'M d, Y H:i' }}</span>
           {% if user == entry.owner %}
@@ -18,7 +20,9 @@
           {% endif %}
         </p>
         <p>{{ entry.text|linebreaks|truncatewords:33 }}</p>
+      </li>
     {% empty %}
-        <p>There are no entries for this topic yet.</p>
+      <li>There are no entries for this toliic yet.</li>
     {% endfor %}
+  </ul>
 {% endblock %}

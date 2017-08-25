@@ -1,12 +1,14 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import View, TemplateView, RedirectView, ListView, DetailView
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic.base import View, TemplateView, RedirectView
+from django.views.generic.detail import DetailView
+from django.views.generic.edit import FormView, CreateView, UpdateView, DeleteView
+from django.views.generic.list import ListView
 from django.urls import reverse, reverse_lazy
 
 from .models import Topic, Entry, Comment
-from .forms import TopicForm, EntryForm
+from .forms import TopicForm, EntryForm, CommentForm
 
 
 class IndexView(TemplateView):
@@ -67,7 +69,7 @@ class TopicDelete(LoginRequiredMixin, DeleteView):
         return object
 
 
-class EntryCreate(LoginRequiredMixin, View):
+class EntryCreate(LoginRequiredMixin, FormView):
     form_class = EntryForm
     template_name = 'learning_logs/entry_create.html'
 
@@ -89,7 +91,7 @@ class EntryCreate(LoginRequiredMixin, View):
         return render(request, self.template_name, {'topic': topic, 'form': form})
 
 
-class EntryUpdate(LoginRequiredMixin, View):
+class EntryUpdate(LoginRequiredMixin, FormView):
     form_class = EntryForm
     template_name = 'learning_logs/entry_update.html'
 
@@ -130,3 +132,17 @@ class EntryDelete(LoginRequiredMixin, DeleteView):
 
     def get_success_url(self):
         return reverse('learning_logs:topic', kwargs={'slug': self.object.topic.slug})
+
+
+class CommentCreate(LoginRequiredMixin, CreateView):
+    template_name = 'learning_logs/comment_create.html'
+    form_class = CommentForm
+
+    def form_valid(self, form):
+        self.entry = get_object_or_404(Entry, slug=self.kwargs['slug'])
+        form.instance.owner = self.request.user
+        form.instance.entry = self.entry
+        return super(CommentCreate, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse('learning_logs:entry', kwargs={'slug': self.object.entry.slug})
