@@ -9,6 +9,10 @@ from .models import Topic, Entry
 from .forms import TopicForm, EntryForm
 
 
+class IndexView(TemplateView):
+    template_name = 'learning_logs/index.html'
+
+
 class TopicList(ListView):
     model = Topic
 

@@ -47,3 +47,16 @@ class Entry(models.Model):
             return self.text
         else:
             return self.text[:100] + '...'
+
+
+class Comment(models.Model):
+    owner = models.ForeignKey(User)
+    entry = models.ForeignKey(Entry)
+    text = models.TextField()
+    date_added = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        if len(self.text) < 50:
+            return self.text
+        else:
+            return self.text[:50] + '...'
