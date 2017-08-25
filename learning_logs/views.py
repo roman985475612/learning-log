@@ -5,7 +5,7 @@ from django.views.generic import View, TemplateView, RedirectView, ListView, Det
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse, reverse_lazy
 
-from .models import Topic, Entry
+from .models import Topic, Entry, Comment
 from .forms import TopicForm, EntryForm
 
 
@@ -21,8 +21,17 @@ class TopicDetail(DetailView):
     model = Topic
 
 
-class EntryDetail(DetailView):
-    model = Entry
+class EntryDetail(ListView):
+    template_name = 'learning_logs/entry_detail.html'
+
+    def get_queryset(self):
+        self.entry = get_object_or_404(Entry, slug=self.kwargs['slug'])
+        return Comment.objects.filter(entry=self.entry)
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(EntryDetail, self).get_context_data(*args, **kwargs)
+        context['entry'] = self.entry
+        return context
     
 
 class TopicCreate(LoginRequiredMixin, CreateView):

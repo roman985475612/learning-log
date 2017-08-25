@@ -1,15 +1,31 @@
 {% extends 'learning_logs/base.html' %}
 
 {% block content %}
-  <p><a href="{% url 'learning_logs:topic' object.topic.slug %}">Back {{ object.topic.title}}</a></p>
-  <h1>{{ object.title }}</h1>
-  <h3>by {{ object.owner|title }}</h3>
-  {% if user == object.owner %}
+  <p><a href="{% url 'learning_logs:topic' entry.topic.slug %}">Back {{ entry.topic.title }}</a></p>
+  <!-- Entry begin -->
+  <h1>{{ entry.title }}</h1>
+  <h3>by {{ entry.owner|title }}</h3>
+  {% if user == entry.owner %}
     <p>
-      <a href="{% url 'learning_logs:entry_update' object.slug %}">update</a>
-      <a href="{% url 'learning_logs:entry_delete' object.slug %}">delete</a>
+      <a href="{% url 'learning_logs:entry_update' entry.slug %}">update</a>
+      <a href="{% url 'learning_logs:entry_delete' entry.slug %}">delete</a>
     </p>
   {% endif %}
-  <p>{{ object.text|linebreaks }}</p>
-  <span>{{ object.date_added|date:'M d, Y H:i' }}</span>
+  <p>{{ entry.text|linebreaks }}</p>
+  <span>{{ entry.date_added|date:'M d, Y H:i' }}</span>
+  <!-- Entry end -->
+
+  <!-- Comment begin -->
+  <h3>Comments:</h3>
+  <ul>
+    {% for comment in comment_list %}
+      <li>
+        <p>{{ comment.date_added }} by {{ comment.owner|title }}</p>
+        <p>{{ comment.text }}</p>
+      </li>
+    {% empty %}
+      <li>No comments this entry yet.</li>
+    {% endfor %}
+  </ul>
+  <!-- Comment end -->
 {% endblock %}
