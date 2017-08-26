@@ -47,6 +47,9 @@ class Entry(models.Model):
             return self.text
         else:
             return self.text[:100] + '...'
+
+    def get_absolute_url(self):
+        return reverse('learning_logs:entry', kwargs={'slug': self.slug})
     
 
 class Comment(models.Model):
@@ -60,4 +63,3 @@ class Comment(models.Model):
             return self.text
         else:
             return self.text[:50] + '...'
-
