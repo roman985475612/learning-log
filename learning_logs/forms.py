@@ -15,7 +15,7 @@ class EntryForm(forms.ModelForm):
         model = Entry
         fields = ['title', 'text']
         labels = {'title': '', 'text': ''}
-        widgets = {'text': forms.Textarea(attrs={'cols': 80})}
+        widgets = {'text': forms.Textarea(attrs={'cols': 40})}
 
 
 class CommentForm(forms.ModelForm):
