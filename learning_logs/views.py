@@ -1,9 +1,9 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic.base import View, TemplateView, RedirectView
+from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import FormView, CreateView, UpdateView, DeleteView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 from django.urls import reverse, reverse_lazy
 
@@ -39,17 +39,11 @@ class TopicCreate(LoginRequiredMixin, CreateView):
         form.instance.owner = self.request.user
         return super(TopicCreate, self).form_valid(form)
 
-    def get_success_url(self):
-        return reverse('learning_logs:topic', kwargs={'slug': self.object.slug})
-
 
 class TopicUpdate(LoginRequiredMixin, UpdateView):
     model = Topic
     form_class = TopicForm
     template_name = 'learning_logs/topic_update.html'
-
-    def get_success_url(self):
-        return reverse('learning_logs:topic', kwargs={'slug': self.object.slug})
 
     def get_object(self):
         object = super(TopicUpdate, self).get_object()
