@@ -2,6 +2,7 @@
 
 {% block content %}
   <p><a href="{% url 'learning_logs:topic' entry.topic.slug %}">Back {{ entry.topic.title }}</a></p>
+
   <!-- Entry begin -->
   <h1>{{ entry.title }}</h1>
   <h3>by {{ entry.owner|title }}</h3>
@@ -21,13 +22,13 @@
     <a href="{% url 'learning_logs:comment_create' entry.slug %}">Add comment</a>
   {% endif %}
   <ul>
-    {% for comment in comment_list %}
+    {% for comment in entry.comment_set.all %}
       <li>
         <p>{{ comment.date_added }} by {{ comment.owner|title }}</p>
         <p>{{ comment.text }}</p>
       </li>
     {% empty %}
-      <li>No comments this entry yet.</li>
+      <li>No comments this entry.yet.</li>
     {% endfor %}
   </ul>
   <!-- Comment end -->

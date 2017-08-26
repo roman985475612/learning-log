@@ -17,39 +17,39 @@ class IndexView(TemplateView):
 
 class TopicList(ListView):
     model = Topic
+    context_object_name = 'topics'
 
 
 class TopicDetail(DetailView):
     model = Topic
+    context_object_name = 'topic'
 
 
-class EntryDetail(ListView):
-    template_name = 'learning_logs/entry_detail.html'
-
-    def get_queryset(self):
-        self.entry = get_object_or_404(Entry, slug=self.kwargs['slug'])
-        return Comment.objects.filter(entry=self.entry)
-
-    def get_context_data(self, *args, **kwargs):
-        context = super(EntryDetail, self).get_context_data(*args, **kwargs)
-        context['entry'] = self.entry
-        return context
+class EntryDetail(DetailView):
+    model = Entry
+    context_object_name = 'entry'
     
 
 class TopicCreate(LoginRequiredMixin, CreateView):
     model = Topic
-    form_class = TopicForm
     template_name = 'learning_logs/topic_create.html'
+    form_class = TopicForm
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
         return super(TopicCreate, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse('learning_logs:topic', kwargs={'slug': self.object.slug})
 
 
 class TopicUpdate(LoginRequiredMixin, UpdateView):
     model = Topic
     form_class = TopicForm
     template_name = 'learning_logs/topic_update.html'
+
+    def get_success_url(self):
+        return reverse('learning_logs:topic', kwargs={'slug': self.object.slug})
 
     def get_object(self):
         object = super(TopicUpdate, self).get_object()
@@ -69,26 +69,19 @@ class TopicDelete(LoginRequiredMixin, DeleteView):
         return object
 
 
-class EntryCreate(LoginRequiredMixin, FormView):
-    form_class = EntryForm
+class EntryCreate(LoginRequiredMixin, CreateView):
+    model = Entry
     template_name = 'learning_logs/entry_create.html'
+    form_class = EntryForm
 
-    def get(self, request, *args, **kwargs):
-        topic = get_object_or_404(Topic, slug=self.kwargs['slug'])
-        form = self.form_class()
-        return render(request, self.template_name, {'topic': topic, 'form': form})
+    def form_valid(self, form):
+        self.topic = get_object_or_404(Topic, slug=self.kwargs['slug'])
+        form.instance.owner = self.request.user
+        form.instance.topic = self.topic
+        return super(EntryCreate, self).form_valid(form)
 
-    def post(self, request, *args, **kwargs):
-        topic = get_object_or_404(Topic, slug=self.kwargs['slug'])
-        form = self.form_class(request.POST)
-        if form.is_valid():
-            new_entry = form.save(commit=False)
-            new_entry.owner = request.user
-            new_entry.topic = topic
-            new_entry.save()
-            return redirect('learning_logs:topic', topic.slug)
-
-        return render(request, self.template_name, {'topic': topic, 'form': form})
+    def get_success_url(self):
+        return reverse('learning_logs:entry', kwargs={'slug': self.object.slug})
 
 
 class EntryUpdate(LoginRequiredMixin, FormView):
