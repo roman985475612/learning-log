@@ -25,11 +25,18 @@
     {% for comment in entry.comment_set.all %}
       <li>
         <p>{{ comment.date_added }} by {{ comment.owner|title }}</p>
-        <p>{{ comment.text }}</p>
+        {% if user == comment.owner %}
+          <p>
+            <a href="{% url 'learning_logs:comment_update' comment.pk %}">update</a>
+            <a href="{% url 'learning_logs:comment_delete' comment.pk %}">delete</a>
+          </p>
+        {% endif %}
+        <p>{{ comment.text|linebreaks }}</p>
       </li>
     {% empty %}
       <li>No comments this entry.yet.</li>
     {% endfor %}
   </ul>
   <!-- Comment end -->
+
 {% endblock %}

@@ -12,6 +12,8 @@ from .views import (
     EntryUpdate,
     EntryDelete,
     CommentCreate,
+    CommentUpdate,
+    CommentDelete,
 )
 
 app_name = 'learning_logs'
@@ -28,4 +30,6 @@ urlpatterns = [
     url(r'^entry/(?P<slug>[\w-]+)/update/$', EntryUpdate.as_view(), name='entry_update'),
     url(r'^entry/(?P<slug>[\w-]+)/delete/$', EntryDelete.as_view(), name='entry_delete'),
     url(r'^entry/(?P<slug>[\w-]+)/comment-add/$', CommentCreate.as_view(), name='comment_create'),
+    url(r'^comment/(?P<pk>\d+)/update/$', CommentUpdate.as_view(), name='comment_update'),
+    url(r'^comment/(?P<pk>\d+)/delete/$', CommentDelete.as_view(), name='comment_delete'),
 ]
