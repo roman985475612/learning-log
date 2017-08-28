@@ -63,3 +63,6 @@ class Comment(models.Model):
             return self.text
         else:
             return self.text[:50] + '...'
+
+    def get_absolute_url(self):
+        return reverse('learning_logs:entry', kwargs={'slug': self.entry.slug})

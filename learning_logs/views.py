@@ -114,9 +114,6 @@ class CommentCreate(LoginRequiredMixin, CreateView):
         form.instance.entry = self.entry
         return super(CommentCreate, self).form_valid(form)
 
-    def get_success_url(self):
-        return reverse('learning_logs:entry', kwargs={'slug': self.object.entry.slug})
-
 
 class CommentUpdate(LoginRequiredMixin, UpdateView):
     model = Comment
@@ -128,9 +125,6 @@ class CommentUpdate(LoginRequiredMixin, UpdateView):
         if object.owner != self.request.user:
             raise Http404("You are not the owner")
         return object
-
-    def get_success_url(self):
-        return reverse('learning_logs:entry', kwargs={'slug': self.object.entry.slug})
 
 
 class CommentDelete(LoginRequiredMixin, DeleteView):
