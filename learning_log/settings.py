@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # My apps
     'learning_logs.apps.LearningLogsConfig',
+    'polls.apps.PollsConfig',
     'users.apps.UsersConfig',
 ]
 
