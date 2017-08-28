@@ -5,8 +5,6 @@ from .models import Question, Choice
 
 class ChoiceInline(admin.TabularInline):
     model = Choice
-    extra = 4
-    readonly_fields = ('votes',)
 
 
 @admin.register(Question)
@@ -23,4 +21,3 @@ class ChoiceAdmin(admin.ModelAdmin):
     list_display = ('text', 'question', 'votes',)
     list_filter = ['question__text']
     search_fields = ['text']
-    readonly_fields = ('votes',)

@@ -3,17 +3,9 @@
 {% block content %}
 	<h1>{{ question.text }}</h1>
 
-	{% if error_message %}
-	    <p><strong>{{ error.message }}</strong></p>
-	{% endif %}
-
-	<form action="{% url 'polls:vote' question.id %}" method="post">
+	<form action="" method="post">
 	    {% csrf_token %}
-	    {% for choice in question.choice_set.all %}
-	        <input id="choice{{ forloop.counter }}" type="radio" name="choice" value="{{ choice.id }}">
-	        <label for="choice{{ forloop.counter }}">{{ choice.text }}</label>
-	        <br>
-	    {% endfor %}
+	    {{ form.as_p }}
 	    <input type="submit" value="Vote">
 	</form>
 {% endblock %}
