@@ -1,8 +1,10 @@
-from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, Http404
-from django.urls import reverse
-from django.views.generic.list import ListView
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.detail import DetailView
+from django.views.generic.edit import FormView
+from django.views.generic.list import ListView
+from django.urls import reverse, reverse_lazy
+
 
 from .models import Question, Choice
 from .forms import VoteForm
@@ -13,27 +15,22 @@ class QuestionList(ListView):
     context_object_name = 'question_list'
 
 
-# class QuestionDetail(DetailView):
-#     model = Question
-#     context_object_name = 'question'
+class VoteFormView(FormView):
+    form_class = VoteForm
+    template_name = 'polls/question_detail.html'
 
-def question_detail(request, pk):
-    question = get_object_or_404(Question, pk=pk)
-    
-    if request.method == 'POST':
-        form = VoteForm(request.POST)
-        if form.is_valid():
-            selected_choice = Choice.objects.get(pk=request.POST['vote'])
-            selected_choice.votes += 1
-            selected_choice.save()
-            return redirect(reverse('polls:results', args=[question.id]))
-    else:
-        form = VoteForm(form_kwargs={'question': question})
+    def get_queryset(self):
+        self.question = get_object_or_404(Question, pk=self.kwargs['pk'])
+        return self.question
 
-    return render(request, 'polls/question_detail.html', {
-        'question': question,
-        'form': form,
-    })
+    def form_valid(self, form):
+        self.selected_choice = get_object_or_404(Choice, pk=self.request.POST['vote'])
+        self.selected_choice.votes += 1
+        self.selected_choice.save()
+        return super(VoteFormView, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse('polls:results', kwargs={'pk': self.kwargs['pk']})
 
 
 class ResultsView(DetailView):
