@@ -28,9 +28,10 @@ class Entry(models.Model):
     owner = models.ForeignKey(User)
     topic = models.ForeignKey(Topic)
     title = models.CharField(max_length=200, unique=True)
+    slug = models.SlugField(unique=True)
     text = models.TextField()
     date_added = models.DateTimeField(auto_now_add=True)
-    slug = models.SlugField(unique=True)
+    views = models.IntegerField(default=0)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
@@ -50,7 +51,7 @@ class Entry(models.Model):
 
     def get_absolute_url(self):
         return reverse('learning_logs:entry', kwargs={'slug': self.slug})
-    
+
 
 class Comment(models.Model):
     owner = models.ForeignKey(User)

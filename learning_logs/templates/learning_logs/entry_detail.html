@@ -6,6 +6,7 @@
   <!-- Entry begin -->
   <h1>{{ entry.title }}</h1>
   <h3>by {{ entry.owner|title }}</h3>
+  <p>views: {{ entry.views }}</p>
   {% if user == entry.owner %}
     <p>
       <a href="{% url 'learning_logs:entry_update' entry.slug %}">update</a>

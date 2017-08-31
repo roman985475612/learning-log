@@ -28,7 +28,13 @@ class TopicDetail(DetailView):
 class EntryDetail(DetailView):
     model = Entry
     context_object_name = 'entry'
-    
+
+    def get_object(self):
+        entry = super(EntryDetail, self).get_object()
+        entry.views += 1
+        entry.save()
+        return entry
+
 
 class TopicCreate(LoginRequiredMixin, CreateView):
     model = Topic
@@ -55,6 +61,7 @@ class TopicUpdate(LoginRequiredMixin, UpdateView):
 class TopicDelete(LoginRequiredMixin, DeleteView):
     model = Topic
     template_name_suffix = '_form_delete'
+    success_url = reverse_lazy('learning_logs:topics')
 
     def get_object(self):
         object = super(TopicDelete, self).get_object()
@@ -62,7 +69,6 @@ class TopicDelete(LoginRequiredMixin, DeleteView):
             raise Http404("You are not the owner")
         return object
 
-    success_url = reverse_lazy('learning_logs:topics')
 
 
 class EntryCreate(LoginRequiredMixin, CreateView):
@@ -92,7 +98,7 @@ class EntryUpdate(LoginRequiredMixin, UpdateView):
 class EntryDelete(LoginRequiredMixin, DeleteView):
     model = Entry
     template_name_suffix = '_form_delete'
-    
+
     def get_object(self):
         object = super(EntryDelete, self).get_object()
         if object.owner != self.request.user:
