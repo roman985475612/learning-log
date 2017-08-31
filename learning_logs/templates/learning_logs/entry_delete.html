@@ -1,0 +1,14 @@
+{% extends 'learning_logs/base.html' %}
+{% load bootstrap3 %}
+
+{% block header %}
+  <h1>Delete entry: {{ entry }}</h1>
+{% endblock %}
+
+{% block content %}
+  <form action="" method="post" class="form">
+    {% csrf_token %}
+    <input type="submit" class="btn btn-primary" value="OK">
+    <a href="{% url 'learning_logs:entry' entry.slug %}" class="btn btn-default">Cancel</a>
+  </form>
+{% endblock %}

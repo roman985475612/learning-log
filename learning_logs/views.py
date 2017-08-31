@@ -38,7 +38,7 @@ class EntryDetail(DetailView):
 
 class TopicCreate(LoginRequiredMixin, CreateView):
     model = Topic
-    template_name_suffix = '_form_create'
+    template_name_suffix = '_create'
     form_class = TopicForm
 
     def form_valid(self, form):
@@ -49,7 +49,7 @@ class TopicCreate(LoginRequiredMixin, CreateView):
 class TopicUpdate(LoginRequiredMixin, UpdateView):
     model = Topic
     form_class = TopicForm
-    template_name_suffix = '_form_update'
+    template_name_suffix = '_update'
 
     def get_object(self):
         object = super(TopicUpdate, self).get_object()
@@ -60,7 +60,7 @@ class TopicUpdate(LoginRequiredMixin, UpdateView):
 
 class TopicDelete(LoginRequiredMixin, DeleteView):
     model = Topic
-    template_name_suffix = '_form_delete'
+    template_name_suffix = '_delete'
     success_url = reverse_lazy('learning_logs:topics')
 
     def get_object(self):
@@ -73,8 +73,13 @@ class TopicDelete(LoginRequiredMixin, DeleteView):
 
 class EntryCreate(LoginRequiredMixin, CreateView):
     model = Entry
-    template_name_suffix = '_form_create'
+    template_name_suffix = '_create'
     form_class = EntryForm
+
+    def get_context_data(self, **kwargs):
+        context = super(EntryCreate, self).get_context_data(**kwargs)
+        context['topic'] = get_object_or_404(Topic, slug=self.kwargs['slug'])
+        return context
 
     def form_valid(self, form):
         self.topic = get_object_or_404(Topic, slug=self.kwargs['slug'])
@@ -86,7 +91,7 @@ class EntryCreate(LoginRequiredMixin, CreateView):
 class EntryUpdate(LoginRequiredMixin, UpdateView):
     model = Entry
     form_class = EntryForm
-    template_name_suffix = '_form_update'
+    template_name_suffix = '_update'
 
     def get_object(self):
         object = super(EntryUpdate, self).get_object()
@@ -97,7 +102,7 @@ class EntryUpdate(LoginRequiredMixin, UpdateView):
 
 class EntryDelete(LoginRequiredMixin, DeleteView):
     model = Entry
-    template_name_suffix = '_form_delete'
+    template_name_suffix = '_delete'
 
     def get_object(self):
         object = super(EntryDelete, self).get_object()
@@ -112,7 +117,12 @@ class EntryDelete(LoginRequiredMixin, DeleteView):
 class CommentCreate(LoginRequiredMixin, CreateView):
     model = Comment
     form_class = CommentForm
-    template_name_suffix = '_form_create'
+    template_name_suffix = '_create'
+
+    def get_context_data(self, **kwargs):
+        context = super(CommentCreate, self).get_context_data(**kwargs)
+        context['entry'] = get_object_or_404(Entry, slug=self.kwargs['slug'])
+        return context
 
     def form_valid(self, form):
         self.entry = get_object_or_404(Entry, slug=self.kwargs['slug'])
@@ -124,7 +134,7 @@ class CommentCreate(LoginRequiredMixin, CreateView):
 class CommentUpdate(LoginRequiredMixin, UpdateView):
     model = Comment
     form_class = CommentForm
-    template_name_suffix = '_form_update'
+    template_name_suffix = '_update'
 
     def get_object(self):
         object = super(CommentUpdate, self).get_object()
@@ -135,7 +145,7 @@ class CommentUpdate(LoginRequiredMixin, UpdateView):
 
 class CommentDelete(LoginRequiredMixin, DeleteView):
     model = Comment
-    template_name_suffix = '_form_delete'
+    template_name_suffix = '_delete'
 
     def get_object(self):
         object = super(CommentDelete, self).get_object()

@@ -26,7 +26,7 @@ class Topic(models.Model):
 
 class Entry(models.Model):
     owner = models.ForeignKey(User)
-    topic = models.ForeignKey(Topic)
+    topic = models.ForeignKey(Topic, on_delete=models.PROTECT)
     title = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(unique=True)
     text = models.TextField()
@@ -60,10 +60,10 @@ class Comment(models.Model):
     date_added = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        if len(self.text) < 50:
+        if len(self.text) < 40:
             return self.text
         else:
-            return self.text[:50] + '...'
+            return self.text[:40] + '...'
 
     def get_absolute_url(self):
         return reverse('learning_logs:entry', kwargs={'slug': self.entry.slug})

@@ -1,28 +1,35 @@
 {% extends 'learning_logs/base.html' %}
 
+{% block title %}{{ topic }}{% endblock %}
+
+{% block header %}
+  <h1>Topic: {{ topic|title }}</h1>
+{% endblock %}
+
 {% block content %}
-  <p>Topic: <a href="{% url 'learning_logs:topics' %}">{{ topic.slug }}</a></p>
+  <a href="{% url 'learning_logs:topics' %}" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-hand-left"></span> Back</a>
+  <br><br>
+  {% for entry in topic.entry_set.all %}
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h2 class="panel-title">{{ entry.title }}</h2>
+      </div>
+      <div class="panel-body">{{ entry.text|linebreaks|truncatewords:33 }}</div>
+      <div class="panel-footer clearfix">
+        <span>{{ entry.date_added|date:'M d, Y H:i' }}</span> by
+        <span>{{ entry.owner|title }}</span>
+        <div class="pull-right">
+          <a href="{% url 'learning_logs:entry' entry.slug %}" class="btn btn-default">Learn More</a>
+        </div>
+      </div>
+    </div>
+  {% empty %}
+    <div class="panel panel-danger">
+      <div class="panel-heading">There are no entries for this toliic yet.</div>
+    </div>
+  {% endfor %}
 
   {% if user.is_authenticated %}
-    <p><a href="{% url 'learning_logs:entry_create' topic.slug %}">Add a new entry</a></p>
+    <a href="{% url 'learning_logs:entry_create' topic.slug %}" class="btn btn-success">Add new entry</a>
   {% endif %}
-
-  <ul>
-    {% for entry in topic.entry_set.all %}
-      <li>
-        <p>
-          <a href="{% url 'learning_logs:entry' entry.slug %}">{{ entry.title }}</a> -
-          <span> by {{ entry.owner|title }}</span>
-          <span>{{ entry.date_added|date:'M d, Y H:i' }}</span>
-          {% if user == entry.owner %}
-            <a href="{% url 'learning_logs:entry_update' entry.slug %}"> update</a> -
-            <a href="{% url 'learning_logs:entry_delete' entry.slug %}"> delete</a>
-          {% endif %}
-        </p>
-        <p>{{ entry.text|linebreaks|truncatewords:33 }}</p>
-      </li>
-    {% empty %}
-      <li>There are no entries for this toliic yet.</li>
-    {% endfor %}
-  </ul>
 {% endblock %}

@@ -1,14 +1,49 @@
-{# base.html #}
-<p>
-  <a href="{% url 'learning_logs:index' %}">Learning Log</a> -
-  <a href="{% url 'learning_logs:topics' %}">Topics</a> -
-  {% if user.is_authenticated %}
-    Hello, {{ user.username|title }}. -
-    <a href="{% url 'users:logout' %}">log out</a>
-  {% else %}
-    <a href="{% url 'users:register' %}">register</a> -
-    <a href="{% url 'users:login' %}">log in</a>
-  {% endif %}
-</p>
+{% load bootstrap3 %}
 
-{% block content %}{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>{% block title %}Document{% endblock %}</title>
+  {% bootstrap_css %}
+  {% bootstrap_javascript %}
+</head>
+<body>
+  <nav class="navbar navbar-light navbar-static-top">
+    <div class="container">
+
+      <div class="navbar-header">
+        <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="glyphicon glyphicon-menu-hamburger"></span>
+        </button>
+      </div>
+
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="{% url 'learning_logs:index' %}">Home</a></li>
+          <li><a href="{% url 'learning_logs:topics' %}">Topics</a></li>
+        </ul>
+
+        <ul class="nav navbar-nav navbar-right">
+          {% if user.is_authenticated %}
+            <li><a><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;{{ user.username|title }}</a></li>
+            <li><a href="{% url 'users:logout' %}"><span class="glyphicon glyphicon-log-out"></span>&nbsp;&nbsp;log out</a></li>
+          {% else %}
+            <li><a href="{% url 'users:register' %}"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Sing Up</a></li>
+            <li><a href="{% url 'users:login' %}"><span class="glyphicon glyphicon-log-in"></span>&nbsp;&nbsp;Log In</a></li>
+          {% endif %}
+        </ul>
+
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="page-header">{% block header %}{% endblock %}</div>
+    <div>{% block content %}{% endblock %}</div>
+  </div>
+
+</body>
+</html>

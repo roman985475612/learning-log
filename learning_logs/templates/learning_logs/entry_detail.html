@@ -1,43 +1,51 @@
 {% extends 'learning_logs/base.html' %}
+{% load staticfiles %}
+
+{% block title %}{{ entry }}{% endblock %}
+
+{% block header %}
+  <h1>Entry: {{ entry|title }}</h1>
+{% endblock %}
 
 {% block content %}
-  <p><a href="{% url 'learning_logs:topic' entry.topic.slug %}">Back {{ entry.topic.title }}</a></p>
+  <a href="{% url 'learning_logs:topic' entry.topic.slug %}" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-hand-left"></span> Back</a>
 
-  <!-- Entry begin -->
-  <h1>{{ entry.title }}</h1>
-  <h3>by {{ entry.owner|title }}</h3>
-  <p>views: {{ entry.views }}</p>
-  {% if user == entry.owner %}
-    <p>
-      <a href="{% url 'learning_logs:entry_update' entry.slug %}">update</a>
-      <a href="{% url 'learning_logs:entry_delete' entry.slug %}">delete</a>
-    </p>
-  {% endif %}
-  <p>{{ entry.text|linebreaks }}</p>
-  <span>{{ entry.date_added|date:'M d, Y H:i' }}</span>
-  <!-- Entry end -->
+  <br><br>
+  <div class="lead"><span class="glyphicon glyphicon-user"></span> {{ entry.owner|title }} - Pablished on {{ entry.date_added|date:'M d, Y' }}</div>
+  <p class="text-justify">{{ entry.text|linebreaksbr }}</p>
 
-  <!-- Comment begin -->
-  <h3>Comments:</h3>
+  <div>
+    <span class="lead">{{ entry.views }} views </span>
+    {% if user == entry.owner %}
+      <a href="{% url 'learning_logs:entry_update' entry.slug %}" class="btn btn-warning"><span class="glyphicon glyphicon-edit"></span></a>
+      <a href="{% url 'learning_logs:entry_delete' entry.slug %}" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
+    {% endif %}
+  </div>
+
+  <br>
+
   {% if user.is_authenticated %}
-    <a href="{% url 'learning_logs:comment_create' entry.slug %}">Add comment</a>
+    <div>
+      <a href="{% url 'learning_logs:comment_create' entry.slug %}" class="btn btn-success">Add new comment</a>
+    </div>
   {% endif %}
-  <ul>
-    {% for comment in entry.comment_set.all %}
-      <li>
-        <p>{{ comment.date_added }} by {{ comment.owner|title }}</p>
-        {% if user == comment.owner %}
-          <p>
-            <a href="{% url 'learning_logs:comment_update' comment.pk %}">update</a>
-            <a href="{% url 'learning_logs:comment_delete' comment.pk %}">delete</a>
-          </p>
-        {% endif %}
+
+  <br>
+
+  {% for comment in entry.comment_set.all %}
+    <div class="media">
+      <div class="media-left">
+        <img src="{% static 'users/img/avatar-tiny.jpg' %}" alt="{{ comment.owner|title }}" class="media-object img-circle">
+      </div>
+      <div class="media-body">
+        <h4 class="media-heding">{{ comment.owner|title }} <small><i>Pablished on {{ comment.date_added|date:'M d, Y' }}</i></small></h4>
         <p>{{ comment.text|linebreaks }}</p>
-      </li>
-    {% empty %}
-      <li>No comments this entry.yet.</li>
-    {% endfor %}
-  </ul>
-  <!-- Comment end -->
+      </div>
+    </div>
+  {% empty %}
+    <div class="panel panel-danger">
+      <div class="panel-heading">No comments this entry yet.</div>
+    </div>
+  {% endfor %}
 
 {% endblock %}
