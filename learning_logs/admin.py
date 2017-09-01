@@ -25,14 +25,14 @@ class EntryAdmin(admin.ModelAdmin):
 
     shorted_text.short_description = "Text"
 
-    list_display = ('title', 'slug', 'shorted_text', 'owner', 'topic', 'date_added',)
-    list_display_links = ('title', 'slug', 'shorted_text',)
+    list_display = ('title', 'views', 'shorted_text', 'owner', 'topic', 'date_added',)
+    list_display_links = ('title', 'shorted_text',)
     list_filter = ('topic', 'date_added', 'owner',)
     search_fields = ['title', 'text']
     date_hierarchy = 'date_added'
     prepopulated_fields = {'slug': ('title',)}
 
-    inlines = [CommentInline] 
+    inlines = [CommentInline]
 
 
 @admin.register(Comment)

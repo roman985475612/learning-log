@@ -10,8 +10,17 @@ from django.urls import reverse, reverse_lazy
 from .models import Topic, Entry, Comment
 from .forms import TopicForm, EntryForm, CommentForm
 
+class ControlObjectOwner(object):
 
-class IndexView(TemplateView):
+    def get_object(self):
+        object = super(ControlObjectOwner, self).get_object()
+        if object.owner != self.request.user:
+            raise Http404("You are not the owner")
+        return object
+
+class IndexView(ListView):
+    queryset = Entry.objects.order_by('-views')[:3]
+    context_object_name = 'entries'
     template_name = 'learning_logs/index.html'
 
 
@@ -46,29 +55,16 @@ class TopicCreate(LoginRequiredMixin, CreateView):
         return super(TopicCreate, self).form_valid(form)
 
 
-class TopicUpdate(LoginRequiredMixin, UpdateView):
+class TopicUpdate(ControlObjectOwner, LoginRequiredMixin, UpdateView):
     model = Topic
     form_class = TopicForm
     template_name_suffix = '_update'
 
-    def get_object(self):
-        object = super(TopicUpdate, self).get_object()
-        if object.owner != self.request.user:
-            raise Http404("You are not the owner")
-        return object
 
-
-class TopicDelete(LoginRequiredMixin, DeleteView):
+class TopicDelete(ControlObjectOwner, LoginRequiredMixin, DeleteView):
     model = Topic
     template_name_suffix = '_delete'
     success_url = reverse_lazy('learning_logs:topics')
-
-    def get_object(self):
-        object = super(TopicDelete, self).get_object()
-        if object.owner != self.request.user:
-            raise Http404("You are not the owner")
-        return object
-
 
 
 class EntryCreate(LoginRequiredMixin, CreateView):
@@ -88,27 +84,15 @@ class EntryCreate(LoginRequiredMixin, CreateView):
         return super(EntryCreate, self).form_valid(form)
 
 
-class EntryUpdate(LoginRequiredMixin, UpdateView):
+class EntryUpdate(ControlObjectOwner, LoginRequiredMixin, UpdateView):
     model = Entry
     form_class = EntryForm
     template_name_suffix = '_update'
 
-    def get_object(self):
-        object = super(EntryUpdate, self).get_object()
-        if object.owner != self.request.user:
-            raise Http404("You are not the owner")
-        return object
 
-
-class EntryDelete(LoginRequiredMixin, DeleteView):
+class EntryDelete(ControlObjectOwner, LoginRequiredMixin, DeleteView):
     model = Entry
     template_name_suffix = '_delete'
-
-    def get_object(self):
-        object = super(EntryDelete, self).get_object()
-        if object.owner != self.request.user:
-            raise Http404("You are not owner")
-        return object
 
     def get_success_url(self):
         return reverse('learning_logs:topic', kwargs={'slug': self.object.topic.slug})
@@ -131,27 +115,15 @@ class CommentCreate(LoginRequiredMixin, CreateView):
         return super(CommentCreate, self).form_valid(form)
 
 
-class CommentUpdate(LoginRequiredMixin, UpdateView):
+class CommentUpdate(ControlObjectOwner, LoginRequiredMixin, UpdateView):
     model = Comment
     form_class = CommentForm
     template_name_suffix = '_update'
 
-    def get_object(self):
-        object = super(CommentUpdate, self).get_object()
-        if object.owner != self.request.user:
-            raise Http404("You are not the owner")
-        return object
 
-
-class CommentDelete(LoginRequiredMixin, DeleteView):
+class CommentDelete(ControlObjectOwner, LoginRequiredMixin, DeleteView):
     model = Comment
     template_name_suffix = '_delete'
-
-    def get_object(self):
-        object = super(CommentDelete, self).get_object()
-        if object.owner != self.request.user:
-            raise Http404("You are not the owner")
-        return object
 
     def get_success_url(self):
         return reverse('learning_logs:entry', kwargs={'slug': self.object.entry.slug})

@@ -3,10 +3,18 @@
 {% block header %}
   <div class="jumbotron text-center">
     <h1>Learning Log</h1>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Numquam dolore reprehenderit nesciunt. Asperiores eaque voluptates ut tempore sit quam optio accusamus laborum facere aliquid nesciunt libero fugit non, adipisci voluptas quaerat deleniti consectetur, consequuntur molestias culpa iusto nemo accusantium? Dolorem?</p>
-    <a href="{% url 'users:register' %}" class="btn btn-success btn-lg">Register</a>
   </div>
 {% endblock %}
 
 {% block content %}
+  <div class="row">
+    {% for entry in entries %}
+      <div class="col-lg-4 col-sm-6 col-xs-12">
+        <h3>{{ entry.title }}</h3>
+        <p><span class="glyphicon glyphicon-user"></span> {{ entry.owner|title }} - {{ entry.date_added|date:'M d, Y H:i' }}</p>
+        <p>{{ entry.text|truncatewords:33 }}</p>
+        <p><a href="{% url 'learning_logs:entry' entry.slug %}" class="btn btn-primary">Learn More</a></p>
+      </div>
+    {% endfor %}
+  </div>
 {% endblock %}

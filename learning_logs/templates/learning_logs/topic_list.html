@@ -3,11 +3,11 @@
 {% block title %}Topics{% endblock %}
 
 {% block header %}
-  <h1>Topics</h1>
+  <a href="{% url 'learning_logs:index' %}" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-chevron-left"></span> Back</a>
 {% endblock %}
 
 {% block content %}
-  <a href="{% url 'learning_logs:index' %}" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-hand-left"></span> Back</a>
+  <h1>Topics</h1>
   <br><br>
   <ul class="list-group">
     {% for topic in topics %}
