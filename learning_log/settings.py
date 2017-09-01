@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'a3t2^t4!(qza5kh4@vu8-($ueopim%sd04$w^d2rbtk0cl8hrz'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost']
 
 
 # Application definition
@@ -59,7 +59,7 @@ ROOT_URLCONF = 'learning_log.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'learning_log/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
