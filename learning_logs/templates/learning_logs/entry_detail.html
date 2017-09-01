@@ -9,17 +9,19 @@
 
 {% block content %}
   <h1>Entry: {{ entry|title }}</h1>
-  <br><br>
-  <div class="lead"><span class="glyphicon glyphicon-user"></span> {{ entry.owner|title }} - Pablished on {{ entry.date_added|date:'M d, Y' }}</div>
-  <p class="text-justify">{{ entry.text|linebreaksbr }}</p>
-
-  <div>
-    <span class="lead">{{ entry.views }} views </span>
+  <span class="lead">{{ entry.views }} views </span><br><br>
+  <div class="lead">
+    <span class="glyphicon glyphicon-user"></span> {{ entry.owner|title }} - Pablished on {{ entry.date_added|date:'M d, Y' }}
     {% if user == entry.owner %}
       <a href="{% url 'learning_logs:entry_update' entry.slug %}" class="btn btn-warning"><span class="glyphicon glyphicon-edit"></span></a>
       <a href="{% url 'learning_logs:entry_delete' entry.slug %}" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
     {% endif %}
   </div>
+  <p class="text-justify">{{ entry.text|linebreaksbr }}</p>
+
+  
+    
+  
 
   <br>
 

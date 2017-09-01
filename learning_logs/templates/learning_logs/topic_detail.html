@@ -16,6 +16,7 @@
       </div>
       <div class="panel-body">{{ entry.text|linebreaks|truncatewords:33 }}</div>
       <div class="panel-footer clearfix">
+        <span>{{ entry.views }} views </span> -
         <span>{{ entry.date_added|date:'M d, Y H:i' }}</span> by
         <span>{{ entry.owner|title }}</span>
         <div class="pull-right">
