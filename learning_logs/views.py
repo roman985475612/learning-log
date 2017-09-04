@@ -10,7 +10,7 @@ from django.urls import reverse, reverse_lazy
 from .models import Topic, Entry, Comment
 from .forms import TopicForm, EntryForm, CommentForm
 
-class ControlObjectOwner(object):
+class ControlObjectOwner:
 
     def get_object(self):
         object = super(ControlObjectOwner, self).get_object()

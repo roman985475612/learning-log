@@ -28,7 +28,7 @@
 
         <ul class="nav navbar-nav navbar-right">
           {% if user.is_authenticated %}
-            <li><a><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;{{ user.username|title }}</a></li>
+            <li><a href="{% url 'users:profile' %}"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;{{ user.username|title }}</a></li>
             <li><a href="{% url 'users:logout' %}"><span class="glyphicon glyphicon-log-out"></span>&nbsp;&nbsp;log out</a></li>
           {% else %}
             <li><a href="{% url 'users:register' %}"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Sing Up</a></li>

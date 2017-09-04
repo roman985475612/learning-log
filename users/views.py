@@ -1,9 +1,16 @@
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from django.views.generic.base import View
-from django.views.generic.edit import FormView
-from django.shortcuts import render, redirect
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import Http404
+from django.views.generic.base import TemplateView, View
+from django.views.generic.detail import DetailView
+from django.views.generic.edit import CreateView, DeleteView, FormView
+from django.views.generic.list import ListView
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
+
+from .models import Person
+from .forms import PersonForm
 
 
 class LoginView(FormView):
@@ -36,3 +43,64 @@ class RegisterView(FormView):
         )
         login(self.request, authenticated_user)
         return redirect(self.success_url) 
+
+
+class PersonDetailView(LoginRequiredMixin, TemplateView):
+
+   def get(self, request, *args, **kwargs):
+        try:
+            person = Person.objects.get(owner=self.request.user)
+        except Person.DoesNotExist:
+            return redirect('users:profile_create')
+        return render(request, 'users/person_detail.html', {'person': person})
+
+
+class PersonCreateView(LoginRequiredMixin, CreateView):
+    model = Person
+    form_class = PersonForm
+    template_name_suffix = '_create'
+    success_url = reverse_lazy('users:profile')
+
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super(PersonCreateView, self).form_valid(form)
+
+
+class PersonUpdateView(LoginRequiredMixin, View):
+    form_class = PersonForm
+    template_name = 'users/person_update.html'
+
+    def get(self, request, *args, **kwargs):
+        try:
+            person = Person.objects.get(owner=self.request.user)
+        except Person.DoesNotExist:
+            return redirect('users:profile_create')
+
+        form = self.form_class(instance=person) 
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request, *args, **kwargs):
+        person = Person.objects.get(owner=self.request.user)
+        form = self.form_class(instance=person, data=request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('users:profile')
+
+        return render(request, self.template_name, {'form': form})
+
+
+class PersonDeleteView(LoginRequiredMixin, View):
+    template_name = 'users/person_delete.html'
+
+    def get(self, request, *args, **kwargs):
+        try:
+            person = Person.objects.get(owner=self.request.user)
+        except Person.DoesNotExist:
+            return redirect('users:profile_create')
+
+        return render(request, self.template_name)
+
+    def post(self, request, *args, **kwargs):
+        person = Person.objects.get(owner=self.request.user)
+        person.delete()   
+        return redirect('learning_logs:index')
