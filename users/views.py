@@ -45,14 +45,26 @@ class RegisterView(FormView):
         return redirect(self.success_url) 
 
 
-class PersonDetailView(LoginRequiredMixin, TemplateView):
+class PersonMixins(View):
+    def get_object(self, request, *args, **kwargs):
+        self.person = Person.objects.get(owner=self.request.user)
+        return self.person
 
-   def get(self, request, *args, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
         try:
-            person = Person.objects.get(owner=self.request.user)
+            person = self.get_object(request)
         except Person.DoesNotExist:
             return redirect('users:profile_create')
-        return render(request, 'users/person_detail.html', {'person': person})
+        return super(PersonMixins, self).dispatch(request)
+
+
+class PersonDetailView(PersonMixins, LoginRequiredMixin, TemplateView):
+    template_name = 'users/person_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PersonDetailView, self).get_context_data(**kwargs)
+        context['person'] = self.get_object(self.request)
+        return context
 
 
 class PersonCreateView(LoginRequiredMixin, CreateView):
@@ -66,21 +78,17 @@ class PersonCreateView(LoginRequiredMixin, CreateView):
         return super(PersonCreateView, self).form_valid(form)
 
 
-class PersonUpdateView(LoginRequiredMixin, View):
+class PersonUpdateView(PersonMixins, LoginRequiredMixin, View):
     form_class = PersonForm
     template_name = 'users/person_update.html'
 
     def get(self, request, *args, **kwargs):
-        try:
-            person = Person.objects.get(owner=self.request.user)
-        except Person.DoesNotExist:
-            return redirect('users:profile_create')
-
+        person = self.get_object(request)
         form = self.form_class(instance=person) 
         return render(request, self.template_name, {'form': form})
 
     def post(self, request, *args, **kwargs):
-        person = Person.objects.get(owner=self.request.user)
+        person = self.get_object(request)
         form = self.form_class(instance=person, data=request.POST)
         if form.is_valid():
             form.save()
@@ -89,18 +97,13 @@ class PersonUpdateView(LoginRequiredMixin, View):
         return render(request, self.template_name, {'form': form})
 
 
-class PersonDeleteView(LoginRequiredMixin, View):
+class PersonDeleteView(PersonMixins, LoginRequiredMixin, View):
     template_name = 'users/person_delete.html'
 
     def get(self, request, *args, **kwargs):
-        try:
-            person = Person.objects.get(owner=self.request.user)
-        except Person.DoesNotExist:
-            return redirect('users:profile_create')
-
         return render(request, self.template_name)
 
     def post(self, request, *args, **kwargs):
-        person = Person.objects.get(owner=self.request.user)
+        person = self.get_object(request)
         person.delete()   
         return redirect('learning_logs:index')

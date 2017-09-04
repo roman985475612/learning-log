@@ -6,6 +6,6 @@
     {% csrf_token %}
     {% bootstrap_form form %}
     <input type="submit" class="btn btn-primary" value="OK">
-    <a href="{% url 'learning_logs:index' %}" class="btn btn-default">Cancel</a>
+    <a href="{% url 'users:profile' %}" class="btn btn-default">Cancel</a>
   </form>
 {% endblock %}
