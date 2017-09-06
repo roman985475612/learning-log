@@ -64,11 +64,23 @@ class PersonAnswerDetailView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         self.last_answers = []
-
         answers = Answer.objects.filter(owner=self.request.user)
         questions = answers.values_list('question__text', flat=True).distinct()
-        
         for question in questions:
             self.last_answers.append(answers.filter(question__text=question).order_by('date_added').last())
-
+        
         return self.last_answers
+
+
+class MostPopularAnswerDetailView(LoginRequiredMixin, ListView):
+    template_name = 'polls/most_popular_answer_detail.html'
+    context_object_name = 'answers'
+
+    def get_queryset(self):
+        self.most_popular_answers = []
+        answers = Answer.objects.all()
+        questions = answers.values_list('question__text', flat=True).distinct()
+        for question in questions:
+            self.most_popular_answers.append(answers.filter(question__text=question).order_by('choice__votes').last())
+        
+        return self.most_popular_answers
