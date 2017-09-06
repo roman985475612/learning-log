@@ -10,13 +10,27 @@ from django.urls import reverse, reverse_lazy
 from .models import Topic, Entry, Comment
 from .forms import TopicForm, EntryForm, CommentForm
 
-class ControlObjectOwner:
+
+class OwnerVerificationMixins:
 
     def get_object(self):
-        object = super(ControlObjectOwner, self).get_object()
+        object = super(OwnerVerificationMixins, self).get_object()
         if object.owner != self.request.user:
             raise Http404("You are not the owner")
         return object
+
+
+class TopicMixins:
+    model = Topic
+
+
+class EntryMixins:
+    model = Entry
+
+
+class CommentMixins:
+    model = Comment
+
 
 class IndexView(ListView):
     queryset = Entry.objects.order_by('-views')[:3]
@@ -24,18 +38,15 @@ class IndexView(ListView):
     template_name = 'learning_logs/index.html'
 
 
-class TopicList(ListView):
-    model = Topic
+class TopicList(TopicMixins, ListView):
     context_object_name = 'topics'
 
 
-class TopicDetail(DetailView):
-    model = Topic
+class TopicDetail(TopicMixins, DetailView):
     context_object_name = 'topic'
 
 
-class EntryDetail(DetailView):
-    model = Entry
+class EntryDetail(EntryMixins, DetailView):
     context_object_name = 'entry'
 
     def get_object(self):
@@ -45,8 +56,7 @@ class EntryDetail(DetailView):
         return entry
 
 
-class TopicCreate(LoginRequiredMixin, CreateView):
-    model = Topic
+class TopicCreate(TopicMixins, LoginRequiredMixin, CreateView):
     template_name_suffix = '_create'
     form_class = TopicForm
 
@@ -55,20 +65,17 @@ class TopicCreate(LoginRequiredMixin, CreateView):
         return super(TopicCreate, self).form_valid(form)
 
 
-class TopicUpdate(ControlObjectOwner, LoginRequiredMixin, UpdateView):
-    model = Topic
+class TopicUpdate(TopicMixins, OwnerVerificationMixins, LoginRequiredMixin, UpdateView):
     form_class = TopicForm
     template_name_suffix = '_update'
 
 
-class TopicDelete(ControlObjectOwner, LoginRequiredMixin, DeleteView):
-    model = Topic
+class TopicDelete(TopicMixins, OwnerVerificationMixins, LoginRequiredMixin, DeleteView):
     template_name_suffix = '_delete'
     success_url = reverse_lazy('learning_logs:topics')
 
 
-class EntryCreate(LoginRequiredMixin, CreateView):
-    model = Entry
+class EntryCreate(EntryMixins, LoginRequiredMixin, CreateView):
     template_name_suffix = '_create'
     form_class = EntryForm
 
@@ -84,22 +91,19 @@ class EntryCreate(LoginRequiredMixin, CreateView):
         return super(EntryCreate, self).form_valid(form)
 
 
-class EntryUpdate(ControlObjectOwner, LoginRequiredMixin, UpdateView):
-    model = Entry
+class EntryUpdate(EntryMixins, OwnerVerificationMixins, LoginRequiredMixin, UpdateView):
     form_class = EntryForm
     template_name_suffix = '_update'
 
 
-class EntryDelete(ControlObjectOwner, LoginRequiredMixin, DeleteView):
-    model = Entry
+class EntryDelete(EntryMixins, OwnerVerificationMixins, LoginRequiredMixin, DeleteView):
     template_name_suffix = '_delete'
 
     def get_success_url(self):
         return reverse('learning_logs:topic', kwargs={'slug': self.object.topic.slug})
 
 
-class CommentCreate(LoginRequiredMixin, CreateView):
-    model = Comment
+class CommentCreate(CommentMixins, LoginRequiredMixin, CreateView):
     form_class = CommentForm
     template_name_suffix = '_create'
 
@@ -115,14 +119,12 @@ class CommentCreate(LoginRequiredMixin, CreateView):
         return super(CommentCreate, self).form_valid(form)
 
 
-class CommentUpdate(ControlObjectOwner, LoginRequiredMixin, UpdateView):
-    model = Comment
+class CommentUpdate(CommentMixins, OwnerVerificationMixins, LoginRequiredMixin, UpdateView):
     form_class = CommentForm
     template_name_suffix = '_update'
 
 
-class CommentDelete(ControlObjectOwner, LoginRequiredMixin, DeleteView):
-    model = Comment
+class CommentDelete(CommentMixins, OwnerVerificationMixins, LoginRequiredMixin, DeleteView):
     template_name_suffix = '_delete'
 
     def get_success_url(self):

@@ -3,13 +3,11 @@
 
 {% block title %}{{ entry }}{% endblock %}
 
-{% block header %}
-  <a href="{% url 'learning_logs:topic' entry.topic.slug %}" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-chevron-left"></span> Back</a>
-{% endblock %}
-
 {% block content %}
   <h1>Entry: {{ entry|title }}</h1>
-  <span class="lead">{{ entry.views }} views </span><br><br>
+  <span class="lead">{{ entry.views }} views </span>
+  <br>
+  <br>
   <div class="lead">
     <span class="glyphicon glyphicon-user"></span> {{ entry.owner|title }} - Pablished on {{ entry.date_added|date:'M d, Y' }}
     {% if user == entry.owner %}
@@ -18,21 +16,13 @@
     {% endif %}
   </div>
   <p class="text-justify">{{ entry.text|linebreaksbr }}</p>
-
-  
-    
-  
-
   <br>
-
   {% if user.is_authenticated %}
     <div>
       <a href="{% url 'learning_logs:comment_create' entry.slug %}" class="btn btn-success">Add new comment</a>
     </div>
   {% endif %}
-
   <br>
-
   {% for comment in entry.comment_set.all %}
     <div class="media">
       <div class="media-left">
@@ -51,9 +41,8 @@
       </div>
     </div>
   {% empty %}
-    <div class="panel panel-danger">
+    <div class="panel panel-default">
       <div class="panel-heading">No comments this entry yet.</div>
     </div>
   {% endfor %}
-
 {% endblock %}
