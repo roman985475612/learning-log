@@ -4,6 +4,10 @@
 
 {% block content %}
   <h1>Topic: {{ topic }}</h1>
+  {% if user == topic.owner %}
+    <a href="{% url 'learning_logs:topic_update' topic.slug %}" class="btn btn-warning btn-sm"><span class="glyphicon glyphicon-edit"></span></a>
+    <a href="{% url 'learning_logs:topic_delete' topic.slug %}" class="btn btn-danger btn-sm"><span class="glyphicon glyphicon-trash"></span></a>
+  {% endif %}
   <br><br>
   {% for entry in topic.entry_set.all %}
     <div class="panel panel-primary">

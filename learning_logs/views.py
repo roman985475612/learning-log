@@ -20,33 +20,24 @@ class OwnerVerificationMixins:
         return object
 
 
-class TopicMixins:
-    model = Topic
-
-
-class EntryMixins:
-    model = Entry
-
-
-class CommentMixins:
-    model = Comment
-
-
 class IndexView(ListView):
     queryset = Entry.objects.order_by('-views')[:3]
     context_object_name = 'entries'
     template_name = 'learning_logs/index.html'
 
 
-class TopicList(TopicMixins, ListView):
+class TopicList(ListView):
+    model = Topic
     context_object_name = 'topics'
 
 
-class TopicDetail(TopicMixins, DetailView):
+class TopicDetail(DetailView):
+    model = Topic
     context_object_name = 'topic'
 
 
-class EntryDetail(EntryMixins, DetailView):
+class EntryDetail(DetailView):
+    model = Entry
     context_object_name = 'entry'
 
     def get_object(self):
@@ -56,7 +47,8 @@ class EntryDetail(EntryMixins, DetailView):
         return entry
 
 
-class TopicCreate(TopicMixins, LoginRequiredMixin, CreateView):
+class TopicCreate(LoginRequiredMixin, CreateView):
+    model = Topic
     template_name_suffix = '_create'
     form_class = TopicForm
 
@@ -65,66 +57,80 @@ class TopicCreate(TopicMixins, LoginRequiredMixin, CreateView):
         return super(TopicCreate, self).form_valid(form)
 
 
-class TopicUpdate(TopicMixins, OwnerVerificationMixins, LoginRequiredMixin, UpdateView):
+class TopicUpdate(OwnerVerificationMixins, LoginRequiredMixin, UpdateView):
+    model = Topic
     form_class = TopicForm
     template_name_suffix = '_update'
 
 
-class TopicDelete(TopicMixins, OwnerVerificationMixins, LoginRequiredMixin, DeleteView):
+class TopicDelete(OwnerVerificationMixins, LoginRequiredMixin, DeleteView):
+    model = Topic
     template_name_suffix = '_delete'
     success_url = reverse_lazy('learning_logs:topics')
 
 
-class EntryCreate(EntryMixins, LoginRequiredMixin, CreateView):
+class EntryCreate(LoginRequiredMixin, CreateView):
+    model = Entry
     template_name_suffix = '_create'
     form_class = EntryForm
 
+    def get_queryset(self):
+        self.topic = get_object_or_404(Topic, slug=self.kwargs['slug'])
+        return self.topic
+
     def get_context_data(self, **kwargs):
         context = super(EntryCreate, self).get_context_data(**kwargs)
-        context['topic'] = get_object_or_404(Topic, slug=self.kwargs['slug'])
+        context['topic'] = self.get_queryset()
         return context
 
     def form_valid(self, form):
-        self.topic = get_object_or_404(Topic, slug=self.kwargs['slug'])
         form.instance.owner = self.request.user
-        form.instance.topic = self.topic
+        form.instance.topic = self.get_queryset()
         return super(EntryCreate, self).form_valid(form)
 
 
-class EntryUpdate(EntryMixins, OwnerVerificationMixins, LoginRequiredMixin, UpdateView):
+class EntryUpdate(OwnerVerificationMixins, LoginRequiredMixin, UpdateView):
+    model = Entry
     form_class = EntryForm
     template_name_suffix = '_update'
 
 
-class EntryDelete(EntryMixins, OwnerVerificationMixins, LoginRequiredMixin, DeleteView):
+class EntryDelete(OwnerVerificationMixins, LoginRequiredMixin, DeleteView):
+    model = Entry
     template_name_suffix = '_delete'
 
     def get_success_url(self):
         return reverse('learning_logs:topic', kwargs={'slug': self.object.topic.slug})
 
 
-class CommentCreate(CommentMixins, LoginRequiredMixin, CreateView):
+class CommentCreate(LoginRequiredMixin, CreateView):
+    model = Comment
     form_class = CommentForm
     template_name_suffix = '_create'
 
+    def get_queryset(self):
+        self.entry = get_object_or_404(Entry, slug=self.kwargs['slug'])
+        return self.entry
+
     def get_context_data(self, **kwargs):
         context = super(CommentCreate, self).get_context_data(**kwargs)
-        context['entry'] = get_object_or_404(Entry, slug=self.kwargs['slug'])
+        context['entry'] = self.get_queryset()
         return context
 
     def form_valid(self, form):
-        self.entry = get_object_or_404(Entry, slug=self.kwargs['slug'])
         form.instance.owner = self.request.user
-        form.instance.entry = self.entry
+        form.instance.entry = self.get_queryset()
         return super(CommentCreate, self).form_valid(form)
 
 
-class CommentUpdate(CommentMixins, OwnerVerificationMixins, LoginRequiredMixin, UpdateView):
+class CommentUpdate(OwnerVerificationMixins, LoginRequiredMixin, UpdateView):
+    model = Comment
     form_class = CommentForm
     template_name_suffix = '_update'
 
 
-class CommentDelete(CommentMixins, OwnerVerificationMixins, LoginRequiredMixin, DeleteView):
+class CommentDelete(OwnerVerificationMixins, LoginRequiredMixin, DeleteView):
+    model = Comment
     template_name_suffix = '_delete'
 
     def get_success_url(self):

@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'bootstrap3',
     # My apps
     'learning_logs.apps.LearningLogsConfig',
+    'polls.apps.PollsConfig',
     'users.apps.UsersConfig',
 ]
 
