@@ -13,7 +13,7 @@
         <h3>{{ entry.title }}</h3>
         <p><span class="glyphicon glyphicon-user"></span> {{ entry.owner|title }} - {{ entry.date_added|date:'M d, Y H:i' }}</p>
         <p>{{ entry.text|truncatewords:33 }}</p>
-        <p><a href="{% url 'learning_logs:entry' entry.slug %}" class="btn btn-primary">Learn More</a></p>
+        <p><a href="{% url 'learning_logs:entry' entry.slug %}" class="btn btn-primary">Read More</a></p>
       </div>
     {% endfor %}
   </div>
