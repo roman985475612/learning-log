@@ -4,9 +4,6 @@
 {% block title %}{{ entry }}{% endblock %}
 
 {% block content %}
-  {% if entry.image %}
-    <img src="{{ entry.image.url }}" alt="{{ entry.title }}">
-  {% endif %}
   <h1>
     {{ entry|title }}
     {% if user == entry.owner %}
@@ -15,6 +12,9 @@
     {% endif %}
     <div><small><i>{{ entry.views }} views </i></small></div>
   </h1>
+  {% if entry.image %}
+    <img src="{{ entry.image.url }}" alt="{{ entry.title }}" class="img-thumbnail">
+  {% endif %}
   <div class="media">
     <div class="media-left">
       <img src="{% static 'img/avatar-tiny.jpg' %}" alt="" class="media-object img-circle">

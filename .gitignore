@@ -103,3 +103,10 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+# image
+media/
+*.jpg
+*.jpeg
+*.png
+*.bnp

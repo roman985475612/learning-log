@@ -86,6 +86,7 @@ class EntryCreate(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.owner = self.request.user
         form.instance.topic = self.get_queryset()
+        form.save()
         return super(EntryCreate, self).form_valid(form)
 
 
@@ -93,6 +94,10 @@ class EntryUpdate(OwnerVerificationMixins, LoginRequiredMixin, UpdateView):
     model = Entry
     form_class = EntryForm
     template_name_suffix = '_update'
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
 
 
 class EntryDelete(OwnerVerificationMixins, LoginRequiredMixin, DeleteView):

@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 
+{% block title %}Home{% endblock %}
+
 {% block header %}
   <div class="jumbotron text-center">
     <h1>Learning Log</h1>
@@ -12,7 +14,7 @@
     {% for entry in entries %}
       <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
         <div class="thumbnail">
-          <a href="{{ entry.get_absolute.url }}">
+          <a href="{% url 'learning_logs:entry' entry.slug %}">
             {% if entry.image %}
               <img src="{{ entry.image.url }}" alt="{{ entry.title }}" class="media-object img-rounded" heigth="80">
             {% else %}
@@ -23,8 +25,14 @@
                 <div><small><i>{{ entry.owner|title }} - {{ entry.date_added|date:'M d, Y H:i' }}</i></small></div>
                 <b>{{ entry.title }}</b>
                 <div>
-                  <small><span class="glyphicon glyphicon-eye-open"></span> {{ entry.views }}</small>
-                  <small><span class="glyphicon glyphicon-pencil"></span> {{ entry.comment_set.all.count }}</small>
+                  <small>
+                    <span class="glyphicon glyphicon-eye-open"></span> {{ entry.views }}
+                    <span class="glyphicon glyphicon-pencil"></span> {{ entry.comment_set.all.count }}
+                    {% if user == entry.owner %}
+                      <a href="{% url 'learning_logs:entry_update' entry.slug %}" class=""><span class="glyphicon glyphicon-edit"></span></a>
+                      <a href="{% url 'learning_logs:entry_delete' entry.slug %}" class=""><span class="glyphicon glyphicon-trash"></span></a>
+                    {% endif %}
+                  </small>
                 </div>
               </h3>
               <p>{{ entry.text|linebreaks|truncatewords:15 }}</p>
