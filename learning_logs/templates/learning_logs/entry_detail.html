@@ -5,7 +5,7 @@
 
 {% block content %}
   {% if entry.image %}
-    <img src="{{ entry.image.url }}" alt="">
+    <img src="{{ entry.image.url }}" alt="{{ entry.title }}">
   {% endif %}
   <h1>
     {{ entry|title }}

@@ -21,7 +21,7 @@ class OwnerVerificationMixins:
 
 
 class IndexView(ListView):
-    queryset = Entry.objects.order_by('-views')[:3]
+    queryset = Entry.objects.order_by('-views')[:4]
     context_object_name = 'entries'
     template_name = 'learning_logs/index.html'
 
