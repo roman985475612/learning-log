@@ -1,32 +1,50 @@
-{% extends 'learning_logs/base.html' %}
+{% extends 'base.html' %}
 {% load staticfiles %}
 
 {% block title %}{{ entry }}{% endblock %}
 
 {% block content %}
-  <h1>Entry: {{ entry|title }}</h1>
-  <span class="lead">{{ entry.views }} views </span>
-  <br>
-  <br>
-  <div class="lead">
-    <span class="glyphicon glyphicon-user"></span> {{ entry.owner|title }} - Pablished on {{ entry.date_added|date:'M d, Y' }}
+  {% if entry.image %}
+    <img src="{{ entry.image.url }}" alt="">
+  {% endif %}
+  <h1>
+    {{ entry|title }}
     {% if user == entry.owner %}
-      <a href="{% url 'learning_logs:entry_update' entry.slug %}" class="btn btn-warning"><span class="glyphicon glyphicon-edit"></span></a>
-      <a href="{% url 'learning_logs:entry_delete' entry.slug %}" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
+      <a href="{% url 'learning_logs:entry_update' entry.slug %}" class="btn btn-default"><span class="glyphicon glyphicon-edit"></span></a>
+      <a href="{% url 'learning_logs:entry_delete' entry.slug %}" class="btn btn-default"><span class="glyphicon glyphicon-trash"></span></a>
     {% endif %}
+    <div><small><i>{{ entry.views }} views </i></small></div>
+  </h1>
+  <div class="media">
+    <div class="media-left">
+      <img src="{% static 'img/avatar-tiny.jpg' %}" alt="" class="media-object img-circle">
+    </div>
+    <div class="media-body">
+      <div class="media-heading">
+        <h4>
+          {{ entry.owner|title }}
+          <div>
+            <small><i>Pablished on {{ entry.date_added|date:'M d, Y' }}</i></small>
+          </div>
+        </h4>
+      </div>
+    </div>
   </div>
+  <br>
   <p class="text-justify">{{ entry.text|linebreaksbr }}</p>
   <br>
   {% if user.is_authenticated %}
     <div>
       <a href="{% url 'learning_logs:comment_create' entry.slug %}" class="btn btn-success">Add new comment</a>
     </div>
+    <br>
   {% endif %}
-  <br>
+
+  <h4>Comments:</h4>
   {% for comment in entry.comment_set.all %}
     <div class="media">
       <div class="media-left">
-        <img src="{% static 'users/img/avatar-tiny.jpg' %}" alt="{{ comment.owner|title }}" class="media-object img-circle">
+        <img src="{% static 'img/avatar-tiny.jpg' %}" alt="{{ comment.owner|title }}" class="media-object img-circle">
       </div>
       <div class="media-body">
         <h4 class="media-heding">

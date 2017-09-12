@@ -1,36 +1,42 @@
-{% extends 'learning_logs/base.html' %}
+{% extends 'base.html' %}
+{% load staticfiles %}
 
 {% block title %}{{ topic }}{% endblock %}
 
 {% block content %}
-  <h1>Topic: {{ topic }}</h1>
-  {% if user == topic.owner %}
-    <a href="{% url 'learning_logs:topic_update' topic.slug %}" class="btn btn-warning btn-sm"><span class="glyphicon glyphicon-edit"></span></a>
-    <a href="{% url 'learning_logs:topic_delete' topic.slug %}" class="btn btn-danger btn-sm"><span class="glyphicon glyphicon-trash"></span></a>
-  {% endif %}
-  <br><br>
-  {% for entry in topic.entry_set.all %}
-    <div class="panel panel-primary">
-      <div class="panel-heading">
-        <h2 class="panel-title">{{ entry.title }}</h2>
-      </div>
-      <div class="panel-body">{{ entry.text|linebreaks|truncatewords:33 }}</div>
-      <div class="panel-footer clearfix">
-        <span>{{ entry.views }} views </span> -
-        <span>{{ entry.date_added|date:'M d, Y H:i' }}</span> by
-        <span>{{ entry.owner|title }}</span>
-        <div class="pull-right">
-          <a href="{% url 'learning_logs:entry' entry.slug %}" class="btn btn-default">Learn More</a>
+
+  <div class="row">
+    {% for entry in topic.entry_set.all %}
+      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+        <div class="thumbnail">
+          <a href="{% url 'learning_logs:entry' entry.slug %}">
+            {% if entry.image %}
+              <img src="{{ entry.image.url }}" alt="{{ entry.title }}" class="media-object img-rounded" heigth="80">
+            {% else %}
+              <img src="{% static 'img/photo_not_found.jpg' %}" alt="photo_not_found" class="media-object img-rounded" heigth="80">
+            {% endif %}
+            <div class="caption">
+              <h3>
+                <div><small><i>{{ entry.owner|title }} - {{ entry.date_added|date:'M d, Y H:i' }}</i></small></div>
+                <b>{{ entry.title }}</b>
+                <div>
+                  <small><span class="glyphicon glyphicon-eye-open"></span> {{ entry.views }}</small>
+                </div>
+              </h3>
+              <p>{{ entry.text|linebreaks|truncatewords:15 }}</p>
+            </div>
+          </a>
         </div>
       </div>
-    </div>
-  {% empty %}
-    <div class="panel panel-default">
-      <div class="panel-heading">There are no entries for this toliic yet.</div>
-    </div>
-  {% endfor %}
+    {% empty %}
+      <div class="panel panel-default">
+        <div class="panel-heading">There are no entries for this toliic yet.</div>
+      </div>
+    {% endfor %}
+  </div>
 
   {% if user.is_authenticated %}
     <a href="{% url 'learning_logs:entry_create' topic.slug %}" class="btn btn-success">Add new entry</a>
   {% endif %}
+
 {% endblock %}
