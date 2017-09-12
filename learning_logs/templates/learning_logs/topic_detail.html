@@ -21,6 +21,7 @@
                 <b>{{ entry.title }}</b>
                 <div>
                   <small><span class="glyphicon glyphicon-eye-open"></span> {{ entry.views }}</small>
+                  <small><span class="glyphicon glyphicon-pencil"></span> {{ entry.comment_set.all.count }}</small>
                 </div>
               </h3>
               <p>{{ entry.text|linebreaks|truncatewords:15 }}</p>

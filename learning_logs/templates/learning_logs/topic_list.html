@@ -8,7 +8,7 @@
   <ul class="list-group">
     {% for topic in topics %}
       <li class="list-group-item lead">
-        <a href="{% url 'learning_logs:topic' topic.slug %}">{{ topic }} <span class="badge">10</span></a>
+        <a href="{% url 'learning_logs:topic' topic.slug %}">{{ topic }} <span class="badge">{{ topic.entry_set.all.count }}</span></a>
       </li>
     {% empty %}
       <li class="list-group-item list-group-item-default">No topics have been added yet.</li>

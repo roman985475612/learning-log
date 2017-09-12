@@ -1,11 +1,15 @@
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.urls import reverse
 
+def get_sentinel_user():
+    return get_user_model().objects.get_or_create(username='deleted')[0]
+
 
 class Topic(models.Model):
-    owner = models.ForeignKey(User)
+    owner = models.ForeignKey(User, on_delete=models.SET(get_sentinel_user))
     title = models.CharField(max_length=200, unique=True)
     date_added = models.DateTimeField(auto_now_add=True)
     slug = models.SlugField(unique=True)
@@ -25,7 +29,7 @@ class Topic(models.Model):
 
 
 class Entry(models.Model):
-    owner = models.ForeignKey(User)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
     topic = models.ForeignKey(Topic, on_delete=models.PROTECT)
     title = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(unique=True)
@@ -55,8 +59,8 @@ class Entry(models.Model):
 
 
 class Comment(models.Model):
-    owner = models.ForeignKey(User)
-    entry = models.ForeignKey(Entry)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    entry = models.ForeignKey(Entry, on_delete=models.CASCADE)
     text = models.TextField()
     date_added = models.DateTimeField(auto_now=True)
 

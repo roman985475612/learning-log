@@ -13,8 +13,8 @@ class TopicForm(forms.ModelForm):
 class EntryForm(forms.ModelForm):
     class Meta:
         model = Entry
-        fields = ['title', 'text']
-        labels = {'title': '', 'text': ''}
+        fields = ['image', 'title', 'text']
+        labels = {'image': '', 'title': '', 'text': ''}
         widgets = {'text': forms.Textarea(attrs={'cols': 40})}
 
 
