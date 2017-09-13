@@ -4,6 +4,9 @@
 {% block title %}{{ entry }}{% endblock %}
 
 {% block content %}
+  {% if entry.image %}
+    <img src="{{ entry.image.url }}" alt="{{ entry.title }}" class="img-thumbnail" height='150'>
+  {% endif %}
   <h1>
     {{ entry|title }}
     {% if user == entry.owner %}
@@ -12,13 +15,10 @@
     {% endif %}
     <div><small><i>{{ entry.views }} views </i></small></div>
   </h1>
-  {% if entry.image %}
-    <img src="{{ entry.image.url }}" alt="{{ entry.title }}" class="img-thumbnail">
-  {% endif %}
   <div class="media">
     <div class="media-left">
-      {% if person.image %}
-        <img src="{{ person.image.url }}" class="media-object img-circle" height='100px' width="100px">
+      {% if entry.owner.person.first.image %}
+        <img src="{{ entry.owner.person.first.image.url }}" class="media-object img-circle" height='80px' width="80px">
       {% else %}
         <img src="{% static 'img/avatar-tiny.jpg' %}" class="media-object img-circle" heigth="64">
       {% endif %}
@@ -48,8 +48,8 @@
   {% for comment in entry.comment_set.all %}
     <div class="media">
       <div class="media-left">
-        {% if person.image %}
-          <img src="{{ person.image.url }}" class="media-object img-circle" height='50px' width="50px">
+        {% if comment.owner.person.first.image %}
+          <img src="{{ comment.owner.person.first.image.url }}" class="media-object img-circle" height='60px' width="60px">
         {% else %}
           <img src="{% static 'img/avatar-tiny.jpg' %}" class="media-object img-circle">
         {% endif %}

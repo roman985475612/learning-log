@@ -16,7 +16,7 @@ from .forms import TopicForm, EntryForm, CommentForm
 class OwnerVerificationMixins:
 
     def get_object(self):
-        object = super(OwnerVerificationMixins, self).get_object()
+        object = super().get_object()
         if object.owner != self.request.user:
             raise Http404("You are not the owner")
         return object
@@ -38,19 +38,9 @@ class TopicDetail(DetailView):
     context_object_name = 'topic'
 
 
-class EntryDetail(ListView):
+class EntryDetail(DetailView):
+    model = Entry
     context_object_name = 'entry'
-    template_name = 'learning_logs/entry_detail.html'
-
-    def get_queryset(self):
-        self.entry = get_object_or_404(Entry, slug=self.kwargs['slug'])
-        self.person = Person.objects.get(owner=self.entry.owner)
-        return self.entry
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['person'] = self.person
-        return context
 
     def get_object(self):
         entry = super().get_object()
@@ -66,7 +56,7 @@ class TopicCreate(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
-        return super(TopicCreate, self).form_valid(form)
+        return super().form_valid(form)
 
 
 class TopicUpdate(OwnerVerificationMixins, LoginRequiredMixin, UpdateView):
@@ -91,7 +81,7 @@ class EntryCreate(LoginRequiredMixin, CreateView):
         return self.topic
 
     def get_context_data(self, **kwargs):
-        context = super(EntryCreate, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context['topic'] = self.get_queryset()
         return context
 
@@ -99,7 +89,7 @@ class EntryCreate(LoginRequiredMixin, CreateView):
         form.instance.owner = self.request.user
         form.instance.topic = self.get_queryset()
         form.save()
-        return super(EntryCreate, self).form_valid(form)
+        return super().form_valid(form)
 
 
 class EntryUpdate(OwnerVerificationMixins, LoginRequiredMixin, UpdateView):
@@ -130,14 +120,14 @@ class CommentCreate(LoginRequiredMixin, CreateView):
         return self.entry
 
     def get_context_data(self, **kwargs):
-        context = super(CommentCreate, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context['entry'] = self.get_queryset()
         return context
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
         form.instance.entry = self.get_queryset()
-        return super(CommentCreate, self).form_valid(form)
+        return super().form_valid(form)
 
 
 class CommentUpdate(OwnerVerificationMixins, LoginRequiredMixin, UpdateView):
