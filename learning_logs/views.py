@@ -7,7 +7,9 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 from django.urls import reverse, reverse_lazy
 
-from .models import Topic, Entry, Comment
+from learning_logs.models import Topic, Entry, Comment
+from users.models import Person
+
 from .forms import TopicForm, EntryForm, CommentForm
 
 
@@ -36,12 +38,22 @@ class TopicDetail(DetailView):
     context_object_name = 'topic'
 
 
-class EntryDetail(DetailView):
-    model = Entry
+class EntryDetail(ListView):
     context_object_name = 'entry'
+    template_name = 'learning_logs/entry_detail.html'
+
+    def get_queryset(self):
+        self.entry = get_object_or_404(Entry, slug=self.kwargs['slug'])
+        self.person = Person.objects.get(owner=self.entry.owner)
+        return self.entry
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['person'] = self.person
+        return context
 
     def get_object(self):
-        entry = super(EntryDetail, self).get_object()
+        entry = super().get_object()
         entry.views += 1
         entry.save()
         return entry

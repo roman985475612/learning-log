@@ -4,6 +4,7 @@ from django.db import models
 from django.template.defaultfilters import slugify
 from django.urls import reverse
 
+
 def get_sentinel_user():
     return get_user_model().objects.get_or_create(username='deleted')[0]
 

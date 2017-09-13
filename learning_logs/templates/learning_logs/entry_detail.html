@@ -17,7 +17,11 @@
   {% endif %}
   <div class="media">
     <div class="media-left">
-      <img src="{% static 'img/avatar-tiny.jpg' %}" alt="" class="media-object img-circle">
+      {% if person.image %}
+        <img src="{{ person.image.url }}" class="media-object img-circle" height='100px' width="100px">
+      {% else %}
+        <img src="{% static 'img/avatar-tiny.jpg' %}" class="media-object img-circle" heigth="64">
+      {% endif %}
     </div>
     <div class="media-body">
       <div class="media-heading">
@@ -44,7 +48,11 @@
   {% for comment in entry.comment_set.all %}
     <div class="media">
       <div class="media-left">
-        <img src="{% static 'img/avatar-tiny.jpg' %}" alt="{{ comment.owner|title }}" class="media-object img-circle">
+        {% if person.image %}
+          <img src="{{ person.image.url }}" class="media-object img-circle" height='50px' width="50px">
+        {% else %}
+          <img src="{% static 'img/avatar-tiny.jpg' %}" class="media-object img-circle">
+        {% endif %}
       </div>
       <div class="media-body">
         <h4 class="media-heding">
