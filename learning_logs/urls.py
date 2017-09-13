@@ -1,25 +1,13 @@
 from django.conf.urls import url
 
-from .views import (
-    IndexView,
-    TopicList,
-    TopicDetail,
-    TopicCreate,
-    TopicUpdate,
-    TopicDelete,
-    EntryCreate,
-    EntryDetail,
-    EntryUpdate,
-    EntryDelete,
-    CommentCreate,
-    CommentUpdate,
-    CommentDelete,
-)
+from .views import (IndexView, TopicList, TopicDetail, TopicCreate, TopicUpdate,
+                    TopicDelete, EntryCreate, EntryDetail, EntryUpdate,
+                    EntryDelete, CommentCreate, CommentUpdate, CommentDelete,)
 
 app_name = 'learning_logs'
 
 urlpatterns = [
-    url(r'^$', IndexView.as_view(), name='index'), 
+    url(r'^$', IndexView.as_view(), name='index'),
     url(r'^topics/$', TopicList.as_view(), name='topics'),
     url(r'^topic-add/$', TopicCreate.as_view(), name='topic_create'),
     url(r'^topic/(?P<slug>[\w-]+)/update/$', TopicUpdate.as_view(), name='topic_update'),

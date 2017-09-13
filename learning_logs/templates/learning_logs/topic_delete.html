@@ -1,11 +1,9 @@
-{% extends 'base.html' %}
+{% extends 'base_form.html' %}
 {% load bootstrap3 %}
 
-{% block header %}
-  <h1>Delete topic: {{ topic }}</h1>
-{% endblock %}
+{% block heading %}Delete topic: {{ topic }}{% endblock %}
 
-{% block content %}
+{% block body %}
   <form action="" method="post" class="form">
     {% csrf_token %}
     <input type="submit" class="btn btn-primary" value="OK">
