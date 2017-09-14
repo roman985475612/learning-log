@@ -24,9 +24,18 @@ class OwnerVerificationMixins:
 
 class IndexView(ListView):
     queryset = Entry.objects.order_by('-views')[:4]
-    context_object_name = 'entries'
     template_name = 'learning_logs/index.html'
 
+
+class NewestEntryListView(ListView):
+    queryset = Entry.objects.order_by('-date_added')[:8]
+    template_name = 'learning_logs/newest_entry_list.html'
+
+
+class MostViewedEntryListView(ListView):
+    queryset = Entry.objects.order_by('-views')[:8]
+    template_name = 'learning_logs/most_viewed_entry_list.html'
+    
 
 class TopicList(ListView):
     model = Topic

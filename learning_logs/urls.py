@@ -2,7 +2,8 @@ from django.conf.urls import url
 
 from .views import (IndexView, TopicList, TopicDetail, TopicCreate, TopicUpdate,
                     TopicDelete, EntryCreate, EntryDetail, EntryUpdate,
-                    EntryDelete, CommentCreate, CommentUpdate, CommentDelete,)
+                    EntryDelete, CommentCreate, CommentUpdate, CommentDelete,
+                    NewestEntryListView, MostViewedEntryListView,)
 
 app_name = 'learning_logs'
 
@@ -14,6 +15,8 @@ urlpatterns = [
     url(r'^topic/(?P<slug>[\w-]+)/delete/$', TopicDelete.as_view(), name='topic_delete'),
     url(r'^topic/(?P<slug>[\w-]+)/$', TopicDetail.as_view(), name='topic'),
     url(r'^topic/(?P<slug>[\w-]+)/entry-add/$', EntryCreate.as_view(), name='entry_create'),
+    url(r'^entry/newest/$', NewestEntryListView.as_view(), name='entry_newest'),
+    url(r'^entry/viewed/$', MostViewedEntryListView.as_view(), name='entry_viewed'),
     url(r'^entry/(?P<slug>[\w-]+)/$', EntryDetail.as_view(), name='entry'),
     url(r'^entry/(?P<slug>[\w-]+)/update/$', EntryUpdate.as_view(), name='entry_update'),
     url(r'^entry/(?P<slug>[\w-]+)/delete/$', EntryDelete.as_view(), name='entry_delete'),
