@@ -9,7 +9,7 @@ class Person(models.Model):
         (MALE, 'Male'),
         (FEMALE, 'Female'),
     )
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='person')
+    owner = models.OneToOneField(User, on_delete=models.CASCADE, related_name='person')
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     sex = models.CharField(max_length=1, choices=SEX_CHOICES)

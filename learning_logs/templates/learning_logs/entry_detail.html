@@ -17,8 +17,8 @@
   </h1>
   <div class="media">
     <div class="media-left">
-      {% if entry.owner.person.first.image %}
-        <img src="{{ entry.owner.person.first.image.url }}" class="media-object img-circle" height='80px' width="80px">
+      {% if entry.owner.person.image %}
+        <img src="{{ entry.owner.person.image.url }}" class="media-object img-circle" height='80px' width="80px">
       {% else %}
         <img src="{% static 'img/avatar-tiny.jpg' %}" class="media-object img-circle" heigth="64">
       {% endif %}
@@ -48,8 +48,8 @@
   {% for comment in entry.comment_set.all %}
     <div class="media">
       <div class="media-left">
-        {% if comment.owner.person.first.image %}
-          <img src="{{ comment.owner.person.first.image.url }}" class="media-object img-circle" height='60px' width="60px">
+        {% if comment.owner.person.image %}
+          <img src="{{ comment.owner.person.image.url }}" class="media-object img-circle" height='60px' width="60px">
         {% else %}
           <img src="{% static 'img/avatar-tiny.jpg' %}" class="media-object img-circle">
         {% endif %}
