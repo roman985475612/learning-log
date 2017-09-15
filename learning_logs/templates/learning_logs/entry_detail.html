@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load bootstrap3 %}
 {% load staticfiles %}
 
 {% block title %}{{ entry }}{% endblock %}
@@ -37,14 +38,10 @@
   <br>
   <p class="text-justify">{{ entry.text|linebreaksbr }}</p>
   <br>
-  {% if user.is_authenticated %}
-    <div>
-      <a href="{% url 'learning_logs:comment_create' entry.slug %}" class="btn btn-success">Add new comment</a>
-    </div>
-    <br>
-  {% endif %}
-
+  
   <h4>Comments:</h4>
+  
+
   {% for comment in entry.comment_set.all %}
     <div class="media">
       <div class="media-left">
@@ -71,4 +68,22 @@
       <div class="panel-heading">No comments this entry yet.</div>
     </div>
   {% endfor %}
+
+  <!-- Add new comments -->
+  {% if user.is_authenticated %}
+    <hr>
+    <div class="row">
+      <div class="col-md-6">
+        <form action="{% url 'learning_logs:comment_create' entry.slug %}" method="post" class="form">
+          {% csrf_token %}
+          {% bootstrap_form form %}
+          <input type="submit" class="btn btn-success" value="Add comment">
+        </form>
+
+      </div>
+    </div>
+    
+
+  {% endif %}
+
 {% endblock %}

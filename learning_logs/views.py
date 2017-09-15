@@ -3,7 +3,7 @@ from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic.edit import CreateView, FormMixin, UpdateView, DeleteView
 from django.views.generic.list import ListView
 from django.urls import reverse, reverse_lazy
 
@@ -50,6 +50,12 @@ class TopicDetail(DetailView):
 class EntryDetail(DetailView):
     model = Entry
     context_object_name = 'entry'
+    form_class = CommentForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = self.form_class
+        return context
 
     def get_object(self):
         entry = super().get_object()
