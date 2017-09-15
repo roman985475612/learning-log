@@ -19,7 +19,7 @@
 </head>
 <body>
 
-  <nav class="navbar navbar-inverse navbar-fixed-top">
+  <nav class="navbar navbar-inverse navbar-static-top">
     <div class="container">
 
       <div class="navbar-header">
@@ -77,8 +77,8 @@
     </div>
   </nav>
 
+  {% block header %}{% endblock %}
   <div class="container">
-    <div class="page-header">{% block header %}{% endblock %}</div>
     <div>{% block content %}{% endblock %}</div>
   </div>
 
