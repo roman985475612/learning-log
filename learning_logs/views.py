@@ -7,10 +7,10 @@ from django.views.generic.edit import CreateView, FormMixin, UpdateView, DeleteV
 from django.views.generic.list import ListView
 from django.urls import reverse, reverse_lazy
 
-from learning_logs.models import Topic, Entry, Comment
+from learning_logs.models import Topic, Tag, Entry, Comment
 from users.models import Person
 
-from .forms import TopicForm, EntryForm, CommentForm
+from .forms import TopicForm, TagForm, EntryForm, CommentForm
 
 
 class OwnerVerificationMixins:
@@ -35,7 +35,15 @@ class NewestEntryListView(ListView):
 class MostViewedEntryListView(ListView):
     queryset = Entry.objects.order_by('-views')[:8]
     template_name = 'learning_logs/most_viewed_entry_list.html'
-    
+
+
+class FilteredTagEntryListView(ListView):
+    template_name = 'learning_logs/filtered_tag_entry_list.html'
+
+    def get_queryset(self):
+        self.entry = Entry.objects.filter(tag__id=self.kwargs['tag_id'])
+        return self.entry
+
 
 class TopicList(ListView):
     model = Topic
@@ -45,6 +53,18 @@ class TopicList(ListView):
 class TopicDetail(DetailView):
     model = Topic
     context_object_name = 'topic'
+
+
+class TagListView(ListView):
+    model = Tag
+    context_object_name = 'tags'
+
+
+class TagCreateView(LoginRequiredMixin, CreateView):
+    model = Tag
+    template_name_suffix = '_create'
+    form_class = TagForm
+    success_url = reverse_lazy('learning_logs:index')
 
 
 class EntryDetail(DetailView):

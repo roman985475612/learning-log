@@ -34,15 +34,23 @@
       {% url 'learning_logs:entry_newest' as entry_newest %}
       {% url 'learning_logs:entry_viewed' as entry_viewed %}
       {% url 'learning_logs:topics' as topic_list %}
+      {% url 'learning_logs:tags' as tag_list %}
       {% url 'users:register' as register %}
       {% url 'users:login' as login %}
 
       <div id="navbar" class="navbar-collapse collapse">
         <ul class="nav navbar-nav">
+          
           <li class="{% if request.path == index %} active {% endif %}"><a href="{% url 'learning_logs:index' %}">Home</a></li>
+          
           <li class="{% if request.path == entry_newest %} active {% endif %}"><a href="{% url 'learning_logs:entry_newest' %}">Newest</a></li>
+          
           <li class="{% if request.path == entry_viewed %} active {% endif %}"><a href="{% url 'learning_logs:entry_viewed' %}">Viewed</a></li>
+          
           <li class="{% if request.path == topic_list %} active {% endif %}"><a href="{% url 'learning_logs:topics' %}">Topics</a></li>
+          
+          <li class="{% if request.path == tag_list %} active {% endif %}"><a href="{% url 'learning_logs:tags' %}">Tags</a></li>
+          
           <li class="dropdown">
               <a data-toggle="dropdown" class="dropdown-toggle">Polls <b class="caret"></b></a>
               <ul class="dropdown-menu">

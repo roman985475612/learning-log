@@ -4,10 +4,12 @@
 {% block heading %}Add new entry{% endblock %}
 
 {% block body %}
-  <form action="" method="post" class="form" enctype="multipart/form-data">
-  	{% csrf_token %}
-    {% bootstrap_form form %}
-    <input type="submit" class="btn btn-primary" value="OK">
-    <a href="{% url 'learning_logs:topic' topic.slug %}" class="btn btn-default">Cancel</a>
-  </form>
+    <a href="{% url 'learning_logs:tag_create' %}" target="_blank">Add tag</a>
+    
+    <form action="" method="post" class="form" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <input type="submit" class="btn btn-primary" value="OK">
+        <a href="{% url 'learning_logs:topic' topic.slug %}" class="btn btn-default">Cancel</a>
+    </form>
 {% endblock %}

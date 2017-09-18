@@ -14,7 +14,15 @@
       <a href="{% url 'learning_logs:entry_update' entry.slug %}" class="btn btn-default"><span class="glyphicon glyphicon-edit"></span></a>
       <a href="{% url 'learning_logs:entry_delete' entry.slug %}" class="btn btn-default"><span class="glyphicon glyphicon-trash"></span></a>
     {% endif %}
-    <div><small><i>{{ entry.views }} views </i></small></div>
+    <div>
+      <small>
+        <span class="glyphicon glyphicon-eye-open"></span> {{ entry.views }}
+        <span class="glyphicon glyphicon-pencil"></span> {{ entry.comment_set.all.count }}
+        {% for tag in entry.tag.all %}
+          <span class="label label-{{ tag.color }}">{{ tag.title }}</span>
+        {% endfor %}
+      </small>
+    </div>
   </h1>
   <div class="media">
     <div class="media-left">

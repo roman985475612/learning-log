@@ -29,7 +29,30 @@ class Topic(models.Model):
         return reverse('learning_logs:topic', kwargs={'slug': self.slug})
 
 
+class Tag(models.Model):
+    DEFAULT = 'default'
+    PRIMARY = 'primary'
+    SUCCESS = 'success'
+    INFO = 'info'
+    WARNING = 'warning'
+    DANGER = 'danger'
+    COLOR_CHOICES = (
+        (DEFAULT, 'Gray'),
+        (PRIMARY, 'Blue'),
+        (SUCCESS, 'Green'),
+        (INFO, 'Cyan'),
+        (WARNING, 'Yellow'),
+        (DANGER, 'Red'),
+    )
+    color = models.CharField(max_length=10, choices=COLOR_CHOICES, default=DEFAULT)
+    title = models.CharField(max_length=30, unique=True)
+
+    def __str__(self):
+        return self.title
+
+
 class Entry(models.Model):
+    tag = models.ManyToManyField(Tag, default='', blank=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     topic = models.ForeignKey(Topic, on_delete=models.PROTECT)
     title = models.CharField(max_length=200, unique=True)

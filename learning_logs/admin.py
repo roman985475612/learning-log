@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Topic, Entry, Comment
+from .models import Topic, Tag, Entry, Comment
 
 
 @admin.register(Topic)
@@ -10,6 +10,11 @@ class TopicAdmin(admin.ModelAdmin):
     search_fields = ['title']
     date_hierarchy = 'date_added'
     prepopulated_fields = {'slug': ('title',)}
+
+
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
+    pass
 
 
 class CommentInline(admin.TabularInline):
