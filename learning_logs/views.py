@@ -41,7 +41,7 @@ class FilteredTagEntryListView(ListView):
     template_name = 'learning_logs/filtered_tag_entry_list.html'
 
     def get_queryset(self):
-        self.entry = Entry.objects.filter(tag__id=self.kwargs['tag_id'])
+        self.entry = Entry.objects.filter(tag__slug=self.kwargs['slug'])
         return self.entry
 
 

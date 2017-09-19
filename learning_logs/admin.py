@@ -14,7 +14,9 @@ class TopicAdmin(admin.ModelAdmin):
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('title', 'color', 'slug')
+    list_filter = ('color',)
+    prepopulated_fields = {'slug': ('title',)}
 
 
 class CommentInline(admin.TabularInline):

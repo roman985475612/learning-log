@@ -21,7 +21,7 @@ urlpatterns = [
         EntryCreate.as_view(), name='entry_create'),
     url(r'^tags/$', TagListView.as_view(), name='tags'),
     url(r'^tag-add/$', TagCreateView.as_view(), name='tag_create'),
-    url(r'^tag/(?P<tag_id>\d+)/$',
+    url(r'^tag/(?P<slug>[\w-]+)/$',
         FilteredTagEntryListView.as_view(), name='entry_tag'),
     url(r'^entry/newest/$', NewestEntryListView.as_view(), name='entry_newest'),
     url(r'^entry/viewed/$', MostViewedEntryListView.as_view(), name='entry_viewed'),

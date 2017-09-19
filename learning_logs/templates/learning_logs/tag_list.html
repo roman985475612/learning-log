@@ -7,8 +7,8 @@
     <h1>Tag list:</h1>
     <br>
     {% for tag in tags %}
-        <a href="{% url 'learning_logs:entry_tag' tag.id %}">
-            <span class="label label-{{ tag.color }}">{{ tag.title }}</span>
+        <a href="{% url 'learning_logs:entry_tag' tag.slug %}" class="btn btn-{{ tag.color }} btn-sm">{{ tag.title }}
+            <!-- <span class="label label-{{ tag.color }}">{{ tag.title }}</span> -->
         </a>
     {% empty %}
         <p>No tags</p>
