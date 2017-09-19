@@ -4,7 +4,7 @@ from .views import (IndexView, TopicList, TopicDetail, TopicCreate, TopicUpdate,
                     TopicDelete, EntryCreate, EntryDetail, EntryUpdate,
                     EntryDelete, CommentCreate, CommentUpdate, CommentDelete,
                     NewestEntryListView, MostViewedEntryListView, TagListView,
-                    TagCreateView, FilteredTagEntryListView,)
+                    TagCreateView, FilteredTagEntryListView, EntryListView,)
 
 app_name = 'learning_logs'
 
@@ -23,8 +23,9 @@ urlpatterns = [
     url(r'^tag-add/$', TagCreateView.as_view(), name='tag_create'),
     url(r'^tag/(?P<slug>[\w-]+)/$',
         FilteredTagEntryListView.as_view(), name='entry_tag'),
-    url(r'^entry/newest/$', NewestEntryListView.as_view(), name='entry_newest'),
-    url(r'^entry/viewed/$', MostViewedEntryListView.as_view(), name='entry_viewed'),
+    url(r'^entries/newest/$', NewestEntryListView.as_view(), name='entry_newest'),
+    url(r'^entries/viewed/$', MostViewedEntryListView.as_view(), name='entry_viewed'),
+    url(r'^entries/$', EntryListView.as_view(), name='entries'),
     url(r'^entry/(?P<slug>[\w-]+)/$', EntryDetail.as_view(), name='entry'),
     url(r'^entry/(?P<slug>[\w-]+)/update/$',
         EntryUpdate.as_view(), name='entry_update'),

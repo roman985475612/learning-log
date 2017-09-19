@@ -27,24 +27,6 @@ class IndexView(ListView):
     template_name = 'learning_logs/index.html'
 
 
-class NewestEntryListView(ListView):
-    queryset = Entry.objects.order_by('-date_added')[:8]
-    template_name = 'learning_logs/newest_entry_list.html'
-
-
-class MostViewedEntryListView(ListView):
-    queryset = Entry.objects.order_by('-views')[:8]
-    template_name = 'learning_logs/most_viewed_entry_list.html'
-
-
-class FilteredTagEntryListView(ListView):
-    template_name = 'learning_logs/filtered_tag_entry_list.html'
-
-    def get_queryset(self):
-        self.entry = Entry.objects.filter(tag__slug=self.kwargs['slug'])
-        return self.entry
-
-
 class TopicList(ListView):
     model = Topic
     context_object_name = 'topics'
@@ -65,6 +47,41 @@ class TagCreateView(LoginRequiredMixin, CreateView):
     template_name_suffix = '_create'
     form_class = TagForm
     success_url = reverse_lazy('learning_logs:index')
+
+
+class NewestEntryListView(ListView):
+    queryset = Entry.objects.order_by('-date_added')[:8]
+    template_name = 'learning_logs/newest_entry_list.html'
+
+
+class MostViewedEntryListView(ListView):
+    queryset = Entry.objects.order_by('-views')[:8]
+    template_name = 'learning_logs/most_viewed_entry_list.html'
+
+
+class FilteredTagEntryListView(ListView):
+    template_name = 'learning_logs/filtered_tag_entry_list.html'
+
+    def get_queryset(self):
+        self.entry = Entry.objects.filter(tag__slug=self.kwargs['slug'])
+        return self.entry
+
+
+class EntryListView(ListView):
+    template_name = 'learning_logs/entry_filtered_list.html'
+
+    def get_queryset(self):
+        self.query = self.request.GET.get('query')
+        if self.query:
+            self.entry = Entry.objects.filter(text__icontains=self.query)
+        else:
+            self.entry = Entry.objects.all()
+        return self.entry
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['query'] = self.query
+        return context
 
 
 class EntryDetail(DetailView):

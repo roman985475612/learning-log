@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}Entries{% endblock %}
+
+{% block content %}
+
+  <div class="row">
+    {% for entry in entry_list %}
+      {% include 'learning_logs/entry_list_snippet.html' %}
+    {% empty %}
+      {% include 'learning_logs/no_entry_snippet.html' %}
+    {% endfor %}
+  </div>
+
+{% endblock %}

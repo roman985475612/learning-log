@@ -66,6 +66,15 @@
           </li>
           <li><a href="#">About</a></li>
         </ul>
+        
+        <form action="{% url 'learning_logs:entries' %}" class="navbar-form navbar-left" method="get">
+          <div class="input-group">
+            <input type="text" class="form-control" name="query" placeholder="Search" value="{{ query|default:'' }}">
+            <span class="input-group-btn">
+              <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button>
+            </span>
+          </div>
+        </form>
 
         <ul class="nav navbar-nav navbar-right">
           {% if user.is_authenticated %}
