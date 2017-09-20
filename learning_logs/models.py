@@ -1,32 +1,7 @@
-from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.urls import reverse
-
-
-def get_sentinel_user():
-    return get_user_model().objects.get_or_create(username='deleted')[0]
-
-
-class Topic(models.Model):
-    owner = models.ForeignKey(User, on_delete=models.SET(get_sentinel_user))
-    title = models.CharField(max_length=200, unique=True)
-    date_added = models.DateTimeField(auto_now_add=True)
-    slug = models.SlugField(unique=True)
-
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.title)
-        super(Topic, self).save(*args, **kwargs)
-
-    class Meta:
-        ordering = ['title']
-
-    def __str__(self):
-        return self.title
-
-    def get_absolute_url(self):
-        return reverse('learning_logs:topic', kwargs={'slug': self.slug})
 
 
 class Tag(models.Model):
@@ -59,7 +34,6 @@ class Tag(models.Model):
 class Entry(models.Model):
     tag = models.ManyToManyField(Tag, default='', blank=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
-    topic = models.ForeignKey(Topic, on_delete=models.PROTECT)
     title = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(unique=True)
     text = models.TextField()

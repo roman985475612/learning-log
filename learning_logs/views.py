@@ -7,10 +7,10 @@ from django.views.generic.edit import CreateView, FormMixin, UpdateView, DeleteV
 from django.views.generic.list import ListView
 from django.urls import reverse, reverse_lazy
 
-from learning_logs.models import Topic, Tag, Entry, Comment
+from learning_logs.models import Tag, Entry, Comment
 from users.models import Person
 
-from .forms import TopicForm, TagForm, EntryForm, CommentForm
+from .forms import TagForm, EntryForm, CommentForm
 
 
 class OwnerVerificationMixins:
@@ -27,16 +27,6 @@ class IndexView(ListView):
     template_name = 'learning_logs/index.html'
 
 
-class TopicList(ListView):
-    model = Topic
-    context_object_name = 'topics'
-
-
-class TopicDetail(DetailView):
-    model = Topic
-    context_object_name = 'topic'
-
-
 class TagListView(ListView):
     model = Tag
     context_object_name = 'tags'
@@ -49,26 +39,7 @@ class TagCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('learning_logs:index')
 
 
-class NewestEntryListView(ListView):
-    queryset = Entry.objects.order_by('-date_added')[:8]
-    template_name = 'learning_logs/newest_entry_list.html'
-
-
-class MostViewedEntryListView(ListView):
-    queryset = Entry.objects.order_by('-views')[:8]
-    template_name = 'learning_logs/most_viewed_entry_list.html'
-
-
-class FilteredTagEntryListView(ListView):
-    template_name = 'learning_logs/filtered_tag_entry_list.html'
-
-    def get_queryset(self):
-        self.entry = Entry.objects.filter(tag__slug=self.kwargs['slug'])
-        return self.entry
-
-
 class EntryListView(ListView):
-    template_name = 'learning_logs/entry_filtered_list.html'
 
     def get_queryset(self):
         self.query = self.request.GET.get('query')
@@ -82,6 +53,21 @@ class EntryListView(ListView):
         context = super().get_context_data(**kwargs)
         context['query'] = self.query
         return context
+
+
+class EntryNewListView(ListView):
+    queryset = Entry.objects.order_by('-date_added')[:8]
+
+
+class EntryPopularListView(ListView):
+    queryset = Entry.objects.order_by('-views')[:8]
+
+
+class EntryTagListView(ListView):
+
+    def get_queryset(self):
+        self.entry = Entry.objects.filter(tag__slug=self.kwargs['slug'])
+        return self.entry
 
 
 class EntryDetail(DetailView):
@@ -101,45 +87,13 @@ class EntryDetail(DetailView):
         return entry
 
 
-class TopicCreate(LoginRequiredMixin, CreateView):
-    model = Topic
-    template_name_suffix = '_create'
-    form_class = TopicForm
-
-    def form_valid(self, form):
-        form.instance.owner = self.request.user
-        return super().form_valid(form)
-
-
-class TopicUpdate(OwnerVerificationMixins, LoginRequiredMixin, UpdateView):
-    model = Topic
-    form_class = TopicForm
-    template_name_suffix = '_update'
-
-
-class TopicDelete(OwnerVerificationMixins, LoginRequiredMixin, DeleteView):
-    model = Topic
-    template_name_suffix = '_delete'
-    success_url = reverse_lazy('learning_logs:topics')
-
-
 class EntryCreate(LoginRequiredMixin, CreateView):
     model = Entry
     template_name_suffix = '_create'
     form_class = EntryForm
 
-    def get_queryset(self):
-        self.topic = get_object_or_404(Topic, slug=self.kwargs['slug'])
-        return self.topic
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['topic'] = self.get_queryset()
-        return context
-
     def form_valid(self, form):
         form.instance.owner = self.request.user
-        form.instance.topic = self.get_queryset()
         form.save()
         return super().form_valid(form)
 

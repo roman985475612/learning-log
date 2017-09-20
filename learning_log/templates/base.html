@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link href="https://fonts.googleapis.com/css?family=Shadows+Into+Light" rel="stylesheet">
-  <title>{% block title %}Document{% endblock %}</title>
+  <title>{% block title %}Live Journal{% endblock %}</title>
   {% bootstrap_css %}
   {% bootstrap_javascript %}
 
@@ -33,7 +33,7 @@
       {% url 'learning_logs:index' as index %}
       {% url 'learning_logs:entry_newest' as entry_newest %}
       {% url 'learning_logs:entry_viewed' as entry_viewed %}
-      {% url 'learning_logs:topics' as topic_list %}
+      {% url 'learning_logs:entries' as entries %}
       {% url 'learning_logs:tags' as tag_list %}
       {% url 'users:register' as register %}
       {% url 'users:login' as login %}
@@ -43,15 +43,16 @@
           
           <li class="{% if request.path == index %} active {% endif %}"><a href="{% url 'learning_logs:index' %}">Home</a></li>
           
-          <li class="{% if request.path == topic_list %} active {% endif %}"><a href="{% url 'learning_logs:topics' %}">Topics</a></li>
-          
           <li class="{% if request.path == tag_list %} active {% endif %}"><a href="{% url 'learning_logs:tags' %}">Tags</a></li>
 
           <li class="dropdown
             {% if request.path == entry_newest %} active {% endif %}
+            {% if request.path == entries %} active {% endif %}
             {% if request.path == entry_viewed %} active {% endif %}">
             <a class="dropdown-toggle" data-toggle="dropdown">Entry <b class="caret"></b></a>
             <ul class="dropdown-menu">
+              <li><a href="{% url 'learning_logs:entries' %}">All</a></li>
+              <li class="divider"></li>
               <li><a href="{% url 'learning_logs:entry_newest' %}">Newest</a></li>
               <li><a href="{% url 'learning_logs:entry_viewed' %}">Viewed</a></li>
             </ul>
@@ -81,6 +82,8 @@
             <li class="dropdown">
               <a data-toggle="dropdown" class="dropdown-toggle"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;{{ user.username|title }} <b class="caret"></b></a>
               <ul class="dropdown-menu">
+                <li><a href="{% url 'learning_logs:entry_create' %}">New Entry</a></li>
+                <li class="divider"></li>
                 <li><a href="{% url 'polls:answer' %}">Answer</a></li>
                 <li><a href="{% url 'users:profile' %}">Form</a></li>
                 <li class="divider"></li>
