@@ -1,1 +1,1 @@
-Project Learning Log
+Project Live Journal
