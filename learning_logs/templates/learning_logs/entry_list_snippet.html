@@ -1,26 +1,35 @@
 {% load staticfiles %}
 
-<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-  {% if entry.image %}
-    <img src="{{ entry.image.url }}" alt="{{ entry.title }}" class="media-object img-responsive" height="130px" width="150px">
-  {% else %}
-    <img src="{% static 'img/photo_not_found.jpg' %}" alt="photo_not_found" class="media-object img-thumbnail" width="150px">
-  {% endif %}
-  <h3>
-    <div>
-      <small><i>{{ entry.owner|title }} - {{ entry.date_added|date:'M d, Y H:i' }}</i></small>
+<div class="row">
+<div class="col-sm-7 col-sm-offset-2">
+  <br>
+  <div class="media">
+
+    <div class="media-left">
+      <a href="{% url 'learning_logs:entry' entry.slug %}">
+        {% if entry.image %}
+          <img src="{{ entry.image.url }}" alt="{{ entry.title }}" class="media-object" height="150" width="200">
+        {% else %}
+          <img src="{% static 'img/photo_not_found.jpg' %}" alt="photo_not_found" class="media-object" height="150" width="200">
+        {% endif %}
+      </a>
     </div>
-    <b>{{ entry.title }}</b>
-    <div>
-      <small>
-        <span class="glyphicon glyphicon-eye-open"></span> {{ entry.views }}
-        <span class="glyphicon glyphicon-pencil"></span> {{ entry.comment_set.all.count }}
-        {% for tag in entry.tag.all %}
-          <span class="label label-{{ tag.color }}">{{ tag.title }}</span>
-        {% endfor %}
-      </small>
+
+    <div class="media-body">
+      <span class="glyphicon glyphicon-eye-open"></span> {{ entry.views }}&nbsp;&nbsp;
+      <span class="glyphicon glyphicon-pencil"></span> {{ entry.comment_set.all.count }}&nbsp;&nbsp;
+      {% for tag in entry.tag.all %}
+        <a href="{% url 'learning_logs:entry_tag' tag.slug %}" class="btn btn-default btn-xs">{{ tag.title }}</a>&nbsp;
+      {% endfor %}
+
+      <a href="{% url 'learning_logs:entry' entry.slug %}"><h4 class="media-heading">{{ entry.title }}</h4></a>
+      
+      {{ entry.date_added|date:'F d, Y' }} by {{ entry.owner|title }}
+
+      <p>{{ entry.text|linebreaks|truncatewords:30 }}</p>
     </div>
-  </h3>
-  <p>{{ entry.text|linebreaks|truncatewords:15 }}</p>
-  <p><a class="btn btn-primary" href="{% url 'learning_logs:entry' entry.slug %}" role="button">Learn more &raquo;</a></p>
-</div> <!-- end col -->
+
+  </div>
+
+</div>
+</div>
