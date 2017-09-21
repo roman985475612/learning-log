@@ -5,41 +5,53 @@
 {% block content %}
 
   <div class="row">
-    {% for entry in entry_list %}
-      <div class="col-sm-7 col-sm-offset-2">
-        <br>
-        <div class="media">
+    <article class="col-sm-10 col-sm-push-2">
+      {% for entry in entry_list %}
+          
+          <div class="media">
+            <div class="media-left">
+              <a href="{% url 'learning_logs:entry' entry.slug %}">
+                {% if entry.image %}
+                  <img src="{{ entry.image.url }}" alt="{{ entry.title }}" class="media-object" height="150" width="200">
+                {% else %}
+                  <img src="{% static 'img/photo_not_found.jpg' %}" alt="photo_not_found" class="media-object" height="150" width="200">
+                {% endif %}
+              </a>
+            </div>
 
-          <div class="media-left">
-            <a href="{% url 'learning_logs:entry' entry.slug %}">
-              {% if entry.image %}
-                <img src="{{ entry.image.url }}" alt="{{ entry.title }}" class="media-object" height="150" width="200">
-              {% else %}
-                <img src="{% static 'img/photo_not_found.jpg' %}" alt="photo_not_found" class="media-object" height="150" width="200">
-              {% endif %}
-            </a>
+            <div class="media-body">
+              <a href="{% url 'learning_logs:entry' entry.slug %}"><h4 class="media-heading">{{ entry.title }}</h4></a>
+              
+              <div class="text-muted">{{ entry.date_added|date:'F d, Y' }} by {{ entry.owner|title }}</div>
+
+              <div class="text-justify">{{ entry.text|linebreaks|truncatewords:30 }}</div>
+
+              <span class="glyphicon glyphicon-eye-open"></span> {{ entry.views }}&nbsp;&nbsp;
+              <span class="glyphicon glyphicon-pencil"></span> {{ entry.comments }}&nbsp;&nbsp;
+              <span class="glyphicon glyphicon-thumbs-up"></span> {{ entry.likes }}&nbsp;&nbsp;
+              {% for tag in entry.tag.all %}
+                <a href="{% url 'learning_logs:entry_tag' tag.slug %}" class="btn btn-default btn-xs">{{ tag.title }}</a>&nbsp;
+              {% endfor %}
+            </div>
           </div>
-
-          <div class="media-body">
-            <a href="{% url 'learning_logs:entry' entry.slug %}"><h4 class="media-heading">{{ entry.title }}</h4></a>
-            
-            <div class="text-muted">{{ entry.date_added|date:'F d, Y' }} by {{ entry.owner|title }}</div>
-
-            <div class="text-justify">{{ entry.text|linebreaks|truncatewords:30 }}</div>
-
-            <span class="glyphicon glyphicon-eye-open"></span> {{ entry.views }}&nbsp;&nbsp;
-            <span class="glyphicon glyphicon-pencil"></span> {{ entry.comments }}&nbsp;&nbsp;
-            {% for tag in entry.tag.all %}
-              <a href="{% url 'learning_logs:entry_tag' tag.slug %}" class="btn btn-default btn-xs">{{ tag.title }}</a>&nbsp;
-            {% endfor %}
-          </div>
+      {% empty %}
+        <div class="panel panel-default">
+          <div class="panel-heading">No entries.</div>
         </div>
-      </div>
-    {% empty %}
-      <div class="panel panel-default">
-        <div class="panel-heading">No entries.</div>
-      </div>
-    {% endfor %}
+      {% endfor %}
+    </article>
+
+    <aside class="col-sm-2 col-sm-pull-10">
+      <ul class="list-group">
+        <li class="list-group-item" ><a href="{% url 'learning_logs:entries' %}">Alphabetically</a></li>
+        <li class="list-group-item" ><a href="{% url 'learning_logs:entry_newest' %}">Newest</a></li>
+        <li class="list-group-item" ><a href="{% url 'learning_logs:entry_oldest' %}">Oldest</a></li>
+        <li class="list-group-item" ><a href="{% url 'learning_logs:entry_viewed' %}">Viewed</a></li>
+        <li class="list-group-item" ><a href="{% url 'learning_logs:entry_liked' %}">Liked</a></li>
+        <li class="list-group-item" ><a href="{% url 'learning_logs:entry_commented' %}">Most commented</a></li>
+      </ul>
+    </aside>
+
   </div>
 
 {% endblock %}

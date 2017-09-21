@@ -1,7 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic.base import TemplateView
+from django.views.generic.base import RedirectView, TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, FormMixin, UpdateView, DeleteView
 from django.views.generic.list import ListView
@@ -72,6 +72,10 @@ class EntryMostCommentedListView(ListView):
     queryset = Entry.objects.order_by('-comments')
 
 
+class EntryLikedListView(ListView):
+    queryset = Entry.objects.order_by('-likes')
+
+
 class EntryTagListView(ListView):
 
     def get_queryset(self):
@@ -98,6 +102,15 @@ class EntryDetail(DetailView):
         context['tags'] = self.get_object().tag.all()
         context['comments'] = self.get_object().comment_set.all()
         return context
+
+
+class EntryLikeRedirectView(LoginRequiredMixin, RedirectView):
+
+    def get_redirect_url(self, *args, **kwargs):
+        entry = get_object_or_404(Entry, slug=self.kwargs['slug'])
+        entry.likes += 1
+        entry.save()
+        return reverse('learning_logs:entry', kwargs={'slug': self.kwargs['slug']})
 
 
 class EntryCreate(LoginRequiredMixin, CreateView):

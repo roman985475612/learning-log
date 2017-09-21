@@ -57,8 +57,12 @@
 
       <br>
       
-      <!-- Display tags -->
       <div>
+        <!-- Like button -->
+        {% if user.is_authenticated %}
+          <a href="{% url 'learning_logs:entry_like' entry.slug %}" class="btn btn-default"><span class="glyphicon glyphicon-thumbs-up"></span> Like | {{ entry.likes }}</a>
+        {% endif %}
+        <!-- Display tags -->
         {% for tag in tags %}
           <a href="{% url 'learning_logs:entry_tag' tag.slug %}" class="btn btn-{{ tag.color }} btn-sm">{{ tag.title }}</a>
         {% endfor %}
