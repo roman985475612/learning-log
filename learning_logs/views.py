@@ -56,12 +56,20 @@ class EntryListView(ListView):
         return context
 
 
-class EntryNewListView(ListView):
-    queryset = Entry.objects.order_by('-date_added')[:8]
+class EntryNewestListView(ListView):
+    queryset = Entry.objects.order_by('-date_added')
+
+
+class EntryOldestListView(ListView):
+    queryset = Entry.objects.order_by('date_added')
 
 
 class EntryPopularListView(ListView):
-    queryset = Entry.objects.order_by('-views')[:8]
+    queryset = Entry.objects.order_by('-views')
+
+
+class EntryMostCommentedListView(ListView):
+    queryset = Entry.objects.order_by('-comments')
 
 
 class EntryTagListView(ListView):

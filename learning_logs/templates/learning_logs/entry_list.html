@@ -21,17 +21,17 @@
           </div>
 
           <div class="media-body">
+            <a href="{% url 'learning_logs:entry' entry.slug %}"><h4 class="media-heading">{{ entry.title }}</h4></a>
+            
+            <div class="text-muted">{{ entry.date_added|date:'F d, Y' }} by {{ entry.owner|title }}</div>
+
+            <div class="text-justify">{{ entry.text|linebreaks|truncatewords:30 }}</div>
+
             <span class="glyphicon glyphicon-eye-open"></span> {{ entry.views }}&nbsp;&nbsp;
             <span class="glyphicon glyphicon-pencil"></span> {{ entry.comments }}&nbsp;&nbsp;
             {% for tag in entry.tag.all %}
               <a href="{% url 'learning_logs:entry_tag' tag.slug %}" class="btn btn-default btn-xs">{{ tag.title }}</a>&nbsp;
             {% endfor %}
-
-            <a href="{% url 'learning_logs:entry' entry.slug %}"><h4 class="media-heading">{{ entry.title }}</h4></a>
-            
-            {{ entry.date_added|date:'F d, Y' }} by {{ entry.owner|title }}
-
-            <p>{{ entry.text|linebreaks|truncatewords:30 }}</p>
           </div>
         </div>
       </div>

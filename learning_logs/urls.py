@@ -2,7 +2,8 @@ from django.conf.urls import url
 
 from .views import (IndexView, TagListView, TagCreateView,
                     EntryCreate, EntryDetail, EntryUpdate, EntryDelete,
-                    EntryListView, EntryNewListView, EntryPopularListView,
+                    EntryListView, EntryNewestListView, EntryOldestListView, 
+                    EntryPopularListView, EntryMostCommentedListView,
                     EntryTagListView, CommentCreate, CommentUpdate, CommentDelete, )
 
 app_name = 'learning_logs'
@@ -13,7 +14,10 @@ urlpatterns = [
     url(r'^tags/$', TagListView.as_view(), name='tags'),
     url(r'^tag/add/$', TagCreateView.as_view(), name='tag_create'),
     url(r'^tag/(?P<slug>[\w-]+)/$', EntryTagListView.as_view(), name='entry_tag'),
-    url(r'^entry/list/newest/$', EntryNewListView.as_view(), name='entry_newest'),
+    url(r'^entry/list/newest/$', EntryNewestListView.as_view(), name='entry_newest'),
+    url(r'^entry/list/oldest/$', EntryOldestListView.as_view(), name='entry_oldest'),
+    url(r'^entry/list/commented/$',
+        EntryMostCommentedListView.as_view(), name='entry_commented'),
     url(r'^entry/list/viewed/$', EntryPopularListView.as_view(), name='entry_viewed'),
     url(r'^entry/list/$', EntryListView.as_view(), name='entries'),
     url(r'^entry/(?P<slug>[\w-]+)/$', EntryDetail.as_view(), name='entry'),

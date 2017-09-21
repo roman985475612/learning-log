@@ -32,7 +32,9 @@
 
       {% url 'learning_logs:index' as index %}
       {% url 'learning_logs:entry_newest' as entry_newest %}
+      {% url 'learning_logs:entry_oldest' as entry_oldest %}
       {% url 'learning_logs:entry_viewed' as entry_viewed %}
+      {% url 'learning_logs:entry_commented' as entry_commented %}
       {% url 'learning_logs:entries' as entries %}
       {% url 'learning_logs:tags' as tag_list %}
       {% url 'users:register' as register %}
@@ -47,14 +49,18 @@
 
           <li class="dropdown
             {% if request.path == entry_newest %} active {% endif %}
+            {% if request.path == entry_oldest %} active {% endif %}
             {% if request.path == entries %} active {% endif %}
-            {% if request.path == entry_viewed %} active {% endif %}">
+            {% if request.path == entry_viewed %} active {% endif %}
+            {% if request.path == entry_commented %} active {% endif %}">
             <a class="dropdown-toggle" data-toggle="dropdown">Entry <b class="caret"></b></a>
             <ul class="dropdown-menu">
               <li><a href="{% url 'learning_logs:entries' %}">All</a></li>
               <li class="divider"></li>
               <li><a href="{% url 'learning_logs:entry_newest' %}">Newest</a></li>
+              <li><a href="{% url 'learning_logs:entry_oldest' %}">Oldest</a></li>
               <li><a href="{% url 'learning_logs:entry_viewed' %}">Viewed</a></li>
+              <li><a href="{% url 'learning_logs:entry_commented' %}">Most commented</a></li>
             </ul>
           </li>
           
