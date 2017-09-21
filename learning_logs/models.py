@@ -40,6 +40,7 @@ class Entry(models.Model):
     date_added = models.DateTimeField(auto_now_add=True)
     image = models.ImageField(upload_to='learning_logs/img', default='', blank=True)
     views = models.IntegerField(default=0)
+    comments = models.IntegerField(default=0)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
@@ -47,6 +48,7 @@ class Entry(models.Model):
 
     class Meta:
         verbose_name_plural = 'entries'
+        ordering = ['title']
 
     def __str__(self):
         return self.title

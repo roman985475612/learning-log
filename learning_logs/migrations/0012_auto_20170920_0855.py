@@ -23,4 +23,18 @@ class Migration(migrations.Migration):
         migrations.DeleteModel(
             name='Topic',
         ),
+        migrations.CreateModel(
+            name='Tag',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('color', models.CharField(choices=[('default', 'Gray'), ('primary', 'Blue'), ('success', 'Green'), ('info', 'Cyan'), ('warning', 'Yellow'), ('danger', 'Red')], default='default', max_length=10)),
+                ('title', models.CharField(max_length=30, unique=True)),
+                ('slug', models.SlugField(unique=True)),
+            ],
+        ),
+        migrations.AddField(
+            model_name='entry',
+            name='tag',
+            field=models.ManyToManyField(blank=True, default='', to='learning_logs.Tag'),
+        ),
     ]

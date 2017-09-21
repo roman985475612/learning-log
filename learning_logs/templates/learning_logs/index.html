@@ -12,11 +12,3 @@
     </div>
   </div>
 {% endblock %}
-
-{% block content %}
-  <div class="row">
-    {% for entry in entry_list %}
-      {% include 'learning_logs/entry_list_snippet.html' %}
-    {% endfor %}
-  </div> <!-- end row -->
-{% endblock %}

@@ -22,7 +22,7 @@
 
           <div class="media-body">
             <span class="glyphicon glyphicon-eye-open"></span> {{ entry.views }}&nbsp;&nbsp;
-            <span class="glyphicon glyphicon-pencil"></span> {{ entry.comment_set.all.count }}&nbsp;&nbsp;
+            <span class="glyphicon glyphicon-pencil"></span> {{ entry.comments }}&nbsp;&nbsp;
             {% for tag in entry.tag.all %}
               <a href="{% url 'learning_logs:entry_tag' tag.slug %}" class="btn btn-default btn-xs">{{ tag.title }}</a>&nbsp;
             {% endfor %}

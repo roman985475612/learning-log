@@ -44,10 +44,11 @@ class EntryListView(ListView):
     def get_queryset(self):
         self.query = self.request.GET.get('query')
         if self.query:
-            self.entry = Entry.objects.filter(text__icontains=self.query)
+            self.entry_list = Entry.objects.filter(text__icontains=self.query)
         else:
-            self.entry = Entry.objects.all()
-        return self.entry
+            self.entry_list = Entry.objects.all()
+
+        return self.entry_list
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -75,16 +76,20 @@ class EntryDetail(DetailView):
     context_object_name = 'entry'
     form_class = CommentForm
 
+    def get_object(self):
+        self.entry = super().get_object()
+        self.entry.views += 1
+        self.entry.save()
+        return self.entry
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = self.form_class
+        context['avatar'] = self.get_object().owner.person.image
+        context['avatar_url'] = context['avatar'].url
+        context['tags'] = self.get_object().tag.all()
+        context['comments'] = self.get_object().comment_set.all()
         return context
-
-    def get_object(self):
-        entry = super().get_object()
-        entry.views += 1
-        entry.save()
-        return entry
 
 
 class EntryCreate(LoginRequiredMixin, CreateView):
@@ -132,7 +137,10 @@ class CommentCreate(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
-        form.instance.entry = self.get_queryset()
+        entry = self.get_queryset()
+        form.instance.entry = entry
+        entry.comments += 1
+        entry.save()
         return super().form_valid(form)
 
 
@@ -145,6 +153,12 @@ class CommentUpdate(OwnerVerificationMixins, LoginRequiredMixin, UpdateView):
 class CommentDelete(OwnerVerificationMixins, LoginRequiredMixin, DeleteView):
     model = Comment
     template_name_suffix = '_delete'
+
+    def delete(self, request, *args, **kwargs):
+        self.entry = self.get_object().entry
+        self.entry.comments -= 1
+        self.entry.save()
+        return super().delete(request, *args, **kwargs)
 
     def get_success_url(self):
         return reverse('learning_logs:entry', kwargs={'slug': self.object.entry.slug})
