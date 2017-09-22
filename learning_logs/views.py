@@ -40,6 +40,7 @@ class TagCreateView(LoginRequiredMixin, CreateView):
 
 
 class EntryListView(ListView):
+    paginate_by = 3
 
     def get_queryset(self):
         self.query = self.request.GET.get('query')
@@ -57,26 +58,32 @@ class EntryListView(ListView):
 
 
 class EntryNewestListView(ListView):
+    paginate_by = 3
     queryset = Entry.objects.order_by('-date_added')
 
 
 class EntryOldestListView(ListView):
+    paginate_by = 3
     queryset = Entry.objects.order_by('date_added')
 
 
 class EntryPopularListView(ListView):
+    paginate_by = 3
     queryset = Entry.objects.order_by('-views')
 
 
 class EntryMostCommentedListView(ListView):
+    paginate_by = 3
     queryset = Entry.objects.order_by('-comments')
 
 
 class EntryLikedListView(ListView):
+    paginate_by = 3
     queryset = Entry.objects.order_by('-likes')
 
 
 class EntryTagListView(ListView):
+    paginate_by = 3
 
     def get_queryset(self):
         self.entry = Entry.objects.filter(tag__slug=self.kwargs['slug'])
