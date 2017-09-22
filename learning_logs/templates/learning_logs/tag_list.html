@@ -3,13 +3,19 @@
 
 {% block title %}Tags{% endblock %}
 
+{% block breadcrumb %}
+  <div class="container">
+    <ol class="breadcrumb">
+      <li><a href="{% url 'learning_logs:index' %}">Home</a></li>
+      <li class="active">Tags</li>
+    </ol>
+  </div>
+{% endblock %}
+
 {% block content %}
-    <h1>Tag list:</h1>
-    <br>
     {% for tag in tags %}
         <a href="{% url 'learning_logs:entry_tag' tag.slug %}" class="btn btn-{{ tag.color }} btn-sm">{{ tag.title }}</a>
     {% empty %}
         <p>No tags</p>
     {% endfor %}
-
 {% endblock %}

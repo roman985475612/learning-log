@@ -99,17 +99,18 @@
     </div>
   </nav>
 
+  {% block breadcrumb %}{% endblock %}
+  
   {% block header %}{% endblock %}
 
   <div class="container">
     <div>{% block content %}{% endblock %}</div>
-
-
-    <footer class="text-center">
-      <hr>
-      <p>&copy; 2017 Learning Log</p>
-    </footer>
   </div>
+
+  <footer class="text-center">
+    <hr>
+    <p>&copy; 2017 Learning Log</p>
+  </footer>
   
 </body>
 </html>

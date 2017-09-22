@@ -1,6 +1,14 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 
+{% block breadcrumb %}
+  <div class="container">
+    <ol class="breadcrumb">
+      <li><a href="{% url 'learning_logs:index' %}">Home</a></li>
+      <li class="active">Articles</li>
+    </ol>
+  </div>
+{% endblock %}
 
 {% block content %}
 

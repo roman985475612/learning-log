@@ -4,6 +4,16 @@
 
 {% block title %}{{ entry }}{% endblock %}
 
+{% block breadcrumb %}
+  <div class="container">
+    <ol class="breadcrumb">
+      <li><a href="{% url 'learning_logs:index' %}">Home</a></li>
+      <li><a href="{% url 'learning_logs:entries' %}">Articles</a></li>
+      <li class="active">{{ entry }}</li>
+    </ol>
+  </div>
+{% endblock %}
+
 {% block content %}
 
   <div class="row">
