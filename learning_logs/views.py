@@ -45,44 +45,25 @@ class EntryListView(ListView):
 
     def get_queryset(self):
         self.entry_list = Entry.objects.all()
+
         self.query = self.request.GET.get('query')
         if self.query:
-            self.entry_list = Entry.objects.filter(
+            self.entry_list = self.entry_list.filter(
                 Q(title__icontains=self.query)|
                 Q(text__icontains=self.query)
             )
+
+        self.sort_by = self.request.GET.get('sort_by')
+        if self.sort_by:
+            self.entry_list = self.entry_list.order_by(self.sort_by)
 
         return self.entry_list
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['query'] = self.query
+        context['sort_by'] = self.sort_by
         return context
-
-
-class EntryNewestListView(ListView):
-    paginate_by = 3
-    queryset = Entry.objects.order_by('-date_added')
-
-
-class EntryOldestListView(ListView):
-    paginate_by = 3
-    queryset = Entry.objects.order_by('date_added')
-
-
-class EntryPopularListView(ListView):
-    paginate_by = 3
-    queryset = Entry.objects.order_by('-views')
-
-
-class EntryMostCommentedListView(ListView):
-    paginate_by = 3
-    queryset = Entry.objects.order_by('-comments')
-
-
-class EntryLikedListView(ListView):
-    paginate_by = 3
-    queryset = Entry.objects.order_by('-likes')
 
 
 class EntryTagListView(ListView):
