@@ -2,9 +2,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic.base import RedirectView, TemplateView
+from django.views.generic.base import RedirectView, TemplateView, View
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView, FormMixin, UpdateView, DeleteView
+from django.views.generic.edit import CreateView, FormMixin, FormView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 from django.urls import reverse, reverse_lazy
 
@@ -100,24 +100,23 @@ class EntryDetailView(DetailView):
         return context
 
 
-class EntryLikeRedirectView(LoginRequiredMixin, RedirectView):
+class EntryLikeView(LoginRequiredMixin, RedirectView):
 
     def get_redirect_url(self, *args, **kwargs):
-        owner = self.request.user
-        entry = get_object_or_404(Entry, slug=self.kwargs['slug'])
+        self.entry = get_object_or_404(Entry, slug=self.kwargs['slug'])
         obj = LogLikedEntries.objects.get_or_create(
-            owner=owner,
-            entry=entry
+            owner=self.request.user,
+            entry=self.entry
         )[0]
         if not obj.is_liked:
             obj.is_liked = True
-            entry.likes += 1
+            self.entry.likes += 1
         else:
             obj.is_liked = False
-            entry.likes -= 1
+            self.entry.likes -= 1
 
         obj.save()
-        entry.save()
+        self.entry.save()
         return reverse('learning_logs:entry', kwargs={'slug': self.kwargs['slug']})
 
 

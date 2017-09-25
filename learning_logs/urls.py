@@ -14,7 +14,7 @@ urlpatterns = [
     url(r'^entry/(?P<slug>[\w-]+)/$',
         views.EntryDetailView.as_view(), name='entry'),
     url(r'^entry/(?P<slug>[\w-]+)/like/$',
-        views.EntryLikeRedirectView.as_view(), name='entry_like'),
+        views.EntryLikeView.as_view(), name='entry_like'),
     url(r'^entry/(?P<slug>[\w-]+)/update/$',
         views.EntryUpdate.as_view(), name='entry_update'),
     url(r'^entry/(?P<slug>[\w-]+)/delete/$',
