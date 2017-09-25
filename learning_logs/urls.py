@@ -12,7 +12,7 @@ urlpatterns = [
     url(r'^entries/$', views.EntryListView.as_view(), name='entries'),
     url(r'^entry/add/$', views.EntryCreate.as_view(), name='entry_create'),
     url(r'^entry/(?P<slug>[\w-]+)/$',
-        views.EntryDetail.as_view(), name='entry'),
+        views.EntryDetailView.as_view(), name='entry'),
     url(r'^entry/(?P<slug>[\w-]+)/like/$',
         views.EntryLikeRedirectView.as_view(), name='entry_like'),
     url(r'^entry/(?P<slug>[\w-]+)/update/$',

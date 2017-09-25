@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Tag, Entry, Comment, LogLikedEntries
+from .models import Tag, Entry, Comment, LogLikedEntries, LogViewedEntries
 
 
 @admin.register(Tag)
@@ -37,6 +37,11 @@ class EntryAdmin(admin.ModelAdmin):
 class LogLikedEntriesAdmin(admin.ModelAdmin):
     list_display = ('owner', 'entry', 'is_liked')
     list_filter = ('owner', 'entry', 'is_liked')
+
+
+@admin.register(LogViewedEntries)
+class LogViewedEntriesAdmin(admin.ModelAdmin):
+    list_display = ('remote_addr', 'entry', 'date_added')
 
 
 @admin.register(Comment)

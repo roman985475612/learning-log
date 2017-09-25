@@ -8,7 +8,7 @@ from django.views.generic.edit import CreateView, FormMixin, UpdateView, DeleteV
 from django.views.generic.list import ListView
 from django.urls import reverse, reverse_lazy
 
-from learning_logs.models import Tag, Entry, Comment, LogLikedEntries
+from learning_logs.models import Tag, Entry, Comment, LogLikedEntries, LogViewedEntries
 from users.models import Person
 
 from .forms import TagForm, EntryForm, CommentForm
@@ -72,16 +72,23 @@ class EntryListView(ListView):
         return context
 
 
-class EntryDetail(DetailView):
+class EntryDetailView(DetailView):
     model = Entry
     context_object_name = 'entry'
     form_class = CommentForm
 
-    def get_object(self):
-        self.entry = super().get_object()
-        self.entry.views += 1
-        self.entry.save()
-        return self.entry
+    def dispatch(self, *args, **kwargs):
+        self.entry = get_object_or_404(Entry, slug=self.kwargs['slug'])
+        self.remote_addr = self.request.META['REMOTE_ADDR']
+        obj, created = LogViewedEntries.objects.get_or_create(
+            entry=self.entry,
+            remote_addr=self.remote_addr
+        )
+        if created:
+            self.entry.views += 1
+            self.entry.save()
+
+        return super().dispatch(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

@@ -73,6 +73,12 @@ class LogLikedEntries(models.Model):
         return self.owner.username + ' ' + self.entry.title
 
 
+class LogViewedEntries(models.Model):
+    entry = models.ForeignKey(Entry, on_delete=models.CASCADE)
+    remote_addr = models.CharField(max_length=20)
+    date_added = models.DateTimeField(auto_now_add=True)
+
+
 class Comment(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     entry = models.ForeignKey(Entry, on_delete=models.CASCADE)
