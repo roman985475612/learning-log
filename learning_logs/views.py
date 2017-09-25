@@ -53,6 +53,10 @@ class EntryListView(ListView):
                 Q(text__icontains=self.query)
             )
 
+        self.tag_query = self.request.GET.get('tag_query')
+        if self.tag_query:
+            self.entry_list = self.entry_list.filter(tag__slug=self.tag_query)
+
         self.sort_by = self.request.GET.get('sort_by')
         if self.sort_by:
             self.entry_list = self.entry_list.order_by(self.sort_by)
@@ -61,17 +65,11 @@ class EntryListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['tags'] = Tag.objects.all()
         context['query'] = self.query
+        context['tag_query'] = self.tag_query
         context['sort_by'] = self.sort_by
         return context
-
-
-class EntryTagListView(ListView):
-    paginate_by = 3
-
-    def get_queryset(self):
-        self.entry = Entry.objects.filter(tag__slug=self.kwargs['slug'])
-        return self.entry
 
 
 class EntryDetail(DetailView):

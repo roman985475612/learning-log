@@ -16,15 +16,26 @@
     <div class="col-xs-4">
       <form class="form-inline" role="form">
         <div class="imput-group">
+
+          <select name="tag_query" class="form-control">
+            <option value="" {% if not tag_query %}selected="selected"{% endif %}>- tags -</option>
+            {% for tag in tags %}
+              <option value="{{ tag.slug }}" {% if tag_query == tag.slug %}selected="selected"{% endif %}>{{ tag }}</option>
+            {% endfor %}
+          </select>
+
           <select name="sort_by" class="form-control">
-            <option value="" {% if not sort_by %}selected="selected"{% endif %}>---</option>
+            <option value="" {% if not sort_by %}selected="selected"{% endif %}>- order by -</option>
             <option value="-date_added" {% if sort_by == "-date_added" %}selected="selected"{% endif %}>Newest</option>
             <option value="date_added" {% if sort_by == "date_added" %}selected="selected"{% endif %}>Oldest</option>
             <option value="-views" {% if sort_by == "-views" %}selected="selected"{% endif %}>Most viewed</option>
             <option value="-likes" {% if sort_by == "-likes" %}selected="selected"{% endif %}>Most liked</option>
             <option value="-comments" {% if sort_by == "-comments" %}selected="selected"{% endif %}>Most commented</option>
           </select>
-          <input type="submit" value="Go" class="btn btn-default">
+
+          <button class="btn btn-default" type="submit">
+              <span class="glyphicon glyphicon-filter"></span>
+          </button>
         </div>
       </form>
     </div>
@@ -58,7 +69,7 @@
               <span class="glyphicon glyphicon-pencil"></span> {{ entry.comments }}&nbsp;&nbsp;
               <span class="glyphicon glyphicon-thumbs-up"></span> {{ entry.likes }}&nbsp;&nbsp;
               {% for tag in entry.tag.all %}
-                <a href="{% url 'learning_logs:entry_tag' tag.slug %}" class="btn btn-default btn-xs">{{ tag.title }}</a>&nbsp;
+                <a href="{% url 'learning_logs:entries' %}?tag_query={{ tag.slug }}" class="btn btn-default btn-xs">{{ tag.title }}</a>&nbsp;
               {% endfor %}
             </div>
           </div>

@@ -8,8 +8,6 @@ urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
     url(r'^tags/$', views.TagListView.as_view(), name='tags'),
     url(r'^tag/add/$', views.TagCreateView.as_view(), name='tag_create'),
-    url(r'^tag/(?P<slug>[\w-]+)/$',
-        views.EntryTagListView.as_view(), name='entry_tag'),
 
     url(r'^entries/$', views.EntryListView.as_view(), name='entries'),
     url(r'^entry/add/$', views.EntryCreate.as_view(), name='entry_create'),
