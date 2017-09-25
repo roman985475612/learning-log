@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.base import RedirectView, TemplateView
@@ -43,11 +44,13 @@ class EntryListView(ListView):
     paginate_by = 3
 
     def get_queryset(self):
+        self.entry_list = Entry.objects.all()
         self.query = self.request.GET.get('query')
         if self.query:
-            self.entry_list = Entry.objects.filter(text__icontains=self.query)
-        else:
-            self.entry_list = Entry.objects.all()
+            self.entry_list = Entry.objects.filter(
+                Q(title__icontains=self.query)|
+                Q(text__icontains=self.query)
+            )
 
         return self.entry_list
 
