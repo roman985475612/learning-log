@@ -8,7 +8,7 @@ from django.views.generic.edit import CreateView, FormMixin, UpdateView, DeleteV
 from django.views.generic.list import ListView
 from django.urls import reverse, reverse_lazy
 
-from learning_logs.models import Tag, Entry, Comment
+from learning_logs.models import Tag, Entry, Comment, LogLikedEntries
 from users.models import Person
 
 from .forms import TagForm, EntryForm, CommentForm
@@ -96,8 +96,20 @@ class EntryDetail(DetailView):
 class EntryLikeRedirectView(LoginRequiredMixin, RedirectView):
 
     def get_redirect_url(self, *args, **kwargs):
+        owner = self.request.user
         entry = get_object_or_404(Entry, slug=self.kwargs['slug'])
-        entry.likes += 1
+        obj = LogLikedEntries.objects.get_or_create(
+            owner=owner,
+            entry=entry
+        )[0]
+        if not obj.is_liked:
+            obj.is_liked = True
+            entry.likes += 1
+        else:
+            obj.is_liked = False
+            entry.likes -= 1
+
+        obj.save()
         entry.save()
         return reverse('learning_logs:entry', kwargs={'slug': self.kwargs['slug']})
 

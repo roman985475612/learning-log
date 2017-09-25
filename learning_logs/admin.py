@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Tag, Entry, Comment
+from .models import Tag, Entry, Comment, LogLikedEntries
 
 
 @admin.register(Tag)
@@ -31,6 +31,12 @@ class EntryAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('title',)}
 
     inlines = [CommentInline]
+
+
+@admin.register(LogLikedEntries)
+class LogLikedEntriesAdmin(admin.ModelAdmin):
+    list_display = ('owner', 'entry', 'is_liked')
+    list_filter = ('owner', 'entry', 'is_liked')
 
 
 @admin.register(Comment)

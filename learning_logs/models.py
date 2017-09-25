@@ -25,7 +25,7 @@ class Tag(models.Model):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
-        super().save(*args, **kwargs) 
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.title
@@ -62,6 +62,15 @@ class Entry(models.Model):
 
     def get_absolute_url(self):
         return reverse('learning_logs:entry', kwargs={'slug': self.slug})
+
+
+class LogLikedEntries(models.Model):
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    entry = models.ForeignKey(Entry, on_delete=models.CASCADE)
+    is_liked = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.owner.username + ' ' + self.entry.title
 
 
 class Comment(models.Model):
