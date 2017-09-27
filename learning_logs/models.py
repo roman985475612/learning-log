@@ -85,6 +85,9 @@ class Comment(models.Model):
     text = models.TextField()
     date_added = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        ordering = ['-date_added']
+
     def __str__(self):
         if len(self.text) < 40:
             return self.text

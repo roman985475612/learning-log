@@ -17,7 +17,7 @@
 </head>
 <body>
 
-  <nav class="navbar navbar-inverse navbar-static-top">
+  <nav class="navbar navbar-default navbar-static-top">
     <div class="container">
 
       <div class="navbar-header">
@@ -31,6 +31,8 @@
       </div>
 
       {% url 'learning_logs:index' as index %}
+      {% url 'learning_logs:newest' as newest %}
+      {% url 'learning_logs:top' as top %}
       {% url 'learning_logs:entries' as entries %}
       {% url 'learning_logs:tags' as tag_list %}
       {% url 'users:register' as register %}
@@ -39,6 +41,8 @@
       <div id="navbar" class="navbar-collapse collapse">
         <ul class="nav navbar-nav">
           <li class="{% if request.path == index %} active {% endif %}"><a href="{% url 'learning_logs:index' %}">Home</a></li>
+          <li class="{% if request.path == newest %} active {% endif %}"><a href="{% url 'learning_logs:newest' %}">New</a></li>
+          <li class="{% if request.path == top %} active {% endif %}"><a href="{% url 'learning_logs:top' %}">Top</a></li>
           <li class="{% if request.path == entries %} active {% endif %}"><a href="{% url 'learning_logs:entries' %}">Entry</a></li>
           <li class="{% if request.path == tag_list %} active {% endif %}"><a href="{% url 'learning_logs:tags' %}">Tags</a></li>
 

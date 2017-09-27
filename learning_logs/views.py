@@ -41,6 +41,7 @@ class TagCreateView(LoginRequiredMixin, CreateView):
 
 
 class EntryListView(ListView):
+    model = Entry
     paginate_by = 3
 
     def get_queryset(self):
@@ -65,10 +66,44 @@ class EntryListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['bc_item'] = 'All'
         context['tags'] = Tag.objects.all()
         context['query'] = self.query
         context['tag_query'] = self.tag_query
         context['sort_by'] = self.sort_by
+        return context
+
+
+class EntryNewestListView(ListView):
+    paginate_by = 3
+    queryset = Entry.objects.order_by('-date_added')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['bc_item'] = 'New'
+        return context
+
+
+class EntryTopListView(ListView):
+    paginate_by = 3
+    queryset = Entry.objects.order_by('-likes')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['bc_item'] = 'Top'
+        return context
+    
+
+class EntryTagListView(ListView):
+    paginate_by = 3
+
+    def get_queryset(self):
+        self.entry_list = Entry.objects.filter(tag__slug=self.kwargs['tag_slug'])
+        return self.entry_list
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['bc_item'] = 'Tag'
         return context
 
 

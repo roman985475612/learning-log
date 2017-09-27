@@ -5,44 +5,14 @@
   <div class="container">
     <ol class="breadcrumb">
       <li><a href="{% url 'learning_logs:index' %}">Home</a></li>
-      <li class="active">Articles</li>
+      <li class="active">{{ bc_item }}</li>
     </ol>
   </div>
 {% endblock %}
 
 {% block content %}
 
-  <div class="row">
-    <div class="col-xs-6 col-xs-offset-2">
-      <form class="form-inline" role="form">
-        <div class="form-group">
-
-          <input type="text" id="search" class="form-control" name="query" placeholder="Search" value="{{ query|default:'' }}">
-
-          <select name="tag_query" class="form-control">
-            <option value="" {% if not tag_query %}selected="selected"{% endif %}>- tags -</option>
-            {% for tag in tags %}
-              <option value="{{ tag.slug }}" {% if tag_query == tag.slug %}selected="selected"{% endif %}>{{ tag }}</option>
-            {% endfor %}
-          </select>
-
-          <select name="sort_by" class="form-control">
-            <option value="" {% if not sort_by %}selected="selected"{% endif %}>- order by -</option>
-            <option value="-date_added" {% if sort_by == "-date_added" %}selected="selected"{% endif %}>Newest</option>
-            <option value="date_added" {% if sort_by == "date_added" %}selected="selected"{% endif %}>Oldest</option>
-            <option value="-views" {% if sort_by == "-views" %}selected="selected"{% endif %}>Most viewed</option>
-            <option value="-likes" {% if sort_by == "-likes" %}selected="selected"{% endif %}>Most liked</option>
-            <option value="-comments" {% if sort_by == "-comments" %}selected="selected"{% endif %}>Most commented</option>
-          </select>
-
-          <button class="btn btn-default" type="submit">
-              <span class="glyphicon glyphicon-search"></span>
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-
+  
   <br>
 
   <div class="row">

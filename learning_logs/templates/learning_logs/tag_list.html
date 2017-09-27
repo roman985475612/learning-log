@@ -14,7 +14,7 @@
 
 {% block content %}
     {% for tag in tags %}
-        <a href="{% url 'learning_logs:entries' %}?tag_query={{ tag.slug }}" class="btn btn-default">{{ tag.title }}</a>
+        <a href="{% url 'learning_logs:tag' tag.slug %}" class="btn btn-default">{{ tag.title }}</a>
     {% empty %}
         <p>No tags</p>
     {% endfor %}
