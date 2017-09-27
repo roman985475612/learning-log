@@ -27,7 +27,7 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="{% url 'learning_logs:index' %}" id="header-font">Learning Log</a>
+        <a class="navbar-brand" href="{% url 'learning_logs:index' %}" id="header-font">Live Journal</a>
       </div>
 
       {% url 'learning_logs:index' as index %}
@@ -45,15 +45,6 @@
           <li class="{% if request.path == top %} active {% endif %}"><a href="{% url 'learning_logs:top' %}">Top</a></li>
           <li class="{% if request.path == entries %} active {% endif %}"><a href="{% url 'learning_logs:entries' %}">Entry</a></li>
           <li class="{% if request.path == tag_list %} active {% endif %}"><a href="{% url 'learning_logs:tags' %}">Tags</a></li>
-
-          <li class="dropdown">
-              <a data-toggle="dropdown" class="dropdown-toggle">Polls <b class="caret"></b></a>
-              <ul class="dropdown-menu">
-                <li><a href="{% url 'polls:questions' %}">Polls</a></li>
-                <li><a href="{% url 'polls:popular-answer' %}">Popular</a></li>
-              </ul>
-          </li>
-          <li><a href="#">About</a></li>
         </ul>
 
         <ul class="nav navbar-nav navbar-right">
