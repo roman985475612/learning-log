@@ -2,56 +2,55 @@
 {% load staticfiles %}
 
 {% block content %}
-  <div class="table-responsive">
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Key</th>
-          <th>Value</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td colspan="2">
-            {% if person.image %}
-              <img src="{{ person.image.url }}" class="media-object img-circle" heigth="64">
-            {% else %}
-              <img src="{% static 'img/avatar-tiny.jpg' %}" class="media-object img-circle" heigth="64">
-            {% endif %}
-          </td>
-        </tr>
-        <tr>
-          <td>First name</td>
-          <td>{{ person.first_name }}</td>
-        </tr>
-        <tr>
-          <td>Last name</td>
-          <td>{{ person.last_name }}</td>
-        </tr>
-        <tr>
-          <td>Sex</td>
-          <td>{{ person.sex }}</td>
-        </tr>
-        <tr>
-          <td>Birth date</td>
-          <td>{{ person.birth_date }}</td>
-        </tr>
-        <tr>
-          <td>Email</td>
-          <td>{{ person.email }}</td>
-        </tr>
-        <tr>
-          <td>Home page</td>
-          <td>{{ person.home_page }}</td>
-        </tr>
-        <tr>
-          <td>About me</td>
-          <td>{{ person.about_me }}</td>
-        </tr>
-      </tbody>
-    </table>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3">
+        {% if person.image %}
+          <img src="{{ person.image.url }}" class="media-object img-circle" heigth="64">
+        {% else %}
+          <img src="{% static 'img/avatar-tiny.jpg' %}" class="media-object img-circle" heigth="64">
+        {% endif %}
+      </div>
+      <div class="col-md-4">
+        <table class="table">
+          <tbody>
+            <tr>
+              <td>First name</td>
+              <td>{{ person.first_name }}</td>
+            </tr>
+            <tr>
+              <td>Last name</td>
+              <td>{{ person.last_name }}</td>
+            </tr>
+            <tr>
+              <td>Sex</td>
+              <td>{{ person.sex }}</td>
+            </tr>
+            <tr>
+              <td>Birth date</td>
+              <td>{{ person.birth_date|default:"" }}</td>
+            </tr>
+            <tr>
+              <td>Email</td>
+              <td>{{ person.email|default:"" }}</td>
+            </tr>
+            <tr>
+              <td>Home page</td>
+              <td>{{ person.home_page|default:"" }}</td>
+            </tr>
+            <tr>
+              <td>About me</td>
+              <td>{{ person.about_me }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <a href="{% url 'users:profile_update' %}" class="btn btn-default">Edit</a>
+        <a href="{% url 'users:profile_delete' %}" class="btn btn-default">Delete</a>
+      </div>
+    </div>
   </div>
-
-  <a href="{% url 'users:profile_update' %}" class="btn btn-warning">Update</a>
-  <a href="{% url 'users:profile_delete' %}" class="btn btn-danger">Delete</a>
+  <br>
+  <br>
+  <br>
+  <br>
 {% endblock %}

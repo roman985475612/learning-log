@@ -3,16 +3,16 @@ from django.db import models
 
 
 class Person(models.Model):
-    MALE = 'M'
-    FEMALE = 'F'
+    MALE = 'male'
+    FEMALE = 'female'
     SEX_CHOICES = (
-        (MALE, 'Male'),
-        (FEMALE, 'Female'),
+        (MALE, 'male'),
+        (FEMALE, 'female'),
     )
     owner = models.OneToOneField(User, on_delete=models.CASCADE, related_name='person')
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
-    sex = models.CharField(max_length=1, choices=SEX_CHOICES)
+    sex = models.CharField(max_length=6, choices=SEX_CHOICES)
     birth_date = models.DateField(null=True, blank=True)
     email = models.EmailField(null=True, blank=True)
     home_page = models.URLField(null=True, blank=True)

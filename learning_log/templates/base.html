@@ -52,10 +52,9 @@
             <li class="dropdown">
               <a data-toggle="dropdown" class="dropdown-toggle"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;{{ user.username|title }} <b class="caret"></b></a>
               <ul class="dropdown-menu">
-                <li><a href="{% url 'learning_logs:entry_create' %}">New Entry</a></li>
+                <li><a href="{% url 'learning_logs:entry_create' %}"><span class="glyphicon glyphicon-plus-sign"></span>&nbsp;&nbsp;Add entry</a></li>
                 <li class="divider"></li>
-                <li><a href="{% url 'polls:answer' %}">Answer</a></li>
-                <li><a href="{% url 'users:profile' %}">Form</a></li>
+                <li><a href="{% url 'users:profile' %}"><span class="glyphicon glyphicon-file"></span>&nbsp;&nbsp;Profile</a></li>
                 <li class="divider"></li>
                 <li><a href="{% url 'users:logout' %}"><span class="glyphicon glyphicon-log-out"></span>&nbsp;&nbsp;Sing out</a></li>
               </ul>

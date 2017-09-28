@@ -61,7 +61,7 @@ class PersonDetailView(LoginRequiredMixin, PersonMixins, TemplateView):
     template_name = 'users/person_detail.html'
 
     def get_context_data(self, **kwargs):
-        context = super(PersonDetailView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context['person'] = self.get_person(self.request)
         return context
 
