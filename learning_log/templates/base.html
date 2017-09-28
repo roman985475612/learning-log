@@ -17,7 +17,7 @@
 </head>
 <body>
 
-  <nav class="navbar navbar-default navbar-static-top">
+  <nav class="navbar navbar-inverse ">
     <div class="container">
 
       <div class="navbar-header">
@@ -71,14 +71,9 @@
 
   {% block breadcrumb %}{% endblock %}
 
-  {% block header %}{% endblock %}
+  {% block content %}{% endblock %}
 
-  <div class="container">
-    <div>{% block content %}{% endblock %}</div>
-  </div>
-
-  <footer class="container-fluid text-center">
-    <hr>
+  <footer class="container-fluid bg-4 text-center">
     <p>&copy; 2017 Live Journal</p>
   </footer>
 

@@ -3,35 +3,37 @@
 
 {% block title %}Home{% endblock %}
 
-{% block header %}
-    <div class="jumbotron">
+{% block content %}
+    <div class="container-fluid bg-3 text-center">
         <div class="container">
             <h1>Live Journal</h1>
             <p>{% lorem 30 w %}</p>
-            <p><a class="btn btn-primary btn-lg" href="{% url 'users:register' %}" role="button">Register &raquo;</a></p>
+            <p><a class="btn btn-default btn-lg" href="{% url 'users:register' %}">Register &raquo;</a></p>
         </div>
     </div>
 
-    <div class="row">
-        {% for entry in entry_list %}
-            <div class="col-sm-6 col-sm-offset-3">
-                <h4><small>RECENT POSTS</small></h4>
-                <h2><a href="{% url 'learning_logs:entry' entry.slug %}">{{ entry.title }}</a></h2>
-                <h5><span class="glyphicon glyphicon-time"></span> Post by {{ entry.owner|title }}, {{ entry.date_added|date:"M d, Y" }}.</h5>
-                
-                <h5>
-                {% for tag in entry.tag.all %}
-                    <a href="{% url 'learning_logs:tag' tag.slug %}" class="btn btn-{{ tag.color }} btn-xs">{{ tag.title }}</a>&nbsp;
+    <div class="container-fluid bg-3">
+        <div class="container">
+            <div class="row">
+                {% for entry in entry_list %}
+                    <div class="col-sm-4">
+                        <h4><small>RECENT POSTS</small></h4>
+                        <h2><a href="{% url 'learning_logs:entry' entry.slug %}">{{ entry.title }}</a></h2>
+                        <h5><span class="glyphicon glyphicon-time"></span> Post by {{ entry.owner|title }}, {{ entry.date_added|date:"M d, Y" }}.</h5>
+                        <h5>
+                        {% for tag in entry.tag.all %}
+                            <a href="{% url 'learning_logs:tag' tag.slug %}" class="btn btn-{{ tag.color }} btn-xs">{{ tag.title }}</a>&nbsp;
+                        {% endfor %}
+                        </h5>
+                        <p class="text-justify">{{ entry.text|linebreaks|truncatewords:33 }}</p>
+                        <h5>
+                            <span class="glyphicon glyphicon-eye-open"></span> {{ entry.views }}&nbsp;&nbsp;
+                            <span class="glyphicon glyphicon-pencil"></span> {{ entry.comments }}&nbsp;&nbsp;
+                            <span class="glyphicon glyphicon-thumbs-up"></span> {{ entry.likes }}&nbsp;&nbsp;
+                        </h5>
+                    </div>
                 {% endfor %}
-                </h5>
-                <p class="text-justify">{{ entry.text|linebreaks|truncatewords:33 }}</p>
-                <h5>
-                    <span class="glyphicon glyphicon-eye-open"></span> {{ entry.views }}&nbsp;&nbsp;
-                    <span class="glyphicon glyphicon-pencil"></span> {{ entry.comments }}&nbsp;&nbsp;
-                    <span class="glyphicon glyphicon-thumbs-up"></span> {{ entry.likes }}&nbsp;&nbsp;
-                </h5>
-                <br><br>
             </div>
-        {% endfor %}
+        </div>
     </div>
 {% endblock %}

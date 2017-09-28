@@ -24,7 +24,7 @@ class OwnerVerificationMixins:
 
 
 class IndexView(ListView):
-    queryset = Entry.objects.order_by('-views')[:4]
+    queryset = Entry.objects.order_by('-views')[:3]
     template_name = 'learning_logs/index.html'
 
 
@@ -42,7 +42,7 @@ class TagCreateView(LoginRequiredMixin, CreateView):
 
 class EntryListView(ListView):
     model = Entry
-    paginate_by = 3
+    paginate_by = 4
 
     def get_queryset(self):
         self.entry_list = Entry.objects.all()
@@ -75,7 +75,7 @@ class EntryListView(ListView):
 
 
 class EntryNewestListView(ListView):
-    paginate_by = 3
+    paginate_by = 4
     queryset = Entry.objects.order_by('-date_added')
 
     def get_context_data(self, **kwargs):
@@ -85,7 +85,7 @@ class EntryNewestListView(ListView):
 
 
 class EntryTopListView(ListView):
-    paginate_by = 3
+    paginate_by = 4
     queryset = Entry.objects.order_by('-likes')
 
     def get_context_data(self, **kwargs):
@@ -95,7 +95,7 @@ class EntryTopListView(ListView):
     
 
 class EntryTagListView(ListView):
-    paginate_by = 3
+    paginate_by = 4
 
     def get_queryset(self):
         self.entry_list = Entry.objects.filter(tag__slug=self.kwargs['tag_slug'])
@@ -106,6 +106,18 @@ class EntryTagListView(ListView):
         context['bc_item'] = 'Tag'
         return context
 
+
+class EntryOwnerListView(ListView):
+    paginate_by = 4
+
+    def get_queryset(self):
+        self.entry_list = Entry.objects.filter(owner__username=self.kwargs['owner'])
+        return self.entry_list
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['bc_item'] = self.kwargs['owner']
+        return context
 
 class EntryDetailView(DetailView):
     model = Entry

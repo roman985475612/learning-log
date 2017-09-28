@@ -13,9 +13,13 @@
 {% endblock %}
 
 {% block content %}
-    {% for tag in tags %}
-        <a href="{% url 'learning_logs:tag' tag.slug %}" class="btn btn-default">{{ tag.title }}</a>
-    {% empty %}
-        <p>No tags</p>
-    {% endfor %}
+  <div class="container-fluid">
+    <div class="container">
+      {% for tag in tags %}
+          <a href="{% url 'learning_logs:tag' tag.slug %}" class="btn btn-default">{{ tag.title }}</a>
+      {% empty %}
+          <p>No tags</p>
+      {% endfor %}
+    </div>
+  </div>
 {% endblock %}
