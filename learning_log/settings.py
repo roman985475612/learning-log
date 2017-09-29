@@ -125,7 +125,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'learning_log/static'),
+    os.path.join(BASE_DIR, 'learning_log', 'static'),
 ]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -164,5 +164,5 @@ if os.getcwd() == '/app':
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
     STATICFILES_DIRS = (
-        os.path.join(BASE_DIR, 'static'),
+        os.path.join(BASE_DIR, 'learning_log', 'static'),
     )
