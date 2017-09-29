@@ -63,6 +63,8 @@ class PersonDetailView(LoginRequiredMixin, PersonMixins, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['person'] = self.get_person(self.request)
+        context['entry_list'] = context['person'].owner.entry.all()
+        context['comment_list'] = context['person'].owner.comment.order_by('entry', '-date_added')
         return context
 
 

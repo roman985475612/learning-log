@@ -80,7 +80,7 @@ class LogViewedEntries(models.Model):
 
 
 class Comment(models.Model):
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comment')
     entry = models.ForeignKey(Entry, on_delete=models.CASCADE)
     text = models.TextField()
     date_added = models.DateTimeField(auto_now=True)
