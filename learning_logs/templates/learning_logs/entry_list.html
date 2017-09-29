@@ -30,7 +30,7 @@
               <div class="media-body">
                 <a href="{% url 'learning_logs:entry' entry.slug %}"><h4 class="media-heading">{{ entry.title }}</h4></a>
 
-                <div class="text-muted">{{ entry.date_added|date:'F d, Y' }} by <a href="{% url 'learning_logs:owner' entry.owner %}">{{ entry.owner|title }}</a></div>
+                <div class="text-muted">{{ entry.date_added|date:'F d, Y' }} by <a href="{% url 'users:profile' entry.owner.person.id %}">{{ entry.owner|title }}</a></div>
 
                 <div class="text-justify">{{ entry.text|linebreaks|truncatewords:30 }}</div>
 

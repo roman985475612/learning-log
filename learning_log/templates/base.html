@@ -54,7 +54,7 @@
               <ul class="dropdown-menu">
                 <li><a href="{% url 'learning_logs:entry_create' %}"><span class="glyphicon glyphicon-plus-sign"></span>&nbsp;&nbsp;Add entry</a></li>
                 <li class="divider"></li>
-                <li><a href="{% url 'users:profile' %}"><span class="glyphicon glyphicon-file"></span>&nbsp;&nbsp;Profile</a></li>
+                <li><a href="{% url 'users:profile' request.user.person.id %}"><span class="glyphicon glyphicon-file"></span>&nbsp;&nbsp;Profile</a></li>
                 <li class="divider"></li>
                 <li><a href="{% url 'users:logout' %}"><span class="glyphicon glyphicon-log-out"></span>&nbsp;&nbsp;Sing out</a></li>
               </ul>

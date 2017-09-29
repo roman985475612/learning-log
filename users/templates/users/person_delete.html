@@ -7,6 +7,6 @@
 	<form action="" method="post" class="form">
 		{% csrf_token %}
 		<input type="submit" class="btn btn-primary" value="OK">
-		<a href="{% url 'users:profile' %}" class="btn btn-default">Cancel</a>
+		<a href="{% url 'users:profile' person.id %}" class="btn btn-default">Cancel</a>
 	</form>
 {% endblock %}

@@ -32,7 +32,7 @@
           <div class="media-body">
             <div class="media-heading">
               <h4>
-                {{ entry.owner|title }}
+                <a href="{% url 'users:profile' entry.owner.person.id %}">{{ entry.owner|title }}</a>
                 <div>
                   <small>Pablished on {{ entry.date_added|date:'F d, Y' }}</small>
                 </div>
@@ -80,8 +80,6 @@
         {% endfor %}
       </div>
 
-      <br>
-
       <!-- Like button -->
       {% if user.is_authenticated %}
         <div class="row">
@@ -93,18 +91,21 @@
 
       <br>
 
-      <div class="row">
-        
-        <!-- Add new comments -->
-        {% if user.is_authenticated %}
+      <!-- Add new comments -->
+      {% if user.is_authenticated %}
+        <div class="row">
           <h4>Leave a Comment:</h4>
           <form action="{% url 'learning_logs:comment_create' entry.slug %}" method="post" class="form">
             {% csrf_token %}
             {% bootstrap_form form %}
             <input type="submit" class="btn btn-default" value="Post comment">
           </form>
-        {% endif %}
-        <br>
+        </div>
+      {% endif %}
+
+      <br>
+      
+      <div class="row">
         <h5>
           <span class="badge">{{ entry.comments }}</span> Comment{{ entry.comments|pluralize }}:
         </h5>
@@ -121,7 +122,7 @@
             </div>
             <div class="media-body">
               <h4 class="media-heding">
-                {{ comment.owner|title }}
+                <a href="{% url 'users:profile' comment.owner.person.id %}">{{ comment.owner|title }}</a>
                 <small><i>Pablished on {{ comment.date_added|date:'F d, Y' }}</i></small>
                 {% if comment.owner == user %}
                   &nbsp;<a href="{% url 'learning_logs:comment_update' comment.pk %}" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-edit"></span></a>
