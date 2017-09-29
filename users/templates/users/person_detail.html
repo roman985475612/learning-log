@@ -2,6 +2,15 @@
 {% load staticfiles %}
 
 {% block content %}
+  <script type="text/javascript">
+    $(document).ready(function(){ 
+        $("#myTab a").click(function(e){
+          e.preventDefault();
+          $(this).tab('show');
+        });
+    });
+  </script>
+
   <div class="container">
     <div class="row">
       <div class="col-md-3">
@@ -11,41 +20,58 @@
           <img src="{% static 'img/avatar-tiny.jpg' %}" class="media-object img-circle" heigth="64">
         {% endif %}
       </div>
-      <div class="col-md-4">
-        <table class="table">
-          <tbody>
-            <tr>
-              <td>First name</td>
-              <td>{{ person.first_name }}</td>
-            </tr>
-            <tr>
-              <td>Last name</td>
-              <td>{{ person.last_name }}</td>
-            </tr>
-            <tr>
-              <td>Sex</td>
-              <td>{{ person.sex }}</td>
-            </tr>
-            <tr>
-              <td>Birth date</td>
-              <td>{{ person.birth_date|default:"" }}</td>
-            </tr>
-            <tr>
-              <td>Email</td>
-              <td>{{ person.email|default:"" }}</td>
-            </tr>
-            <tr>
-              <td>Home page</td>
-              <td>{{ person.home_page|default:"" }}</td>
-            </tr>
-            <tr>
-              <td>About me</td>
-              <td>{{ person.about_me }}</td>
-            </tr>
-          </tbody>
-        </table>
-        <a href="{% url 'users:profile_update' %}" class="btn btn-default">Edit</a>
-        <a href="{% url 'users:profile_delete' %}" class="btn btn-default">Delete</a>
+
+      <div class="col-md-8">
+
+        <ul class="nav nav-tabs" id="myTab">
+          <li class="active"><a href="#profile">Profile</a></li>
+          <li><a href="#entries">Entries</a></li>
+        </ul>
+
+        <div class="tab-content">
+          <div class="tab-pane fade in active" id="profile">
+            <table class="table table-bordered">
+              <tbody>
+                <tr><td>First name</td><td>{{ person.first_name }}</td></tr>
+                <tr><td>Last name</td><td>{{ person.last_name }}</td></tr>
+                <tr><td>Sex</td><td>{{ person.sex }}</td></tr>
+                <tr><td>Birth date</td><td>{{ person.birth_date|default:"" }}</td></tr>
+                <tr><td>Email</td><td>{{ person.email|default:"" }}</td></tr>
+                <tr><td>Home page</td><td>{{ person.home_page|default:"" }}</td></tr>
+                <tr><td>About me</td><td>{{ person.about_me }}</td></tr>
+              </tbody>
+            </table>
+            <a href="{% url 'users:profile_update' %}" class="btn btn-default">Edit</a>
+            <a href="{% url 'users:profile_delete' %}" class="btn btn-default">Delete</a>
+          </div>
+          <div class="tab-pane fade" id="entries">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th class="text-center">Date added</th>
+                  <th class="text-center">Views</th>
+                  <th class="text-center">Likes</th>
+                  <th class="text-center">Comments</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for entry in person.owner.entry.all %}
+                  <tr>
+                    <td><a href="{% url 'learning_logs:entry' entry.slug %}">{{ entry.title }}</a></td>
+                    <td class="text-center">{{ entry.date_added|date:'d.m.Y' }}</td>
+                    <td class="text-center">{{ entry.views }}</td>
+                    <td class="text-center">{{ entry.likes }}</td>
+                    <td class="text-center">{{ entry.comments }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        
+
       </div>
     </div>
   </div>

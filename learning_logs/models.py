@@ -33,7 +33,7 @@ class Tag(models.Model):
 
 class Entry(models.Model):
     tag = models.ManyToManyField(Tag, default='', blank=True)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='entry')
     title = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(unique=True)
     text = models.TextField()
