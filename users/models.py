@@ -10,9 +10,9 @@ class Person(models.Model):
         (FEMALE, 'female'),
     )
     owner = models.OneToOneField(User, on_delete=models.CASCADE, related_name='person')
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
-    sex = models.CharField(max_length=6, choices=SEX_CHOICES)
+    first_name = models.CharField(max_length=30, blank=True)
+    last_name = models.CharField(max_length=30, blank=True)
+    sex = models.CharField(max_length=6, choices=SEX_CHOICES, blank=True)
     birth_date = models.DateField(null=True, blank=True)
     email = models.EmailField(null=True, blank=True)
     home_page = models.URLField(null=True, blank=True)

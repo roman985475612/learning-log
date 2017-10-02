@@ -50,6 +50,8 @@ class RegisterView(FormView):
             username=form.cleaned_data['username'],
             password=form.cleaned_data['password1']
         ))
+        obj = Person.objects.get_or_create(owner=self.request.user)[0]
+        obj.save()
         return redirect(self.success_url)
 
 
@@ -67,7 +69,7 @@ class PersonCreateView(LoginRequiredMixin, OwnerVerificationMixins, CreateView):
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
-        return super(PersonCreateView, self).form_valid(form)
+        return super().form_valid(form)
 
 
 class PersonUpdateView(LoginRequiredMixin, OwnerVerificationMixins, UpdateView):
