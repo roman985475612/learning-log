@@ -7,7 +7,7 @@
 {% block breadcrumb %}
   <div class="container">
     <ol class="breadcrumb">
-      <li><a href="{% url 'learning_logs:index' %}">Home</a></li>
+      <li><a href="{% url 'learning_logs:index' %}"><span class="glyphicon glyphicon-home"></span></a></li>
       <li><a href="{% url 'learning_logs:entries' %}">Articles</a></li>
       <li class="active">{{ entry }}</li>
     </ol>
@@ -68,17 +68,18 @@
 
       <!-- Display entry text -->
       <div class="row">
-        <p class="text-justify">{{ entry.text|linebreaksbr }}</p>
+        {{ entry.text|linebreaks }}
       </div>
       
-      <hr>
-
+      <br>
       <!-- Display tags -->
       <div class="row">
         {% for tag in tags %}
           <a href="{% url 'learning_logs:entries' %}?tag_query={{ tag.slug }}" class="btn btn-default">{{ tag.title }}</a>
         {% endfor %}
       </div>
+
+      <br>
 
       <!-- Like button -->
       {% if user.is_authenticated %}
@@ -129,7 +130,7 @@
                   <a href="{% url 'learning_logs:comment_delete' comment.pk %}" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-trash"></span></a>
                 {% endif %}
               </h4>
-              <p>{{ comment.text|linebreaks }}</p>
+              {{ comment.text|linebreaks }}
             </div>
           </div>
         {% empty %}
