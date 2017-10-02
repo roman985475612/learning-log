@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
@@ -23,11 +24,6 @@ class OwnerVerificationMixins:
         return object
 
 
-class IndexView(ListView):
-    queryset = Entry.objects.order_by('-views')[:3]
-    template_name = 'learning_logs/index.html'
-
-
 class TagListView(ListView):
     model = Tag
     context_object_name = 'tags'
@@ -41,36 +37,26 @@ class TagCreateView(LoginRequiredMixin, CreateView):
 
 
 class EntryListView(ListView):
-    model = Entry
-    paginate_by = 4
+    paginate_by = 3
 
     def get_queryset(self):
         self.entry_list = Entry.objects.all()
-
-        self.query = self.request.GET.get('query')
-        if self.query:
+        self.question = self.request.GET.get('q')
+        if self.question:
             self.entry_list = self.entry_list.filter(
-                Q(title__icontains=self.query)|
-                Q(text__icontains=self.query)
-            )
-
-        self.tag_query = self.request.GET.get('tag_query')
-        if self.tag_query:
-            self.entry_list = self.entry_list.filter(tag__slug=self.tag_query)
-
-        self.sort_by = self.request.GET.get('sort_by')
-        if self.sort_by:
-            self.entry_list = self.entry_list.order_by(self.sort_by)
+                Q(title__icontains=self.question)|
+                Q(text__icontains=self.question)
+            ).order_by('-date_added')
 
         return self.entry_list
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['bc_item'] = 'All'
-        context['tags'] = Tag.objects.all()
-        context['query'] = self.query
-        context['tag_query'] = self.tag_query
-        context['sort_by'] = self.sort_by
+        if self.question:
+            context['last_question'] = '?q=%s' % self.question
+        
+        context['q'] = self.question
         return context
 
 
@@ -106,18 +92,6 @@ class EntryTagListView(ListView):
         context['bc_item'] = 'Tag'
         return context
 
-
-class EntryOwnerListView(ListView):
-    paginate_by = 4
-
-    def get_queryset(self):
-        self.entry_list = Entry.objects.filter(owner__username=self.kwargs['owner'])
-        return self.entry_list
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['bc_item'] = self.kwargs['owner']
-        return context
 
 class EntryDetailView(DetailView):
     model = Entry
