@@ -12,28 +12,6 @@
         </div>
     </div>
 
-    <div class="container-fluid bg-3">
-        <div class="container">
-            <div class="row">
-                {% for entry in entry_list %}
-                    <div class="col-sm-4">
-                        <h4><small>RECENT POSTS</small></h4>
-                        <h2><a href="{% url 'learning_logs:entry' entry.slug %}">{{ entry.title }}</a></h2>
-                        <h5><span class="glyphicon glyphicon-time"></span> Post by {{ entry.owner|title }}, {{ entry.date_added|date:"M d, Y" }}.</h5>
-                        <h5>
-                        {% for tag in entry.tag.all %}
-                            <a href="{% url 'learning_logs:tag' tag.slug %}" class="btn btn-{{ tag.color }} btn-xs">{{ tag.title }}</a>&nbsp;
-                        {% endfor %}
-                        </h5>
-                        <p class="text-justify">{{ entry.text|linebreaks|truncatewords:33 }}</p>
-                        <h5>
-                            <span class="glyphicon glyphicon-eye-open"></span> {{ entry.views }}&nbsp;&nbsp;
-                            <span class="glyphicon glyphicon-pencil"></span> {{ entry.comments }}&nbsp;&nbsp;
-                            <span class="glyphicon glyphicon-thumbs-up"></span> {{ entry.likes }}&nbsp;&nbsp;
-                        </h5>
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
+    {% include 'learning_logs/popular.html' %}
+
 {% endblock %}
