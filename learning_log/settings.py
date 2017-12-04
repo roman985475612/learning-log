@@ -128,7 +128,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = '/home/user/code/learning_log/learning_log/static/'
+# STATIC_ROOT = '/home/user/code/learning_log/learning_log/static/'
 
 STATICFILES_DIRS = [ os.path.join(BASE_DIR, 'learning_log', 'static'), ]
 
