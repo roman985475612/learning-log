@@ -128,27 +128,19 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# STATIC_ROOT = '/home/user/code/learning_log/learning_log/static/'
-
-STATICFILES_DIRS = [ os.path.join(BASE_DIR, 'learning_log', 'static'), ]
-
+# My settings
+LOGIN_URL = '/users/login/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
 MEDIA_URL = '/media/'
 
-# My settings
-
-LOGIN_URL = '/users/login/'
-
 # Settings for django-bootstrap3
-
 BOOTSTRAP3 = {
     'include_jquery': True,
 }
 
 # Heroku settings
-
-if os.getcwd() == '/app':
+cwd = os.getcwd()
+if cwd == '/app' or cwd[:4] == '/tmp':
     import dj_database_url
     DATABASES = {
         'default': dj_database_url.config(default='postgres://localhost')
@@ -159,14 +151,11 @@ if os.getcwd() == '/app':
 
     # Allow all host headers.
     ALLOWED_HOSTS = ['livejournal.herokuapp.com']
-
     DEBUG = False
 
     # Static asset configuration
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
     STATIC_ROOT = 'staticfiles'
-
     STATICFILES_DIRS = (
-        os.path.join(BASE_DIR, 'learning_log', 'static'),
+        os.path.join(BASE_DIR, 'static'),
     )
