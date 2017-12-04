@@ -25,7 +25,7 @@ SECRET_KEY = 'a3t2^t4!(qza5kh4@vu8-($ueopim%sd04$w^d2rbtk0cl8hrz'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
@@ -128,9 +128,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'learning_log', 'static'),
-]
+STATIC_ROOT = '/home/user/code/learning_log/learning_log/static/'
+
+STATICFILES_DIRS = [ os.path.join(BASE_DIR, 'learning_log', 'static'), ]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
@@ -165,8 +165,8 @@ if os.getcwd() == '/app':
     # Static asset configuration
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    STATIC_ROOT = 'staticfiles'
 
     STATICFILES_DIRS = (
-        os.path.join(BASE_DIR, 'learning_log', 'static'),
+        os.path.join(BASE_DIR, 'static'),
     )
