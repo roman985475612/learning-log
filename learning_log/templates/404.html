@@ -1,5 +1,13 @@
-{% extends 'learning_logs/base.html' %}
+{% extends 'base.html' %}
 
-{% block header %}
-  <h2>The item you requested is not available. (404)</h2>
+{% block title %}404 Not Foune{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="container">
+        <div class="alert alert-warning">
+            The item you requested is not available. (404)
+        </div>
+    </div>
+</div>
 {% endblock %}

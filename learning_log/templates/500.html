@@ -1,5 +1,13 @@
-{% extends 'learning_logs/base.html' %}
+{% extends 'base.html' %}
 
-{% block header %}
-  <h2>There has been an internal error. (500)</h2>
+{% block title %}500 Internal Server Error{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="container">
+        <div class="alert alert-warning">
+            There has been an internal error. (500)
+        </div>
+    </div>
+</div>
 {% endblock %}

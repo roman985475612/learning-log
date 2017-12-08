@@ -8,7 +8,9 @@
         <div class="container">
             <h1>Live Journal</h1>
             <p>{% lorem 30 w %}</p>
-            <p><a class="btn btn-default btn-lg" href="{% url 'users:register' %}">Register &raquo;</a></p>
+            {% if not user.is_authenticated %}
+                <p><a class="btn btn-default btn-lg" href="{% url 'users:register' %}">Register &raquo;</a></p>
+            {% endif %}
         </div>
     </div>
 
