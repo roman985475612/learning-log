@@ -4,10 +4,11 @@
 {% block heading %}Log In{% endblock %}
 
 {% block body %}
-  <form action="{% url 'users:login' %}" method="post" class="form">
+  <form action="" method="post" class="form">
     {% csrf_token %}
     {% bootstrap_form form %}
     <input type="submit" class="btn btn-primary btn-block" value="OK">
+    <input type="hidden" name="next" value="{{ next }}">
     <a href="{% url 'learning_logs:index' %}" class="btn btn-default btn-block">Cancel</a>
   </form>
 {% endblock %}

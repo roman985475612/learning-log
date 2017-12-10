@@ -130,6 +130,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'learning_log/static')
 
 # My settings
+LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/users/login/'
 
 # Media files
