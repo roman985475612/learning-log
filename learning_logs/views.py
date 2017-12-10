@@ -114,8 +114,8 @@ class EntryDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = self.form_class
-        context['avatar'] = self.get_object().owner.person.image
-        context['avatar_url'] = context['avatar'].url
+        #context['avatar'] = self.get_object().owner.person.image
+        #context['avatar_url'] = context['avatar'].url
         context['tags'] = self.get_object().tag.all()
         context['comments'] = self.get_object().comment_set.all()
         return context

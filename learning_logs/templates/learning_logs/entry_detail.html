@@ -23,8 +23,8 @@
       <div class="row">
         <div class="media">
           <div class="media-left">
-            {% if avatar %}
-              <img src="{{ avatar_url }}" class="media-object img-circle" height='50px' width="50px">
+            {% if entry.owner.person.image %}
+              <img src="{{ entry.owner.person.image.url }}" class="media-object img-circle" height='50px' width="50px">
             {% else %}
               <img src="{% static 'img/avatar-tiny.jpg' %}" class="media-object img-circle" heigth="64">
             {% endif %}
