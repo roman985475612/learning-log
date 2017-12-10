@@ -132,7 +132,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'learning_log/static')
 # My settings
 LOGIN_URL = '/users/login/'
 
+# Media files
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 MEDIA_URL = '/media/'
 
 # Settings for django-bootstrap3

@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load bootstrap3 %}
-{% load static from staticfiles %}
+{% load staticfiles %}
 
 {% block title %}{{ entry }}{% endblock %}
 
@@ -32,7 +32,7 @@
           <div class="media-body">
             <div class="media-heading">
               <h4>
-                <a href="{% url 'users:profile' entry.owner.person.id %}">{{ entry.owner|title }}</a>
+                <a href="{% url 'users:profile' entry.owner.person.id %}">{{ entry.owner|capfirst }}</a>
                 <div>
                   <small>Pablished on {{ entry.date_added|date:'F d, Y' }}</small>
                 </div>
@@ -123,7 +123,7 @@
             </div>
             <div class="media-body">
               <h4 class="media-heding">
-                <a href="{% url 'users:profile' comment.owner.person.id %}">{{ comment.owner|title }}</a>
+                <a href="{% url 'users:profile' comment.owner.person.id %}">{{ comment.owner|capfirst }}</a>
                 <small><i>Pablished on {{ comment.date_added|date:'F d, Y' }}</i></small>
                 {% if comment.owner == user %}
                   &nbsp;<a href="{% url 'learning_logs:comment_update' comment.pk %}" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-edit"></span></a>
