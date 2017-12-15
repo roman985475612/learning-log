@@ -1,4 +1,4 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q
 from django.http import Http404
@@ -15,13 +15,12 @@ from users.models import Person
 from .forms import TagForm, EntryForm, CommentForm
 
 
-class OwnerVerificationMixins:
+class MyUserPassesTestMixin(UserPassesTestMixin):
+    raise_exception = True
 
-    def get_object(self):
-        object = super().get_object()
-        if object.owner != self.request.user:
-            raise Http404("You are not the owner")
-        return object
+    def test_func(self):
+        owner = self.get_queryset()[0].owner
+        return self.request.user == owner
 
 
 class TagListView(ListView):
@@ -152,7 +151,7 @@ class EntryCreate(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class EntryUpdate(OwnerVerificationMixins, LoginRequiredMixin, UpdateView):
+class EntryUpdate(MyUserPassesTestMixin, UpdateView):
     model = Entry
     form_class = EntryForm
     template_name_suffix = '_update'
@@ -162,7 +161,7 @@ class EntryUpdate(OwnerVerificationMixins, LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 
-class EntryDelete(OwnerVerificationMixins, LoginRequiredMixin, DeleteView):
+class EntryDelete(MyUserPassesTestMixin, DeleteView):
     model = Entry
     template_name_suffix = '_delete'
 
@@ -193,13 +192,13 @@ class CommentCreate(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class CommentUpdate(OwnerVerificationMixins, LoginRequiredMixin, UpdateView):
+class CommentUpdate(MyUserPassesTestMixin, UpdateView):
     model = Comment
     form_class = CommentForm
     template_name_suffix = '_update'
 
 
-class CommentDelete(OwnerVerificationMixins, LoginRequiredMixin, DeleteView):
+class CommentDelete(MyUserPassesTestMixin, DeleteView):
     model = Comment
     template_name_suffix = '_delete'
 
