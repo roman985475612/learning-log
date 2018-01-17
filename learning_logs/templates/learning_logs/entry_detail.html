@@ -1,146 +1,155 @@
 {% extends 'base.html' %}
-{% load bootstrap3 %}
 {% load static %}
 
 {% block title %}{{ entry }}{% endblock %}
 
-{% block breadcrumb %}
-  <div class="container">
-    <ol class="breadcrumb">
-      <li><a href="{% url 'learning_logs:index' %}"><span class="glyphicon glyphicon-home"></span></a></li>
-      <li><a href="{% url 'learning_logs:entries' %}">Articles</a></li>
-      <li class="active">{{ entry }}</li>
-    </ol>
-  </div>
-{% endblock %}
-
 {% block content %}
-<div class="container">
-  <div class="row">
-    <div class="col-lg-7 col-lg-offset-2">
-
-      <!-- Display author entry -->
-      <div class="row">
-        <div class="media">
-          <div class="media-left">
+  <header class="container">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'learning_logs:index' %}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'learning_logs:entries' %}">Articles</a></li>
+        <li class="breadcrumb-item active">{{ entry }}</li>
+      </ol>
+    </nav>
+  </header>
+  <section class="container">
+    <div class="row">
+      <article class="col-12">
+        <!-- Display author entry -->
+        <section class="row">
+          <div class="col-1">
             {% if entry.owner.person.image %}
-              <img src="{{ entry.owner.person.image.url }}" class="media-object img-circle" height='50px' width="50px">
+              <img class="rounded" style="width:50px;height:50px;" src="{{ entry.owner.person.image.url }}">
             {% else %}
-              <img src="{% static 'img/avatar-tiny.jpg' %}" class="media-object img-circle" heigth="64">
+              <img class="rounded" style="width:50px;height:50px;" src="{% static 'img/avatar-tiny.jpg' %}">
             {% endif %}
           </div>
-          <div class="media-body">
-            <div class="media-heading">
-              <h4>
-                <a href="{% url 'users:profile' entry.owner.person.id %}">{{ entry.owner|capfirst }}</a>
-                <div>
-                  <small>Pablished on {{ entry.date_added|date:'F d, Y' }}</small>
-                </div>
-              </h4>
+          <div class="col-11">
+            <a href="{% url 'users:profile' entry.owner.person.id %}">{{ entry.owner|capfirst }}</a><br>
+            <span>Pablished on {{ entry.date_added|date:'F d, Y' }}</span>
+          </div>
+        </section>
+        <br>
+        <!-- Display title block -->
+        <h1>
+          {{ entry.title }}
+          {% if request.user == entry.owner %}
+            <a href="{% url 'learning_logs:entry_update' entry.slug %}" class="btn btn-sm btn-outline-warning">Update</a>
+            <button class="btn btn-outline-danger btn-sm" type="button" data-toggle="modal" data-target="#entryDelete">Delete</button>
+          {% endif %}
+        </h1>
+        <div id="entryDelete" class="modal fade">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title">Deleting Entry</h4>
+                <button class="close" type="button" data-dismiss="modal">&times;</button>
+              </div>
+              <div class="modal-body">
+                Do you want to delete a entry {{ entry.title }}
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
+                <form action="{% url 'learning_logs:entry_delete' entry.pk %}" method="post">
+                  {% csrf_token %}
+                  <button class="btn btn-danger" button="submit">Delete</button>
+                </form>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+                
+        {# <p>{{ entry.views }} view{{ entry.views|pluralize }}</p> #}
 
-      <!-- Display title block -->
-      <div class="row">
-        <h1>
-          {{ entry.title }}
-          {% if user == entry.owner %}
-            <a href="{% url 'learning_logs:entry_update' entry.slug %}" class="btn btn-default"><span class="glyphicon glyphicon-edit"></span></a>
-            <a href="{% url 'learning_logs:entry_delete' entry.slug %}" class="btn btn-default"><span class="glyphicon glyphicon-trash"></span></a>
-          {% endif %}
-          <div>
-            <small>
-              {{ entry.views }} views
-            </small>
-          </div>
-        </h1>
-      </div>
-
-      <!-- Display image -->
-      <div class="row">
+        <!-- Display image -->
         {% if entry.image %}
-          <img src="{{ entry.image.url }}" alt="{{ entry.title }}" class="media-object" height='300'>
-          <br>
+          <img src="{{ entry.image.url }}" alt="{{ entry.title }}" class="rounded" style="height:300px;">
         {% endif %}
-      </div>
 
-      <!-- Display entry text -->
-      <div class="row">
-        {{ entry.text|linebreaks }}
-      </div>
+        <!-- Display entry text -->
+        <p>{{ entry.text|linebreaks }}</p>
       
-      <br>
-      <!-- Display tags -->
-      <div class="row">
+        <!-- Display tags -->
         {% for tag in tags %}
-          <a href="{% url 'learning_logs:entries' %}?tag_query={{ tag.slug }}" class="btn btn-default">{{ tag.title }}</a>
+          <a href="{% url 'learning_logs:entries' %}?tag_query={{ tag.slug }}" class="btn btn-sm btn-outline-{{ tag.color }}">{{ tag.title }}</a>
         {% endfor %}
-      </div>
 
-      <br>
+        <br><br>
 
-      <!-- Like button -->
-      {% if user.is_authenticated %}
-        <div class="row">
-          <a href="{% url 'learning_logs:entry_like' entry.slug %}" class="btn btn-default">
-            <span class="glyphicon glyphicon-thumbs-up"></span> Like | {{ entry.likes }}
-          </a>
-        </div>
-      {% endif %}
+        <!-- Like button -->
+        <a href="{% url 'learning_logs:entry_like' entry.slug %}" class="btn btn-outline-info btn-sm">
+          Like | {{ entry.likes }}
+        </a>
 
-      <br>
+        <br><br>
 
-      <!-- Add new comments -->
-      {% if user.is_authenticated %}
-        <div class="row">
-          <h4>Leave a Comment:</h4>
+        <!-- Add new comments -->
+        {% if request.user.is_authenticated %}
           <form action="{% url 'learning_logs:comment_create' entry.slug %}" method="post" class="form">
             {% csrf_token %}
-            {% bootstrap_form form %}
-            <input type="submit" class="btn btn-success" value="Post comment">
+            <div class="form-group">
+              {{ form }}
+            </div>
+            <button class="btn btn-outline-success" type="submit">Post comment</button>
           </form>
-        </div>
-      {% endif %}
+        {% endif %}
 
-      <br>
+        <br>
       
-      <div class="row">
-        <h5>
-          <span class="badge">{{ entry.comments }}</span> Comment{{ entry.comments|pluralize }}:
-        </h5>
+        <p>{{ entry.comments }} Comment{{ entry.comments|pluralize }}:</p>
         
         <!-- Display comments -->
         {% for comment in comments %}
-          <div class="media">
-            <div class="media-left">
+          <article class="row">
+            <div class="col-1">
               {% if comment.owner.person.image %}
-                <img src="{{ comment.owner.person.image.url }}" class="media-object img-circle" height='50px' width="50px">
+                <img class="rounded" style="width:80px;height:80px;" src="{{ comment.owner.person.image.url }}">
               {% else %}
-                <img src="{% static 'img/avatar-tiny.jpg' %}" class="media-object img-circle">
+                <img class="rounded" style="width:80px;height:80px;" src="{% static 'img/avatar-tiny.jpg' %}">
               {% endif %}
             </div>
-            <div class="media-body">
-              <h4 class="media-heding">
-                <a href="{% url 'users:profile' comment.owner.person.id %}">{{ comment.owner|capfirst }}</a>
-                <small><i>Pablished on {{ comment.date_added|date:'F d, Y' }}</i></small>
-                {% if comment.owner == user %}
-                  &nbsp;<a href="{% url 'learning_logs:comment_update' comment.pk %}" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-edit"></span></a>
-                  <a href="{% url 'learning_logs:comment_delete' comment.pk %}" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-trash"></span></a>
+            <div class="col-11">
+              <h5>
+                <a href="{% url 'users:profile' comment.owner.person.id %}">{{ comment.owner|capfirst }}</a>&nbsp;
+                {% if comment.owner == request.user %}
+                  <a href="{% url 'learning_logs:comment_update' comment.pk %}" class="btn btn-outline-warning btn-sm">Update</a>
+                  <button class="btn btn-outline-danger btn-sm" type="button" data-toggle="modal" data-target="#commentDelete{{ forloop.counter }}">
+                    Delete
+                  </button>
+                  <div id="commentDelete{{ forloop.counter }}" class="modal fade">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h4 class="modal-title">Deleting Comment</h4>
+                          <button class="close" type="button" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                          Do you want to delete a comment: {{ comment.text }} {{ comment.pk }}
+                        </div>
+                        <div class="modal-footer">
+                          <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
+                          <form action="{% url 'learning_logs:comment_delete' slug=entry.slug pk=comment.pk %}" method="post">
+                            {% csrf_token %}
+                            <button class="btn btn-danger" type="submit">Delete</button>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div><!-- /.modal -->
                 {% endif %}
-              </h4>
-              {{ comment.text|linebreaks }}
+              </h5>
+              <span>Pablished on {{ comment.date_added|date:'F d, Y' }}</span>
+              <p>{{ comment.text|linebreaks }}</p>
             </div>
-          </div>
-        {% empty %}
+          </article>
           <br>
-          <div class="panel panel-default">
-            <div class="panel-heading">No comments this entry yet.</div>
+        {% empty %}
+          <div class="alert alert-warning">
+            <strong>Ups!</strong> This article has no comments.
           </div>
         {% endfor %}
-      </div>
-    </div>
-  </div> <!-- end row -->
-</div>
+      </article>
+    </div> <!-- end row -->
+  </section>
 {% endblock %}

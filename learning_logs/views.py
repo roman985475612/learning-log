@@ -36,7 +36,7 @@ class TagCreateView(LoginRequiredMixin, CreateView):
 
 
 class EntryListView(ListView):
-    paginate_by = 3
+    paginate_by = 6
 
     def get_queryset(self):
         self.entry_list = Entry.objects.all()
@@ -113,8 +113,6 @@ class EntryDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = self.form_class
-        #context['avatar'] = self.get_object().owner.person.image
-        #context['avatar_url'] = context['avatar'].url
         context['tags'] = self.get_object().tag.all()
         context['comments'] = self.get_object().comment_set.all()
         return context
@@ -140,9 +138,8 @@ class EntryLikeView(LoginRequiredMixin, RedirectView):
         return reverse('learning_logs:entry', kwargs={'slug': self.kwargs['slug']})
 
 
-class EntryCreate(LoginRequiredMixin, CreateView):
+class EntryCreateView(LoginRequiredMixin, CreateView):
     model = Entry
-    template_name_suffix = '_create'
     form_class = EntryForm
 
     def form_valid(self, form):
@@ -150,26 +147,47 @@ class EntryCreate(LoginRequiredMixin, CreateView):
         form.save()
         return super().form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title_label'] = 'Add New Post'
+        context['breadcrumb_item_label'] = 'Add new post'
+        context['button_label'] = 'Add post'
+        return context
 
-class EntryUpdate(MyUserPassesTestMixin, UpdateView):
+
+class EntryUpdateView(MyUserPassesTestMixin, UpdateView):
     model = Entry
     form_class = EntryForm
-    template_name_suffix = '_update'
 
     def form_valid(self, form):
         form.save()
         return super().form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title_label'] = 'Update post'
+        context['breadcrumb_item_label'] = 'Update post'
+        context['button_label'] = 'Update post'
+        return context
 
-class EntryDelete(MyUserPassesTestMixin, DeleteView):
-    model = Entry
-    template_name_suffix = '_delete'
 
-    def get_success_url(self):
-        return reverse('learning_logs:topic', kwargs={'slug': self.object.topic.slug})
+class EntryDeleteView(UserPassesTestMixin, RedirectView):
+
+    def get_queryset(self):
+        return get_object_or_404(Entry, pk=self.kwargs['pk'])
+
+    def test_func(self):
+        return self.request.user == self.get_queryset().owner
+
+    def post(self, request, *args, **kwargs):
+        self.get_queryset().delete()
+        return super().post(request, *args, **kwargs)
+
+    def get_redirect_url(self, *args, **kwargs):
+        return reverse('learning_logs:entries')
 
 
-class CommentCreate(LoginRequiredMixin, CreateView):
+class CommentCreateView(LoginRequiredMixin, CreateView):
     model = Comment
     form_class = CommentForm
     template_name_suffix = '_create'
@@ -192,21 +210,25 @@ class CommentCreate(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class CommentUpdate(MyUserPassesTestMixin, UpdateView):
+class CommentUpdateView(MyUserPassesTestMixin, UpdateView):
     model = Comment
     form_class = CommentForm
-    template_name_suffix = '_update'
 
 
-class CommentDelete(MyUserPassesTestMixin, DeleteView):
-    model = Comment
-    template_name_suffix = '_delete'
+class CommentDeleteView(UserPassesTestMixin, RedirectView):
 
-    def delete(self, request, *args, **kwargs):
-        self.entry = self.get_object().entry
-        self.entry.comments -= 1
-        self.entry.save()
-        return super().delete(request, *args, **kwargs)
+    def get_comment(self):
+        return get_object_or_404(Comment, pk=self.kwargs['pk'])
 
-    def get_success_url(self):
-        return reverse('learning_logs:entry', kwargs={'slug': self.object.entry.slug})
+    def test_func(self):
+        return self.request.user == self.get_comment().owner
+
+    def post(self, request, *args, **kwargs):
+        entry = self.get_comment().entry
+        entry.comments -= 1
+        entry.save()
+        self.get_comment().delete()
+        return super().post(request, *args, **kwargs)
+
+    def get_redirect_url(self, *args, **kwargs):
+        return reverse_lazy('learning_logs:entry', kwargs={'slug': kwargs['slug']})

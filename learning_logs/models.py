@@ -5,21 +5,25 @@ from django.urls import reverse
 
 
 class Tag(models.Model):
-    DEFAULT = 'default'
     PRIMARY = 'primary'
+    SECONDARY = 'secondary'
     SUCCESS = 'success'
     INFO = 'info'
     WARNING = 'warning'
     DANGER = 'danger'
+    LIGHT = 'light'
+    DARK = 'dark'
     COLOR_CHOICES = (
-        (DEFAULT, 'Gray'),
         (PRIMARY, 'Blue'),
+        (SECONDARY, 'Gray'),
         (SUCCESS, 'Green'),
         (INFO, 'Cyan'),
         (WARNING, 'Yellow'),
         (DANGER, 'Red'),
+        (LIGHT, 'White'),
+        (DARK, 'Black')
     )
-    color = models.CharField(max_length=10, choices=COLOR_CHOICES, default=DEFAULT)
+    color = models.CharField(max_length=10, choices=COLOR_CHOICES, default=PRIMARY)
     title = models.CharField(max_length=30, unique=True)
     slug = models.SlugField(unique=True)
 

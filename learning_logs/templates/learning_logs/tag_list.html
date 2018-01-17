@@ -1,25 +1,30 @@
 {% extends 'base.html' %}
-{% load staticfiles %}
+{% load static %}
 
 {% block title %}Tags{% endblock %}
 
-{% block breadcrumb %}
-  <div class="container">
-    <ol class="breadcrumb">
-      <li><a href="{% url 'learning_logs:index' %}">Home</a></li>
-      <li class="active">Tags</li>
-    </ol>
-  </div>
-{% endblock %}
-
 {% block content %}
-  <div class="container-fluid">
-    <div class="container">
-      {% for tag in tags %}
-          <a href="{% url 'learning_logs:tag' tag.slug %}" class="btn btn-default">{{ tag.title }}</a>
-      {% empty %}
-          <p>No tags</p>
-      {% endfor %}
+  <header class="container">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'learning_logs:index' %}">Home</a></li>
+        <li class="breadcrumb-item active">Tags</li>
+      </ol>
+    </nav>
+  </header>
+  <section class="container">
+    <div class="row">
+      <div class="col">
+        <h2 class="text-info">Tags list</h2>
+        {% for tag in tags %}
+          <a href="{% url 'learning_logs:tag' tag.slug %}" class="btn btn-sm btn-outline-{{tag.color}}">{{ tag.title }}</a>&nbsp;
+        {% empty %}
+          <div class="alert alert-primary" role="alert">
+            No tags
+          </div>
+        {% endfor %}
+      </div>
     </div>
-  </div>
+  </section>
+  <br>
 {% endblock %}

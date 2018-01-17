@@ -22,16 +22,6 @@ class OwnerVerificationMixins:
         return object
 
 
-#class LoginView(FormView):
-#    template_name = 'users/login.html'
-#    form_class = AuthenticationForm
-#    success_url = reverse_lazy('learning_logs:index')
-#
-#    def form_valid(self, form):
-#        login(self.request, form.get_user())
-#        return redirect(self.success_url)
-
-
 class LogoutView(View):
 
     def get(self, request):
@@ -64,7 +54,6 @@ class PersonDetailView(LoginRequiredMixin, DetailView):
 class PersonCreateView(LoginRequiredMixin, OwnerVerificationMixins, CreateView):
     model = Person
     form_class = PersonForm
-    template_name_suffix = '_create'
     success_url = reverse_lazy('users:profile')
 
     def form_valid(self, form):
@@ -75,7 +64,6 @@ class PersonCreateView(LoginRequiredMixin, OwnerVerificationMixins, CreateView):
 class PersonUpdateView(LoginRequiredMixin, OwnerVerificationMixins, UpdateView):
     model = Person
     form_class = PersonForm
-    template_name_suffix = '_update'
 
     def form_valid(self, form):
         form.save()
@@ -83,3 +71,7 @@ class PersonUpdateView(LoginRequiredMixin, OwnerVerificationMixins, UpdateView):
 
     def get_success_url(self):
         return reverse('users:profile', kwargs={'pk': self.object.pk})
+
+
+class PersonDeleteView():
+    pass

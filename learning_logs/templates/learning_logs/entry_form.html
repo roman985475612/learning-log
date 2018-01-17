@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title_label }}{% endblock %}
+
+{% block content %}
+<header class="container">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'learning_logs:index' %}">Home</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'learning_logs:entries' %}">Articles</a></li>
+      <li class="breadcrumb-item active">{{ breadcrumb_item_label }}</li>
+    </ol>
+  </nav>
+</header>
+<section class="container">
+  <div class="row">
+    <div class="col-12">
+      <form action="" method="post" class="form" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+          {{ form.title.label_tag }}
+          {{ form.title }}
+          {{ form.title.errors }}
+        </div>
+        <div class="form-group">
+          {{ form.tag.label_tag }}
+          {{ form.tag }}
+          {{ form.tag.errors }}
+          <br>
+          <a class="btn btn-outline-info btn-sm" href="{% url 'learning_logs:tag_create' %}" target="_blank">Create new tag</a>
+        </div>
+        <div class="form-group">
+          {{ form.text.label_tag }}
+          {{ form.text }}
+          {{ form.text.errors }}
+        </div>
+        <div class="form-group">
+          {{ form.image.label_tag }}
+          {{ form.image }}
+          {{ form.image.errors }}
+        </div>
+        <button class="btn btn-success" type="submit">{{ button_label }}</button>
+      </form>
+    </div>
+  </div>
+</section>
+<br>
+{% endblock %}

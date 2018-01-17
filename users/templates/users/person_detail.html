@@ -1,19 +1,18 @@
 {% extends 'base.html' %}
-{% load staticfiles %}
+{% load static %}
 
 {% block content %}
-  <script type="text/javascript">
-    $(document).ready(function(){ 
-        $("#myTab a").click(function(e){
-          e.preventDefault();
-          $(this).tab('show');
-        });
-    });
-  </script>
-
+<header class="container">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'learning_logs:index' %}">Home</a></li>
+      <li class="breadcrumb-item active">Profile</li>
+    </ol>
+  </nav>
+</header>
   <div class="container">
     <div class="row">
-      <div class="col-md-3">
+      <div class="col-3">
         {% if person.image %}
           <img src="{{ person.image.url }}" class="media-object img-circle" heigth="64">
         {% else %}
@@ -21,16 +20,20 @@
         {% endif %}
       </div>
 
-      <div class="col-md-8">
-
-        <ul class="nav nav-tabs" id="myTab">
-          <li class="active"><a href="#profile">Profile</a></li>
-          <li><a href="#entries">Entries</a></li>
-          <li><a href="#comments">Comments</a></li>
+      <div class="col-9">
+        <ul class="nav nav-tabs">
+          <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab" href="#profile">Profile</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#entries">Entries</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#comments">Comments</a>
+          </li>
         </ul>
-
         <div class="tab-content">
-          <div class="tab-pane fade in active" id="profile">
+          <div class="tab-pane container active" id="profile">
             <br>
             <table class="table table-bordered">
               <tbody>
@@ -45,20 +48,20 @@
             </table>
             
             {% if person.id == request.user.person.id %}
-              <a href="{% url 'users:profile_update' person.id %}" class="btn btn-default">Edit</a>
+              <a href="{% url 'users:profile_update' person.id %}" class="btn btn-outline-primary">Update</a>
             {% endif %}
 
           </div>
-          <div class="tab-pane fade" id="entries">
+          <div class="tab-pane container" id="entries">
             <br>
             <table class="table table-bordered">
               <thead>
                 <tr>
                   <th>Title</th>
                   <th class="text-center">Date added</th>
-                  <th class="text-center"><span class="glyphicon glyphicon-eye-open"></span></th>
-                  <th class="text-center"><span class="glyphicon glyphicon-thumbs-up"></span></th>
-                  <th class="text-center"><span class="glyphicon glyphicon-comment"></span></th>
+                  <th class="text-center">Views</th>
+                  <th class="text-center">Likes</th>
+                  <th class="text-center">Comments</th>
                 </tr>
               </thead>
               <tbody>
@@ -74,7 +77,7 @@
               </tbody>
             </table>
           </div>
-          <div class="tab-pane fade" id="comments">
+          <div class="tab-pane container" id="comments">
             <br>
             <table class="table table-bordered">
               <thead>
@@ -99,8 +102,5 @@
       </div>
     </div>
   </div>
-  <br>
-  <br>
-  <br>
   <br>
 {% endblock %}

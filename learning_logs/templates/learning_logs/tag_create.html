@@ -1,13 +1,27 @@
-{% extends 'base_form.html' %}
-{% load bootstrap3 %}
+{% extends 'base.html' %}
 
-{% block heading %}Add new tag{% endblock %}
+{% block title %}Add new tag{% endblock %}
 
-{% block body %}
-  <form action="" method="post" class="form">
-    {% csrf_token %}
-    {% bootstrap_form form %}
-    <input type="submit" class="btn btn-primary" value="OK">
-    <a href="{% url 'learning_logs:tags' %}" class="btn btn-default">Cancel</a>
-  </form>
+{% block content %}
+  <header class="container">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'learning_logs:index' %}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'learning_logs:tags' %}">Tags</a></li>
+        <li class="breadcrumb-item active">Add new tag</li>
+      </ol>
+    </nav>
+  </header>
+  <section class="container">
+    <div class="row">
+      <div class="col-12">
+        <form action="" method="post" class="form">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <button class="btn btn-success" type="submit">Create tag</button>
+        </form>
+      </div>
+    </div>
+  </section>
+  <br>
 {% endblock %}
