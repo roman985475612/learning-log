@@ -1,86 +1,28 @@
-{% load staticfiles %}
+{% load static %}
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <link href="https://fonts.googleapis.com/css?family=Shadows+Into+Light" rel="stylesheet">
-  <title>{% block title %}Live Journal{% endblock %}</title>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% block title %}Live Journal{% endblock %}</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
 </head>
 <body>
-  {% url 'learning_logs:index' as index %}
-  {% url 'learning_logs:newest' as newest %}
-  {% url 'learning_logs:top' as top %}
-  {% url 'learning_logs:entries' as entries %}
-  {% url 'learning_logs:tags' as tag_list %}
-  {% url 'users:register' as register %}
-  {% url 'users:login' as login %}
-  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <a class="navbar-brand" href="{{ index }}" id="header-font">Live Journal</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
 
-        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item {% if request.path == index %}active{% endif %}">
-                    <a class="nav-link" href="{{ index }}">Home</a>
-                </li>
-                <li class="nav-item {% if request.path == newest %}active{% endif %}">
-                    <a class="nav-link" href="{{ newest }}">New</a>
-                </li>
-                <li class="nav-item {% if request.path == top %}active{% endif %}">
-                    <a class="nav-link" href="{{ top }}">Top</a>
-                </li>
-                <li class="nav-item {% if request.path == entries %}active{% endif %}">
-                    <a class="nav-link" href="{{ entries }}">Entry</a>
-                </li>
-                <li class="nav-item {% if request.path == tag_list %}active{% endif %}">
-                    <a class="nav-link" href="{{ tag_list }}">Tags</a>
-                </li>
-                <form class="form-inline" action="{{ entries }}" method="get">
-                  <input class="form-control mr-sm-2" name="q" type="text" value="{{ q|default:'' }}" placeholder="Search" aria-label="Search">
-                  <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
-                </form>                 
-                {% if user.is_authenticated %}
-                  <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="navbardrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ user.username|title }}</a>
-                    <div class="dropdown-menu" aria-labelledby="navbardrop">
-                      <a class="dropdown-item" href="{% url 'learning_logs:entry_create' %}">Add entry</a>
-                      <a class="dropdown-item" href="{% url 'users:profile' request.user.person.id %}">Profile</a>
-                      <div class="dropdown-divider"></div>
-                      <a class="dropdown-item" href="{% url 'users:logout' %}">Log Out</a>
-                    </div>
-                  </li>
-                {% else %}
-                  <li class="nav-item {% if request.path == login %}active{% endif %}"><a class="nav-link" href="{{ login }}">Sign In</a></li>
-                {% endif %}
-            </ul>
-      </div>
-    </nav>
-  
-  <div class="container">
-    {% if messages %}
-      {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} alert-dismissable">
-          <button class="close" type="button" data-dismiss="alert">&times;</button>
-          <strong>{{ message.tags|capfirst }}!</strong> {{ message }}
-        </div>
-      {% endfor %}      
-    {% endif %}
-  </div>
+    {% include "navbar_snippet.html" %}
+    
+    {% block breadcrumb %}{% endblock %}
+    
+    {% include "messages_snippet.html" %}
 
-  {% block content %}{% endblock %}
+    {% block content %}{% endblock %}
 
-  <footer class="container">
-    <p>&copy; 2017 Live Journal</p>
-  </footer>
+    {% include "footer_snippet.html" %}
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.6/umd/popper.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.6/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
 </body>
 </html>

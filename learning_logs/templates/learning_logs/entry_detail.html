@@ -3,16 +3,19 @@
 
 {% block title %}{{ entry }}{% endblock %}
 
+{% block breadcrumb %}
+    <header class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'learning_logs:index' %}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'learning_logs:entries' %}">Articles</a></li>
+                <li class="breadcrumb-item active">{{ entry }}</li>
+            </ol>
+        </nav>
+    </header>
+{% endblock %}
+
 {% block content %}
-  <header class="container">
-    <nav aria-label="breadcrumb">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{% url 'learning_logs:index' %}">Home</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'learning_logs:entries' %}">Articles</a></li>
-        <li class="breadcrumb-item active">{{ entry }}</li>
-      </ol>
-    </nav>
-  </header>
   <section class="container">
     <div class="row">
       <article class="col-12">
