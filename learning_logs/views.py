@@ -1,4 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib import messages
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q
 from django.http import Http404
@@ -28,11 +30,17 @@ class TagListView(ListView):
     context_object_name = 'tags'
 
 
-class TagCreateView(LoginRequiredMixin, CreateView):
+class TagCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Tag
-    template_name_suffix = '_create'
     form_class = TagForm
-    success_url = reverse_lazy('learning_logs:index')
+    success_url = reverse_lazy('learning_logs:tags')
+    success_message = "%(title)s was created successfully"
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(
+            cleaned_data,
+            title = self.object.title
+        )
 
 
 class EntryListView(ListView):
@@ -129,18 +137,27 @@ class EntryLikeView(LoginRequiredMixin, RedirectView):
         if not obj.is_liked:
             obj.is_liked = True
             self.entry.likes += 1
+            messages.success(self.request, "Added to Liked entry")
         else:
             obj.is_liked = False
             self.entry.likes -= 1
+            messages.success(self.request, "Revoke to Liked entry")
 
         obj.save()
         self.entry.save()
         return reverse('learning_logs:entry', kwargs={'slug': self.kwargs['slug']})
 
 
-class EntryCreateView(LoginRequiredMixin, CreateView):
+class EntryCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Entry
     form_class = EntryForm
+    success_message = "%(title)s was created successfully"
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(
+            cleaned_data,
+            title = self.object.title,
+        )
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
@@ -155,9 +172,16 @@ class EntryCreateView(LoginRequiredMixin, CreateView):
         return context
 
 
-class EntryUpdateView(MyUserPassesTestMixin, UpdateView):
+class EntryUpdateView(MyUserPassesTestMixin, SuccessMessageMixin, UpdateView):
     model = Entry
     form_class = EntryForm
+    success_message = "%(title)s was updated successfully"
+
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(
+            cleaned_data,
+            title = self.object.title,
+        )
 
     def form_valid(self, form):
         form.save()
@@ -181,16 +205,17 @@ class EntryDeleteView(UserPassesTestMixin, RedirectView):
 
     def post(self, request, *args, **kwargs):
         self.get_queryset().delete()
+        messages.success(self.request, 'Entry was deleted successfully')
         return super().post(request, *args, **kwargs)
 
     def get_redirect_url(self, *args, **kwargs):
         return reverse('learning_logs:entries')
 
 
-class CommentCreateView(LoginRequiredMixin, CreateView):
+class CommentCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Comment
     form_class = CommentForm
-    template_name_suffix = '_create'
+    success_message = "Comment was created successfully"
 
     def get_queryset(self):
         self.entry = get_object_or_404(Entry, slug=self.kwargs['slug'])
@@ -210,9 +235,10 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class CommentUpdateView(MyUserPassesTestMixin, UpdateView):
+class CommentUpdateView(MyUserPassesTestMixin, SuccessMessageMixin, UpdateView):
     model = Comment
     form_class = CommentForm
+    success_message = "Comment was updated successfully"
 
 
 class CommentDeleteView(UserPassesTestMixin, RedirectView):
@@ -228,6 +254,7 @@ class CommentDeleteView(UserPassesTestMixin, RedirectView):
         entry.comments -= 1
         entry.save()
         self.get_comment().delete()
+        messages.success(self.request, 'Comment was deleted successfully')
         return super().post(request, *args, **kwargs)
 
     def get_redirect_url(self, *args, **kwargs):

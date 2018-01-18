@@ -25,6 +25,12 @@
         {% endfor %}
       </div>
     </div>
+    <br>
+    <div class="row">
+      <div class="col">
+        <a href="{% url 'learning_logs:tag_create' %}" class="btn btn-primary">Add tag</a>
+      </div>
+    </div>
   </section>
   <br>
 {% endblock %}

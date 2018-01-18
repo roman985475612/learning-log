@@ -1,6 +1,8 @@
+from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.messages.views import SuccessMessageMixin
 from django.http import Http404
 from django.views.generic.base import TemplateView, View
 from django.views.generic.detail import DetailView
@@ -40,9 +42,13 @@ class RegisterView(FormView):
             username=form.cleaned_data['username'],
             password=form.cleaned_data['password1']
         ))
+        # Create Person model
         obj = Person.objects.get_or_create(owner=self.request.user)[0]
         obj.save()
-        return redirect(self.success_url)
+        # Display message
+        msg = 'Account {} was registered successfully'.format(self.request.user.username)
+        messages.success(self.request, msg)
+        return super().form_valid(form)
 
 
 class PersonDetailView(LoginRequiredMixin, DetailView):
@@ -51,19 +57,21 @@ class PersonDetailView(LoginRequiredMixin, DetailView):
     context_object_name = 'person'
 
 
-class PersonCreateView(LoginRequiredMixin, OwnerVerificationMixins, CreateView):
+#class PersonCreateView(LoginRequiredMixin, OwnerVerificationMixins, SuccessMessageMixin,  CreateView):
+#   model = Person
+#    form_class = PersonForm
+#    success_url = reverse_lazy('users:profile')
+#    success_message = "Profile was created successfully"
+#
+#    def form_valid(self, form):
+#        form.instance.owner = self.request.user
+#        return super().form_valid(form)
+
+
+class PersonUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Person
     form_class = PersonForm
-    success_url = reverse_lazy('users:profile')
-
-    def form_valid(self, form):
-        form.instance.owner = self.request.user
-        return super().form_valid(form)
-
-
-class PersonUpdateView(LoginRequiredMixin, OwnerVerificationMixins, UpdateView):
-    model = Person
-    form_class = PersonForm
+    success_message = "Your profile was updated successfully"
 
     def form_valid(self, form):
         form.save()

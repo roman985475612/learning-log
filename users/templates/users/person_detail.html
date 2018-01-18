@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block title %}Profile: {{ person.first_name|capfirst }} {{ person.last_name|capfirst }}{% endblock %}
+
 {% block content %}
 <header class="container">
   <nav aria-label="breadcrumb">
