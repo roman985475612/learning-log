@@ -3,8 +3,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
-from django.http import Http404
-from django.views.generic.base import TemplateView, View
+from django.views.generic.base import View
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, DeleteView, FormView, UpdateView
 from django.views.generic.list import ListView
@@ -15,13 +14,22 @@ from .models import Person
 from .forms import PersonForm
 
 
-class OwnerVerificationMixins:
+class LoginView(FormView):
+    template_name = 'users/login.html'
+    form_class = AuthenticationForm
+    success_url = reverse_lazy('learning_logs:index')
 
-    def get_object(self):
-        object = super().get_object()
-        if object.owner != self.request.user:
-            raise Http404("You are not the owner")
-        return object
+    def form_valid(self, form):
+        username = form.cleaned_data['username']
+        password = form.cleaned_data['password']
+        user = authenticate(username=username, password=password)
+        login(self.request, user)
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Log In'
+        return context
 
 
 class LogoutView(View):
@@ -35,6 +43,11 @@ class RegisterView(FormView):
     template_name = 'users/register.html'
     form_class = UserCreationForm
     success_url = reverse_lazy('learning_logs:index')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Register'
+        return context
 
     def form_valid(self, form):
         form.save()
@@ -56,16 +69,10 @@ class PersonDetailView(LoginRequiredMixin, DetailView):
     template_name = 'users/person_detail.html'
     context_object_name = 'person'
 
-
-#class PersonCreateView(LoginRequiredMixin, OwnerVerificationMixins, SuccessMessageMixin,  CreateView):
-#   model = Person
-#    form_class = PersonForm
-#    success_url = reverse_lazy('users:profile')
-#    success_message = "Profile was created successfully"
-#
-#    def form_valid(self, form):
-#        form.instance.owner = self.request.user
-#        return super().form_valid(form)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Profile: {}'.format(self.request.user.username)
+        return context
 
 
 class PersonUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
@@ -76,6 +83,11 @@ class PersonUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     def form_valid(self, form):
         form.save()
         return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Updata: {}'.format(self.request.user.username)
+        return context
 
     def get_success_url(self):
         return reverse('users:profile', kwargs={'pk': self.object.pk})

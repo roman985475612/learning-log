@@ -1,7 +1,7 @@
 from django.urls import path
-from django.views.generic import TemplateView
 
 from .views import (
+    IndexView,
     TagListView,
     TagCreateView,
     EntryListView,
@@ -21,13 +21,13 @@ from .views import (
 app_name = 'learning_logs'
 
 urlpatterns = [
-    path('', TemplateView.as_view(template_name='learning_logs/index.html'), name='index'),
+    path('', IndexView.as_view(), name='index'),
     path('tags/', TagListView.as_view(), name='tags'),
     path('tag/add/', TagCreateView.as_view(), name='tag_create'),
     path('entries/', EntryListView.as_view(), name='entries'),
     path('new/', EntryNewestListView.as_view(), name='newest'),
     path('top/', EntryTopListView.as_view(), name='top'),
-    path('tag/<slug:tag_slug>/', EntryTagListView.as_view(), name='tag'),
+    path('tag/<slug:slug>/', EntryTagListView.as_view(), name='tag'),
     path('entry/add/', EntryCreateView.as_view(), name='entry_create'),
     path('entry/<slug:slug>/', EntryDetailView.as_view(), name='entry'),
     path('entry/<slug:slug>/like/', EntryLikeView.as_view(), name='entry_like'),

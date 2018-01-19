@@ -25,9 +25,23 @@ class MyUserPassesTestMixin(UserPassesTestMixin):
         return self.request.user == owner
 
 
+class IndexView(TemplateView):
+    template_name = 'learning_logs/index.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Home'
+        return context
+
+
 class TagListView(ListView):
     model = Tag
     context_object_name = 'tags'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Tags'
+        return context
 
 
 class TagCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
@@ -35,6 +49,11 @@ class TagCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     form_class = TagForm
     success_url = reverse_lazy('learning_logs:tags')
     success_message = "%(title)s was created successfully"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Add new tag'
+        return context
 
     def get_success_message(self, cleaned_data):
         return self.success_message % dict(
@@ -59,11 +78,11 @@ class EntryListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['bc_item'] = 'All'
         if self.question:
             context['last_question'] = '?q=%s' % self.question
         
         context['q'] = self.question
+        context['title'] = 'Articles'
         return context
 
 
@@ -73,7 +92,7 @@ class EntryNewestListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['bc_item'] = 'New'
+        context['title'] = 'New Articles'
         return context
 
 
@@ -83,7 +102,7 @@ class EntryTopListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['bc_item'] = 'Top'
+        context['title'] = 'Top Articles'
         return context
     
 
@@ -91,12 +110,12 @@ class EntryTagListView(ListView):
     paginate_by = 4
 
     def get_queryset(self):
-        self.entry_list = Entry.objects.filter(tag__slug=self.kwargs['tag_slug'])
+        self.entry_list = Entry.objects.filter(tag__slug=self.kwargs['slug'])
         return self.entry_list
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['bc_item'] = 'Tag'
+        context['title'] = 'Tag: {}'.format(self.kwargs['slug'].title()) 
         return context
 
 
@@ -115,7 +134,6 @@ class EntryDetailView(DetailView):
         if created:
             self.entry.views += 1
             self.entry.save()
-
         return super().dispatch(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -123,6 +141,7 @@ class EntryDetailView(DetailView):
         context['form'] = self.form_class
         context['tags'] = self.get_object().tag.all()
         context['comments'] = self.get_object().comment_set.all()
+        context['title'] = self.get_object().title
         return context
 
 
@@ -166,9 +185,7 @@ class EntryCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title_label'] = 'Add New Post'
-        context['breadcrumb_item_label'] = 'Add new post'
-        context['button_label'] = 'Add post'
+        context['title'] = 'Add article'
         return context
 
 
@@ -189,9 +206,7 @@ class EntryUpdateView(MyUserPassesTestMixin, SuccessMessageMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title_label'] = 'Update post'
-        context['breadcrumb_item_label'] = 'Update post'
-        context['button_label'] = 'Update post'
+        context['title'] = 'Update article'
         return context
 
 
@@ -239,6 +254,11 @@ class CommentUpdateView(MyUserPassesTestMixin, SuccessMessageMixin, UpdateView):
     model = Comment
     form_class = CommentForm
     success_message = "Comment was updated successfully"
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Updata comment'
+        return context
 
 
 class CommentDeleteView(UserPassesTestMixin, RedirectView):
