@@ -110,3 +110,6 @@ media/
 *.jpeg
 *.png
 *.bnp
+
+# Geany IDE
+*.geany
