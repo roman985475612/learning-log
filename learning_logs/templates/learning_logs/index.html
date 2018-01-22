@@ -1,11 +1,33 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <main class="jumbotron">
-    <div class="container">
-      <h1 class="display-3">Live Journal</h1>
-      <p class="lead">{% lorem 30 w %}</p>
-      <p><a class="btn btn-primary btn-lg" href="{% url 'users:register' %}">Register &raquo;</a></p>
+<main>
+    <div class="jumbotron">
+        <div class="container">
+            <h1 class="display-3">Live Journal</h1>
+            <p class="lead">{% lorem 30 w %}</p>
+            <p>
+                <a class="btn btn-primary btn-lg" href="{% url 'users:register' %}">
+                    Register &raquo;
+                </a>
+            </p>
+        </div>
     </div>
-  </main>
+    <div class="container">
+        <div class="row">
+        {% for entry in entries %}
+            <div class="col-md-4">
+                <h2>{{ entry.title }}</h2>
+                <p>{{ entry.text|truncatewords:50 }}</p>
+                <p>
+                    <a class="btn btn-secondary" href="{% url 'learning_logs:entry' entry.slug %}">
+                        View details &raquo;
+                    </a>
+                </p>
+            </div>
+        {% endfor %}
+        </div><!-- /.row -->
+        <hr>
+    </div><!-- /.container -->
+</main>
 {% endblock %}

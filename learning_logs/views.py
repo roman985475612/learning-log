@@ -25,7 +25,9 @@ class MyUserPassesTestMixin(UserPassesTestMixin):
         return self.request.user == owner
 
 
-class IndexView(TemplateView):
+class IndexView(ListView):
+    queryset = Entry.objects.all()[:3]
+    context_object_name = 'entries'
     template_name = 'learning_logs/index.html'
 
     def get_context_data(self, **kwargs):
