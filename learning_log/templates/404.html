@@ -1,12 +1,13 @@
 {% extends 'base.html' %}
 
-{% block title %}404 Not Foune{% endblock %}
+{% block title %}404 Not Found{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <div class="container">
-        <div class="alert alert-warning">
-            <strong>404!</strong> The item you requested is not available.
+<div class="container">
+    <div class="card border-danger mb-3">
+        <div class="card-body text-danger">
+            <h5 class="card-title">404 Not Found</h5>
+            <p class="card-text">The item you requested is not available.</p>
         </div>
     </div>
 </div>

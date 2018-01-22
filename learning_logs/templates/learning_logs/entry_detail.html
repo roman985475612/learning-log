@@ -147,8 +147,10 @@
           </article>
           <br>
         {% empty %}
-          <div class="alert alert-warning">
-            <strong>Ups!</strong> This article has no comments.
+          <div class="card border-dark mb-3">
+              <div class="card-body">
+                This article has no comments.
+              </div>
           </div>
         {% endfor %}
       </article>
