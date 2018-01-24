@@ -226,7 +226,7 @@ class EntryDeleteView(UserPassesTestMixin, RedirectView):
         return super().post(request, *args, **kwargs)
 
     def get_redirect_url(self, *args, **kwargs):
-        return reverse('learning_logs:entries')
+        return reverse('users:profile')
 
 
 class CommentCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
@@ -265,12 +265,15 @@ class CommentUpdateView(MyUserPassesTestMixin, SuccessMessageMixin, UpdateView):
 
 class CommentDeleteView(UserPassesTestMixin, RedirectView):
 
+    # Get comment for deleting
     def get_comment(self):
         return get_object_or_404(Comment, pk=self.kwargs['pk'])
-
+    
+    # Check comment owner
     def test_func(self):
         return self.request.user == self.get_comment().owner
-
+    
+    # Deleting comment
     def post(self, request, *args, **kwargs):
         entry = self.get_comment().entry
         entry.comments -= 1
@@ -279,5 +282,6 @@ class CommentDeleteView(UserPassesTestMixin, RedirectView):
         messages.success(self.request, 'Comment was deleted successfully')
         return super().post(request, *args, **kwargs)
 
+    # Redirect to profile
     def get_redirect_url(self, *args, **kwargs):
-        return reverse_lazy('learning_logs:entry', kwargs={'slug': kwargs['slug']})
+        return reverse('users:profile')

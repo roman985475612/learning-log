@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block breadcrumb %}
+<header class="container">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'learning_logs:index' %}">Home</a></li>
+      <li class="breadcrumb-item active">{{ title }}</li>
+    </ol>
+  </nav>
+</header>
+{% endblock %}
+
+{% block content %}
+{% with person=request.user.person %}
+  <div class="container">
+    <div class="row">
+      <div class="col-3">
+        {% if person.image %}
+          <img src="{{ person.image.url }}" class="media-object img-circle" heigth="64">
+        {% else %}
+          <img src="{% static 'img/avatar-tiny.jpg' %}" class="media-object img-circle" heigth="64">
+        {% endif %}
+      </div><!-- /.col -->
+
+      <div class="col-9">
+        <ul class="nav nav-tabs">
+          <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab" href="#profile">Profile</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#entries">Entries</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#comments">Comments</a>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane container active" id="profile">
+            <br>
+            <table class="table table-bordered">
+              <tbody>
+                <tr><td><b>First name</b></td><td>{{ person.first_name }}</td></tr>
+                <tr><td><b>Last name</b></td><td>{{ person.last_name }}</td></tr>
+                <tr><td><b>Sex</b></td><td>{{ person.sex }}</td></tr>
+                <tr><td><b>Birth date</b></td><td>{{ person.birth_date|default:"" }}</td></tr>
+                <tr><td><b>Email</b></td><td>{{ person.email|default:"" }}</td></tr>
+                <tr><td><b>Home page</b></td><td>{{ person.home_page|default:"" }}</td></tr>
+              </tbody>
+            </table>
+            <a href="{% url 'users:profile_update' %}" class="btn btn-outline-primary">Update</a>
+          </div><!-- /#profiel -->
+          
+          <div class="tab-pane container" id="entries">
+            <br>
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th class="text-center">Date added</th>
+                  <th class="text-center">Views</th>
+                  <th class="text-center">Likes</th>
+                  <th class="text-center">Comments</th>
+                  <th class="text-center">Update</th>
+                  <th class="text-center">Delete</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for entry in person.owner.entry.all %}
+                  <tr>
+                    <td><a href="{% url 'learning_logs:entry' entry.slug %}">{{ entry.title }}</a></td>
+                    <td class="text-center">{{ entry.date_added|date:'d.m.Y' }}</td>
+                    <td class="text-center">{{ entry.views }}</td>
+                    <td class="text-center">{{ entry.likes }}</td>
+                    <td class="text-center">{{ entry.comments }}</td>
+                    <td class="text-center">
+                        <a href="{% url 'learning_logs:entry_update' entry.slug %}" class="btn btn-outline-primary btn-sm">
+                            Update
+                        </a>
+                    </td>
+                    <td class="text-center">
+                        <button type="button" data-toggle="modal" data-target="#entryDelete{{forloop.counter}}" class="btn btn-outline-danger btn-sm">
+                            Delete
+                        </button>
+                        
+                        <!-- The Modal -->
+                        <div class="modal fade" id="entryDelete{{forloop.counter}}">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    
+                                    <!-- Modal Header -->
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Deleting An Article</h4>
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    </div><!-- /.modal-header -->
+                                
+                                    <!-- Modal Body -->
+                                    <div class="modal-body">
+                                        Do you want to delete an article: {{ entry.title }}
+                                    </div><!-- /.modal-body -->
+                                    
+                                    <!-- Modal Footer -->
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <form action="{% url 'learning_logs:entry_delete' entry.pk %}" method="post">
+                                            {% csrf_token %}
+                                            <button type=submit class="btn btn-danger">Delete</button>
+                                        </form>
+                                    </div><!-- /.modal-footer -->
+                                    
+                                </div><!-- /.modal-content -->
+                            </div><!-- /.modal-dialog -->
+                        </div><!-- /.modal -->
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+
+            <a href="{% url 'learning_logs:entry_create' %}" class="btn btn-primary">Create</a>
+          </div><!-- /#entries -->
+          
+          <div class="tab-pane container" id="comments">
+            <br>
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th class="text-left">Comment</th>
+                  <th class="text-left">Entry</th>
+                  <th class="text-center">Date added</th>
+                  <th class="text-center">Delete</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for comment in person.owner.comment.all %}
+                  <tr>
+                    <td class="text-left"><a href="{% url 'learning_logs:entry' comment.entry.slug %}">{{ comment.text|truncatewords:5 }}</a></td>
+                    <td class="text-left">{{ comment.entry.title }}</td>
+                    <td class="text-center">{{ comment.date_added|date:'d.m.Y' }}</td>
+                    <td class="text-center">
+                        <button type="button" data-toggle="modal" data-target="#commentDelete{{forloop.counter}}" class="btn btn-outline-danger btn-sm">
+                            Delete
+                        </button>
+                        
+                        <!-- The Modal -->
+                        <div class="modal fade" id="commentDelete{{forloop.counter}}">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    
+                                    <!-- Modal Header -->
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Deleting A Comment</h4>
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    </div><!-- /.modal-header -->
+                                
+                                    <!-- Modal Body -->
+                                    <div class="modal-body">
+                                        Do you want to delete a comment: {{ comment.text }}
+                                    </div><!-- /.modal-body -->
+                                    
+                                    <!-- Modal Footer -->
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <form action="{% url 'learning_logs:comment_delete' comment.pk %}" method="post">
+                                            {% csrf_token %}
+                                            <button type=submit class="btn btn-danger">Delete</button>
+                                        </form>
+                                    </div><!-- /.modal-footer -->
+                                    
+                                </div><!-- /.modal-content -->
+                            </div><!-- /.modal-dialog -->
+                        </div><!-- /.modal -->
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div><!-- /#comments -->
+        </div><!-- /.tab-content -->
+      </div><!-- /.col -->
+    </div><!-- /.row -->
+  </div><!-- /.container -->
+  <br>
+{% endwith %}
+{% endblock %}

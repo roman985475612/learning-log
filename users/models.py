@@ -16,7 +16,6 @@ class Person(models.Model):
     birth_date = models.DateField(null=True, blank=True)
     email = models.EmailField(null=True, blank=True)
     home_page = models.URLField(null=True, blank=True)
-    about_me = models.TextField(blank=True)
     image = models.ImageField(upload_to='users/img', default='', blank=True)
 
     def __str__(self):

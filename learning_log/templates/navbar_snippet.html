@@ -41,7 +41,7 @@
                     <a class="nav-link dropdown-toggle" id="navbardrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ user.username|title }}</a>
                     <div class="dropdown-menu" aria-labelledby="navbardrop">
                         <a class="dropdown-item" href="{% url 'learning_logs:entry_create' %}">Add article</a>
-                        <a class="dropdown-item" href="{% url 'users:profile' request.user.person.id %}">Profile</a>
+                        <a class="dropdown-item" href="{% url 'users:profile' %}">Profile</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{% url 'users:logout' %}">Log Out</a>
                     </div>

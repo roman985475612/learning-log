@@ -28,11 +28,12 @@
             {% endif %}
           </div>
           <div class="col-11">
-            <a href="{% url 'users:profile' entry.owner.person.id %}">{{ entry.owner|capfirst }}</a><br>
+            <spen>{{ entry.owner|capfirst }}</spen><br>
             <span>Pablished on {{ entry.date_added|date:'F d, Y' }}</span>
           </div>
         </section>
         <br>
+        
         <!-- Display title block -->
         <h1>
           {{ entry.title }}
@@ -113,7 +114,7 @@
             </div>
             <div class="col-11">
               <h5>
-                <a href="{% url 'users:profile' comment.owner.person.id %}">{{ comment.owner|capfirst }}</a>&nbsp;
+                <span>{{ comment.owner|capfirst }}</span>&nbsp;
                 {% if comment.owner == request.user %}
                   <a href="{% url 'learning_logs:comment_update' comment.pk %}" class="btn btn-outline-warning btn-sm">Update</a>
                   <button class="btn btn-outline-danger btn-sm" type="button" data-toggle="modal" data-target="#commentDelete{{ forloop.counter }}">
@@ -131,7 +132,7 @@
                         </div>
                         <div class="modal-footer">
                           <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
-                          <form action="{% url 'learning_logs:comment_delete' slug=entry.slug pk=comment.pk %}" method="post">
+                          <form action="{% url 'learning_logs:comment_delete' comment.pk %}" method="post">
                             {% csrf_token %}
                             <button class="btn btn-danger" type="submit">Delete</button>
                           </form>
