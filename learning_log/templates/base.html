@@ -12,9 +12,20 @@
 <body>
 
   {% include "navbar_snippet.html" %}
-    <br>
-  {% block breadcrumb %}{% endblock %}
-    
+
+  {% url 'learning_logs:index' as index %}
+  {% if request.path != index %}
+  <header class="container mt-3">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'learning_logs:index' %}">Home</a></li>
+        {% block breadcrumb %}{% endblock %}
+        <li class="breadcrumb-item active">{{ title }}</li>
+      </ol>
+    </nav>
+  </header>
+  {% endif %}
+
   {% include "messages_snippet.html" %}
 
   {% block content %}{% endblock %}

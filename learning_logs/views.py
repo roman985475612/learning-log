@@ -65,7 +65,7 @@ class TagCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
 
 
 class EntryListView(ListView):
-    paginate_by = 6
+    paginate_by = 1
 
     def get_queryset(self):
         self.entry_list = Entry.objects.all()
@@ -89,7 +89,7 @@ class EntryListView(ListView):
 
 
 class EntryNewestListView(ListView):
-    paginate_by = 4
+    paginate_by = 1
     queryset = Entry.objects.order_by('-date_added')
 
     def get_context_data(self, **kwargs):
@@ -99,7 +99,7 @@ class EntryNewestListView(ListView):
 
 
 class EntryTopListView(ListView):
-    paginate_by = 4
+    paginate_by = 1
     queryset = Entry.objects.order_by('-likes')
 
     def get_context_data(self, **kwargs):
@@ -109,7 +109,7 @@ class EntryTopListView(ListView):
     
 
 class EntryTagListView(ListView):
-    paginate_by = 4
+    paginate_by = 1
 
     def get_queryset(self):
         self.entry_list = Entry.objects.filter(tag__slug=self.kwargs['slug'])

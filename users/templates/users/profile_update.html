@@ -1,15 +1,7 @@
 {% extends 'base.html' %}
 
 {% block breadcrumb %}
-<header class="container">
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="{% url 'learning_logs:index' %}">Home</a></li>
-      <li class="breadcrumb-item"><a href="{% url 'users:profile' %}">Profile</a></li>
-      <li class="breadcrumb-item active">{{ title }}</li>
-    </ol>
-  </nav>
-</header>
+  <li class="breadcrumb-item"><a href="{% url 'users:profile' %}">Profile</a></li>
 {% endblock %}
 
 {% block content %}
@@ -58,5 +50,4 @@
     </div>
   </div>
 </div>
-<br>
 {% endblock %}

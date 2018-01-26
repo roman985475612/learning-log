@@ -1,17 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block breadcrumb %}
-<header class="container">
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="{% url 'learning_logs:index' %}">Home</a></li>
-      <li class="breadcrumb-item active">{{ title }}</li>
-    </ol>
-  </nav>
-</header>
-{% endblock %}
-
 {% block content %}
 {% with person=request.user.person %}
   <div class="container">
@@ -181,6 +170,5 @@
       </div><!-- /.col -->
     </div><!-- /.row -->
   </div><!-- /.container -->
-  <br>
 {% endwith %}
 {% endblock %}
