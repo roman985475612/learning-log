@@ -2,16 +2,14 @@
 
 {% block content %}
 <main>
-    <div class="jumbotron">
-        <div class="container">
-            <h1 class="display-3">Live Journal</h1>
-            <p class="lead">{% lorem 30 w %}</p>
-            <p>
-                <a class="btn btn-primary btn-lg" href="{% url 'users:register' %}">
-                    Register &raquo;
-                </a>
-            </p>
-        </div>
+    <div class="container btn-light p-5">
+        <h1 class="display-3">Live Journal</h1>
+        <p class="lead">{% lorem 30 w %}</p>
+        <p>
+            <a class="btn btn-primary btn-lg" href="{% url 'users:register' %}">
+                Register &raquo;
+            </a>
+        </p>
     </div>
     <div class="container">
         <div class="row">
