@@ -17,10 +17,11 @@
         </div>
         <div class="mb-3">
           {{ form.tag.label_tag }}
+          <br>
+          <a id="addTagBtn" class="btn btn-success btn-sm" href="{% url 'learning_logs:tag_create' %}" target="_blank">Add tag</a>
+          <br>
           {{ form.tag }}
           {{ form.tag.errors }}
-          <br>
-          <a class="btn btn-outline-info btn-sm" href="{% url 'learning_logs:tag_create' %}" target="_blank">Create new tag</a>
         </div>
         <div class="mb-3">
           {{ form.text.label_tag }}
@@ -38,4 +39,32 @@
   </div>
 </section>
 <br>
+
+<!-- Modal -->
+<div class="modal fade" id="addTagModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Create tag</h5>
+        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="addTagForm">
+          <div class="mb-3">
+            <input type="text" id="tagTitleField" name="title" class="form-control" placeholder="Tag name">
+          </div>
+          <div class="mb-3">
+            <select class="form-select" id="tagColorField" name="color" aria-label="Default select example">
+              <option selected>Open this select menu</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="addTagActionBtn">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

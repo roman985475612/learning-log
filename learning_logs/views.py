@@ -11,10 +11,20 @@ from django.views.generic.edit import CreateView, FormMixin, FormView, UpdateVie
 from django.views.generic.list import ListView
 from django.urls import reverse, reverse_lazy
 
-from learning_logs.models import Tag, Entry, Comment, LogLikedEntries, LogViewedEntries
+from rest_framework import viewsets
+from rest_framework import permissions
+
 from users.models import Person
 
-from .forms import TagForm, EntryForm, CommentForm
+from learning_logs.models import Tag, Entry, Comment, LogLikedEntries, LogViewedEntries
+from learning_logs.serializers import TagSerializer
+from learning_logs.forms import TagForm, EntryForm, CommentForm
+
+
+class TagViewSet(viewsets.ModelViewSet):
+    queryset = Tag.objects.all().order_by('slug')
+    serializer_class = TagSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
 
 class MyUserPassesTestMixin(UserPassesTestMixin):

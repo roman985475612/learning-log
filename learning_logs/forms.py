@@ -50,7 +50,7 @@ class EntryForm(forms.ModelForm):
                 'placeholder': 'Enter text article'
             }),
             'tag': forms.SelectMultiple(attrs={
-                'class': 'form-control',
+                'class': 'form-select',
             }),
             'image': forms.ClearableFileInput(attrs={
                 'class': 'form-control',

@@ -1,4 +1,6 @@
-from django.urls import path
+from django.urls import include, path
+
+from rest_framework import routers
 
 from .views import (
     IndexView,
@@ -18,9 +20,16 @@ from .views import (
     CommentDeleteView
 )
 
+from learning_logs import views
+
+router = routers.DefaultRouter()
+router.register(r'tags', views.TagViewSet)
+
 app_name = 'learning_logs'
 
 urlpatterns = [
+    path('api-tag/', include(router.urls)),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('', IndexView.as_view(), name='index'),
     path('tags/', TagListView.as_view(), name='tags'),
     path('tag/add/', TagCreateView.as_view(), name='tag_create'),

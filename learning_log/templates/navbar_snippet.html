@@ -1,34 +1,26 @@
-{% url 'learning_logs:index' as index %}
-{% url 'learning_logs:newest' as newest %}
-{% url 'learning_logs:top' as top %}
-{% url 'learning_logs:entries' as entries %}
-{% url 'learning_logs:tags' as tag_list %}
-{% url 'users:register' as register %}
-{% url 'users:login' as login %}
-
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container">
-    <a class="navbar-brand" href="{{ index }}" id="header-font">Live Journal</a>
+    <a class="navbar-brand" href="{% url 'learning_logs:index' %}" id="header-font">Live Journal</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
 
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item {% if request.path == index %}active{% endif %}">
-                <a class="nav-link" href="{{ index }}">Home</a>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'learning_logs:index' %}">Home</a>
             </li>
-            <li class="nav-item {% if request.path == newest %}active{% endif %}">
-                <a class="nav-link" href="{{ newest }}">New</a>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'learning_logs:newest' %}">New</a>
             </li>
-            <li class="nav-item {% if request.path == top %}active{% endif %}">
-                <a class="nav-link" href="{{ top }}">Top</a>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'learning_logs:top' %}">Top</a>
             </li>
-            <li class="nav-item {% if request.path == entries %}active{% endif %}">
-                <a class="nav-link" href="{{ entries }}">All Articles</a>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'learning_logs:entries' %}">All Articles</a>
             </li>
-            <li class="nav-item {% if request.path == tag_list %}active{% endif %}">
-                <a class="nav-link" href="{{ tag_list }}">Tags</a>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'learning_logs:tags' %}">Tags</a>
             </li>
             {% if user.is_authenticated %}
                 <li class="nav-item dropdown">
@@ -41,13 +33,16 @@
                     </div>
                 </li>
             {% else %}
-                <li class="nav-item {% if request.path == login %}active{% endif %}">
-                    <a class="nav-link" href="{{ login }}">Log In</a>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'users:register' %}">Register</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'users:login' %}">Log In</a>
                 </li>
             {% endif %}
         </ul>
 
-        <form class="d-flex" action="{{ entries }}" method="get">
+        <form class="d-flex" action="{% url 'learning_logs:entries' %}" method="get">
           <input class="form-control mr-sm-2" name="q" type="text" value="{{ q|default:'' }}" placeholder="Search" aria-label="Search">
           <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
         </form>                 
