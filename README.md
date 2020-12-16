@@ -1,1 +1,1 @@
-Project Live Journal
+# Блог на Django 3!

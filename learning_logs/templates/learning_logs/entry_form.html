@@ -5,9 +5,11 @@
 {% endblock %}
 
 {% block content %}
-<section class="container">
-  <div class="row">
-    <div class="col-12">
+  <div class="card">
+    <div class="card-header">
+        New article
+    </div>
+    <div class="card-body">
       <form action="" method="post" class="form" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="mb-3">
@@ -16,10 +18,8 @@
           {{ form.title.errors }}
         </div>
         <div class="mb-3">
-          {{ form.tag.label_tag }}
-          <br>
-          <a id="addTagBtn" class="btn btn-success btn-sm" href="{% url 'learning_logs:tag_create' %}" target="_blank">Add tag</a>
-          <br>
+          {{ form.tag.label_tag }}<br>
+          <a id="addTagBtn" class="btn btn-success btn-sm my-3" href="{% url 'learning_logs:tag_create' %}" target="_blank">Add tag</a>
           {{ form.tag }}
           {{ form.tag.errors }}
         </div>
@@ -37,8 +37,6 @@
       </form>
     </div>
   </div>
-</section>
-<br>
 
 <!-- Modal -->
 <div class="modal fade" id="addTagModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

@@ -4,9 +4,10 @@ Django==3.1.3
 django-filter==2.4.0
 djangorestframework==3.12.2
 Markdown==3.3.3
-#mysqlclient @ file:///C:/Users/%D0%A0%D0%BE%D0%BC%D0%B0%D0%BD/Downloads/OpenServer/domains/learning-log/mysqlclient-1.4.6-cp39-cp39-win_amd64.whl
+mysqlclient @ file:///C:/Users/%D0%A0%D0%BE%D0%BC%D0%B0%D0%BD/Downloads/OpenServer/domains/learning-log/mysqlclient-1.4.6-cp39-cp39-win_amd64.whl
 olefile==0.44
 Pillow==8.0.1
+pytils==0.3
 pytz==2017.3
 sqlparse==0.4.1
 static3==0.7.0

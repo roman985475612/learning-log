@@ -1,12 +1,12 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container">
     <a class="navbar-brand" href="{% url 'learning_logs:index' %}" id="header-font">Live Journal</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
 
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-        <ul class="navbar-nav mr-auto">
+        <ul class="navbar-nav me-auto">
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'learning_logs:index' %}">Home</a>
             </li>
@@ -24,7 +24,7 @@
             </li>
             {% if user.is_authenticated %}
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="navbardrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ user.username|title }}</a>
+                    <a class="nav-link dropdown-toggle" id="navbardrop" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ user.username|title }}</a>
                     <div class="dropdown-menu" aria-labelledby="navbardrop">
                         <a class="dropdown-item" href="{% url 'learning_logs:entry_create' %}">Add article</a>
                         <a class="dropdown-item" href="{% url 'users:profile' %}">Profile</a>
@@ -43,8 +43,8 @@
         </ul>
 
         <form class="d-flex" action="{% url 'learning_logs:entries' %}" method="get">
-          <input class="form-control mr-sm-2" name="q" type="text" value="{{ q|default:'' }}" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
+          <input class="form-control me-2" name="q" type="text" value="{{ q|default:'' }}" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button>
         </form>                 
     </div>
   </div>
